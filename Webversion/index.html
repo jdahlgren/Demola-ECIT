@@ -52,23 +52,29 @@
     
    
     <script type="text/javascript">
+        var geographic = new OpenLayers.Projection("EPSG:4326");
+        var mercator = new OpenLayers.Projection("EPSG:900913");
+
         var lon = 5;
         var lat = 40;
         var zoom = 5;
         var map, layer;
 
         function init(){
-            map = new OpenLayers.Map( 'map', {} );
+            
+            var options = {
+                    projection: geographic,
+                    maxExtent: new OpenLayers.Bounds(-200000, -200000, 200000, 200000),
+                    center: new OpenLayers.LonLat(-12356463.476333, 5621521.4854095)
+            };
+            map = new OpenLayers.Map( 'map', options );
+            
+            //Layer part 
             layer = new OpenLayers.Layer.OSM();
             map.addLayer(layer);
 
-
-
-
-
-
-
-            //Control panel
+            
+            //Control part
             var layerPanel = new OpenLayers.Control.Panel({
         					displayClass: "layerPanel",
         					autoActivate: true
@@ -91,7 +97,7 @@
                 trigger: function() { alert("Button 2 clicked!") },
                 displayClass: "button2"
             });
-            
+            /*
             var b3 = new OpenLayers.Control.Button({
                 trigger: function() { alert("Button 3 clicked!") },
                 displayClass: "button3"
@@ -121,16 +127,25 @@
             hpanel.addControls([
                 b3, b4, b5
             ]);
-            
+            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+            */
             map.addControl(vpanel);
             map.addControl(hpanel);
+            
+        
 
-            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+
+
+
+
+
+              
         }
     </script>
   </head>
   <body onload="init()">   
     <div id="panel"></div>
     <div id="map" class="smallmap"></div>
+    
   </body>
 </html>
