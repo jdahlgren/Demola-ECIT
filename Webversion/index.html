@@ -5,7 +5,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>OpenLayers: TextButtonPanel</title>
     <script src="lib/OpenLayers.js"></script>
-    <script src="lib/Firebug/firebug.js"></script>
+    <!--<script src="lib/Firebug/firebug.js"></script>-->
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     <link rel="stylesheet" href="style.css" type="text/css">
     <style type="text/css">
@@ -52,8 +52,11 @@
     
    
     <script type="text/javascript">
+        
+
+
         var geographic = new OpenLayers.Projection("EPSG:4326");
-        var mercator = new OpenLayers.Projection("EPSG:900913");
+        var mercator   = new OpenLayers.Projection("EPSG:900913");
 
         var lon = 5;
         var lat = 40;
@@ -64,77 +67,89 @@
             
             var options = {
                     projection: geographic,
-                    maxExtent: new OpenLayers.Bounds(-200000, -200000, 200000, 200000),
-                    center: new OpenLayers.LonLat(-12356463.476333, 5621521.4854095)
+                    maxExtent: new OpenLayers.Bounds(-20000, -20000, 20000, 20000),
+                    center: new OpenLayers.LonLat(-1235643.476333, 5621521.4854095)
             };
-            map = new OpenLayers.Map( 'map', options );
+            function mapEvent(event) {
+                    console.log(event.type);
+            }
+            function mapBaseLayerChanged(event) {
+                    console.log(event.type );
+            }
+                function mapLayerChanged(event) {
+                    console.log(event.type + " " + event.layer.name + " " + event.property);
+            }
+
+
+            var map_event_function = function(){
+                console.log('hsjkdfhds');
+                
+            }
+            //Create a function for the toggle button
+            var toggle_button_activate_func = function(){
+                //Attach the map_event_function to the map
+                map.events.register('click', map, map_event_function);
+            }
+            var toggle_button_deactivate_func = function(){
+                //Remove the map_event_function from the map
+                map.events.unregister('click', map, map_event_function);
+                //Restore the layer's opacity
+                map.layers[0].setOpacity(1);
+            }
+
+            map = new OpenLayers.Map( 'map', {
+                
+                eventListeners: {
+                        "moveend": mapEvent,
+                        "zoomend": mapEvent,
+                        "changelayer": mapLayerChanged,
+                        "changebaselayer": mapBaseLayerChanged
+                    }});
             
             //Layer part 
-            layer = new OpenLayers.Layer.OSM();
-            map.addLayer(layer);
-
+            var ol_wms = new OpenLayers.Layer.WMS( "OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {layers: 'basic'} );
             
+            var landsat = new OpenLayers.Layer.WMS(
+                    "NASA Global Mosaic",
+                    "http://t1.hypercube.telascience.org/cgi-bin/landsat7", 
+                    {layers: "landsat7"}
+            );
+            map.addLayer(ol_wms,landsat);
+
             //Control part
             var layerPanel = new OpenLayers.Control.Panel({
-        					displayClass: "layerPanel",
-        					autoActivate: true
-    		});
-
-            var b1 = new OpenLayers.Control.Button({
-                    type: OpenLayers.Control.TYPE_TOGGLE,
-        			displayClass: "labelButton",
-        			eventListeners: {
-         						   activate: function() {
-                	if (labels) {labels.setVisibility(true);}
-            		},
-            		deactivate: function() {
-                if (labels) {labels.setVisibility(false);}
-            }
-        	}
+        		displayClass: "layerPanel",
+        					
             });
-            
-            var b2 = new OpenLayers.Control.Button({
-                trigger: function() { alert("Button 2 clicked!") },
-                displayClass: "button2"
+        
+             //Create the toggle button object
+            var custom_toggle_button = new OpenLayers.Control.Button({
+                displayClass: 'button3',
+                eventListeners: {
+                    'activate': toggle_button_activate_func,
+                    'deactivate': toggle_button_deactivate_func
+                },
             });
-            /*
-            var b3 = new OpenLayers.Control.Button({
-                trigger: function() { alert("Button 3 clicked!") },
-                displayClass: "button3"
-            });
-            
-            var b4 = new OpenLayers.Control.Button({
-                trigger: function() { alert("Button 4 clicked!") },
-                displayClass: "button4"
-            });
-            
-            var b5 = new OpenLayers.Control.Button({
-                trigger: function() { alert("Button 5 clicked!") },
-                displayClass: "button5"
-            });
-
+    
             var vpanel = new OpenLayers.Control.TextButtonPanel({
-                vertical: true,
+                
                 additionalClass: "vpanel"
             });
-            vpanel.addControls([
-                b1, b2
-            ]);
-            
-            var hpanel = new OpenLayers.Control.TextButtonPanel({
-                additionalClass: "hpanel"
-            });
-            hpanel.addControls([
-                b3, b4, b5
-            ]);
-            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
-            */
+
+
+            vpanel.addControls([custom_toggle_button]);
+           
             map.addControl(vpanel);
-            map.addControl(hpanel);
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+           
+
+            
+
             
         
 
-
+             
 
 
 
@@ -145,7 +160,7 @@
   </head>
   <body onload="init()">   
     <div id="panel"></div>
-    <div id="map" class="smallmap"></div>
-    
+    <div id="map" ></div>
+    <div id ="output"></div>
   </body>
 </html>
