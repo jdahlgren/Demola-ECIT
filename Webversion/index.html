@@ -7,16 +7,25 @@
     <script src="lib/OpenLayers.js"></script>
     <!--<script src="lib/Firebug/firebug.js"></script>-->
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
-    <link rel="stylesheet" href="style.css" type="text/css">
+    <!-- <link rel="stylesheet" href="style.css" type="text/css"> -->
     <style type="text/css">
+          .olControlCustomButtonToggleItemActive {
+           background:#336699;
+           border:5px solid #202020;
+           cursor: pointer;
+           height: 28px;
+           width:  28px;
+       }
+       .olControlCustomButtonToggleItemInactive {
+           background:#003366;
+           border:5px solid #202020;
+           cursor: pointer;
+           height: 28px;
+           width:  28px;
+       }
         
-        .olControlTextButtonPanel.vpanel { 
-          top: 8px;
-          right: 8px;
-          left: auto;
-        }
         
-        .olControlTextButtonPanel.hpanel { 
+        .olControlPanel.hpanel { 
           top: auto;
           bottom: 8px;
           left: 8px;
@@ -65,11 +74,36 @@
 
         function init(){
             
-            var options = {
-                    projection: geographic,
-                    maxExtent: new OpenLayers.Bounds(-20000, -20000, 20000, 20000),
-                    center: new OpenLayers.LonLat(-1235643.476333, 5621521.4854095)
-            };
+            map = new OpenLayers.Map( 'map', {
+                
+            eventListeners: {
+                        "moveend": mapEvent,
+                        "zoomend": mapEvent,
+                        "changelayer": mapLayerChanged,
+                        "changebaselayer": mapBaseLayerChanged
+            }});
+
+             //Layer part 
+            var ol_wms = new OpenLayers.Layer.WMS( "OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {layers: 'basic'} , {tileOrigin: new OpenLayers.LonLat(-180, -90)});
+            var layer2 =  new OpenLayers.Layer.WMS(
+            "Global Imagery",
+            "http://maps.opengeo.org/geowebcache/service/wms",
+            {layers: "bluemarble"},
+            {tileOrigin: new OpenLayers.LonLat(-180, -90)}
+            );
+            
+            map.addLayer(ol_wms);
+
+
+            function knapptryck(){
+                console.log("Tryckt !");
+            } 
+            function drawObject(layer){
+
+            }
+            function drawLayer(){
+
+            }
             function mapEvent(event) {
                     console.log(event.type);
             }
@@ -82,40 +116,29 @@
 
 
             var map_event_function = function(){
-                console.log('hsjkdfhds');
+                console.log('Klickar på kartan');
+                map.layers[0].setOpacity(0.3);
                 
             }
+            //Då knappen är aktiv som så lyssnar man på kartans eventlistener !
             //Create a function for the toggle button
             var toggle_button_activate_func = function(){
+                console.log('toggle_button_activate_func');
                 //Attach the map_event_function to the map
                 map.events.register('click', map, map_event_function);
             }
+            //Tar bort eventlistener
             var toggle_button_deactivate_func = function(){
+                 console.log('toggle_button_deactivate_func');
                 //Remove the map_event_function from the map
                 map.events.unregister('click', map, map_event_function);
                 //Restore the layer's opacity
                 map.layers[0].setOpacity(1);
             }
 
-            map = new OpenLayers.Map( 'map', {
-                
-                eventListeners: {
-                        "moveend": mapEvent,
-                        "zoomend": mapEvent,
-                        "changelayer": mapLayerChanged,
-                        "changebaselayer": mapBaseLayerChanged
-                    }});
+      
             
-            //Layer part 
-            var ol_wms = new OpenLayers.Layer.WMS( "OpenLayers WMS", "http://vmap0.tiles.osgeo.org/wms/vmap0?", {layers: 'basic'} );
-            
-            var landsat = new OpenLayers.Layer.WMS(
-                    "NASA Global Mosaic",
-                    "http://t1.hypercube.telascience.org/cgi-bin/landsat7", 
-                    {layers: "landsat7"}
-            );
-            map.addLayer(ol_wms,landsat);
-
+           
             //Control part
             var layerPanel = new OpenLayers.Control.Panel({
         		displayClass: "layerPanel",
@@ -124,14 +147,16 @@
         
              //Create the toggle button object
             var custom_toggle_button = new OpenLayers.Control.Button({
-                displayClass: 'button3',
+                displayClass: 'olControlCustomButtonToggle',
                 eventListeners: {
-                    'activate': toggle_button_activate_func,
-                    'deactivate': toggle_button_deactivate_func
+                    "activate": toggle_button_activate_func,
+                    "deactivate": toggle_button_deactivate_func
                 },
+                type: OpenLayers.Control.TYPE_TOGGLE
+                
             });
     
-            var vpanel = new OpenLayers.Control.TextButtonPanel({
+            var vpanel = new OpenLayers.Control.Panel({
                 
                 additionalClass: "vpanel"
             });
@@ -140,7 +165,8 @@
             vpanel.addControls([custom_toggle_button]);
            
             map.addControl(vpanel);
-            map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+            
 
            
 
@@ -160,7 +186,7 @@
   </head>
   <body onload="init()">   
     <div id="panel"></div>
-    <div id="map" ></div>
+    <div id="map" class="smallmap olMap" style='width: 500px; height: 500px;'></div>
     <div id ="output"></div>
   </body>
 </html>
