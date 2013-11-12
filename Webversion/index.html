@@ -70,7 +70,7 @@
         
         .button5ItemInactive:after,
         .button5ItemActive:after {
-            content: "Button 5";
+            content:url('img/task_empty.png');
         }
     </style>
     
@@ -122,7 +122,6 @@ function init(){
               map = new OpenLayers.Map( 'map', {
                 
               eventListeners: {
-                        "click": knapptryck,
                         "moveend": mapEvent,
                         "zoomend": mapEvent,
                         "changelayer": mapLayerChanged,
@@ -156,7 +155,9 @@ function init(){
 				              displayClass: "button3"
 			         });
               
-
+					var layerButton = new OpenLayers.Control.Button({
+						displayClass: "button5"
+					});
 
 			         var mapButton = new OpenLayers.Control.Button({
                 displayClass: "button4",
@@ -177,7 +178,7 @@ function init(){
             
       });
       
-      topLeftPanel.addControls(mapButton);
+      topLeftPanel.addControls([layerButton, mapButton]);
 			vButtonPanel.addControls([b1,b2,b3]);
 
              //Layer part 
