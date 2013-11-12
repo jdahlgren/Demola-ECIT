@@ -75,15 +75,6 @@
     </style>
     
     <script type="text/javascript">
-        
-
-
-        var geographic = new OpenLayers.Projection("EPSG:4326");
-        var mercator   = new OpenLayers.Projection("EPSG:900913");
-
-        var lon = 5;
-        var lat = 40;
-        var zoom = 5;
         var map, layer;
 
         function init(){
@@ -163,20 +154,15 @@
 			vButtonPanel.addControls([b1,b2,b3]);
 
              //Layer part 
-            var wms_layer = new OpenLayers.Layer.WMS(
-                   'OpenLayers WMS',
-                   'http://vmap0.tiles.osgeo.org/wms/vmap0',
-                   {layers: 'basic'},
-                   {}
-            );
-            
-            
-            var vectorLayer = new OpenLayers.Layer.Vector('Point Vector Layer');
 
-            map.addLayer(wms_layer,vectorLayer);
+      layer = new OpenLayers.Layer.OSM("Karta");
+			map.addLayer(layer);
+			var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
+				new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+			map.setCenter(lonlat);
+			map.zoomTo(13);
+			
 
-
-           
             function drawObject(layer){
 
             }
