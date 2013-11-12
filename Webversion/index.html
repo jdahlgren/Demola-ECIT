@@ -5,6 +5,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>OpenLayers: TextButtonPanel</title>
     <script src="lib/OpenLayers.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <!--<script src="lib/Firebug/firebug.js"></script>-->
     <link rel="stylesheet" href="style.css" type="text/css"> 
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
@@ -32,15 +33,21 @@
           left: 8px;
           right: auto;
         }
+		
+		.olControlTextButtonPanel.vButtonPanel { 
+          top: 8px;
+		  left: auto;
+          right: 8px;
+        }
         
         .button1ItemInactive:after,
         .button1ItemActive:after {
-            content: "Button 1";
+            content: "Menu";
         }
         
         .button2ItemInactive:after,
         .button2ItemActive:after {
-            content: "Button 2";
+            content: "Settings";
         }
         
         .button3ItemInactive:after,
@@ -89,6 +96,33 @@
                         "changelayer": mapLayerChanged,
                         "changebaselayer": mapBaseLayerChanged
             }});
+			
+			//Buttons
+			var b1 = new OpenLayers.Control.Button({
+				trigger: function(){//Toggle visibility of submenubuttons
+					$(".button2ItemInactive").toggle();
+					$(".button2ItemActive").toggle();
+					$(".button3ItemInactive").toggle();
+					$(".button3ItemActive").toggle();
+				},
+				displayClass: "button1"
+			});
+			var b2 = new OpenLayers.Control.Button({
+				trigger: function(){},
+				displayClass: "button2"
+			});
+			var b3 = new OpenLayers.Control.Button({
+				trigger: function(){},
+				displayClass: "button3"
+			});
+			
+			//ButtonPanel
+			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
+				vertical: true,
+				additionalClass: "vButtonPanel"
+			});
+			
+			vButtonPanel.addControls([b1,b2,b3]);
 
              //Layer part 
             var wms_layer = new OpenLayers.Layer.WMS(
@@ -148,8 +182,6 @@
                 map.layers[0].setOpacity(1);
             }
 
-          
-                      //Control part
             var layerPanel = new OpenLayers.Control.Panel({
         		displayClass: "layerPanel",
         					
@@ -168,27 +200,22 @@
     
             var vpanel = new OpenLayers.Control.Panel({
                 
-                displayClass: "hpanel"
+                displayClass: "vpanel"
             });
 
 
-        vpanel.addControls([custom_toggle_button]);
-        ///map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
-        map.addControl(vpanel);
-        
-	
-            
 
+      
+      vpanel.addControls([custom_toggle_button]);
            
-
-            
-
-            
-        
-
-             
-
-
+      map.addControl(vpanel);
+			map.addControl(vButtonPanel);
+			
+			//Submenubuttons start hidden
+			$(".button2ItemInactive").hide();
+			$(".button2ItemActive").hide();
+			$(".button3ItemInactive").hide();
+			$(".button3ItemActive").hide();
 
 
               
