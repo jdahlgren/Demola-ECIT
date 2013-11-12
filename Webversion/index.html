@@ -13,34 +13,39 @@
     <style type="text/css">
          
         div.olControlZoom{
-         
           top: auto;
           bottom: 8px;
         }
         
 
 
-
-       .olControlTextButtonPanel.vpanel { 
+      
+        .olControlTextButtonPanel.topLeftPanel { 
+          
           top: 8px;
-          right: 8px;
-          left: auto;
+          right: auto;
+          left: 8px;
+          
         }
-        
-        .olControlTextButtonPanel.hpanel { 
+
+        .olControlTextButtonPanel.BottomRightPanel { 
+           background: #858585;
           top: 8px;
           bottom: auto;
           left: 8px;
           right: auto;
         }
 		
-		.olControlTextButtonPanel.vButtonPanel { 
+		    .olControlTextButtonPanel.vButtonPanel { 
           top: 8px;
-		  left: auto;
+		      left: auto;
           right: 8px;
         }
         
-        .button1ItemInactive:after,
+        .button1ItemInactive:after{
+            content: "Menu";
+            
+        }
         .button1ItemActive:after {
             content: "Menu";
         }
@@ -52,16 +57,14 @@
         
         .button3ItemInactive:after,
         .button3ItemActive:after {
-            background: #858585;
-            height: 22px;
-            width:  22px;
-            line-height: 19px;
+            
+          
             content:url('img/task_empty.png');
         }
         
         .button4ItemInactive:after,
         .button4ItemActive:after {
-            background: #858585;
+            
             content:url('img/update.png');
         }
         
@@ -115,53 +118,7 @@
 				trigger: function(){},
 				displayClass: "button3"
 			});
-			
-			//ButtonPanel
-			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
-				vertical: true,
-				additionalClass: "vButtonPanel"
-			});
-			
-			vButtonPanel.addControls([b1,b2,b3]);
-
-             //Layer part 
-            var wms_layer = new OpenLayers.Layer.WMS(
-                   'OpenLayers WMS',
-                   'http://vmap0.tiles.osgeo.org/wms/vmap0',
-                   {layers: 'basic'},
-                   {}
-            );
-            var layer2 =  new OpenLayers.Layer.WMS(
-            "Global Imagery",
-            "http://maps.opengeo.org/geowebcache/service/wms",
-            {layers: "bluemarble"},
-            {tileOrigin: new OpenLayers.LonLat(-180, -90)}
-            );
-            
-            var vectorLayer = new OpenLayers.Layer.Vector('Point Vector Layer');
-
-            map.addLayer(wms_layer,vectorLayer);
-
-
-           
-            function drawObject(layer){
-
-            }
-            function drawLayer(){
-
-            }
-            function mapEvent(event) {
-                    console.log(event.type);
-            }
-            function mapBaseLayerChanged(event) {
-                    console.log(event.type );
-            }
-                function mapLayerChanged(event) {
-                    console.log(event.type + " " + event.layer.name + " " + event.property);
-            }
-
-
-            var map_event_function = function(){
+     var map_event_function = function(){
                 console.log('Klickar på kartan');
                 map.layers[0].setOpacity(0.3);
                 
@@ -182,35 +139,79 @@
                 map.layers[0].setOpacity(1);
             }
 
-            var layerPanel = new OpenLayers.Control.Panel({
-        		displayClass: "layerPanel",
-        					
-            });
-        
-             //Create the toggle button object
-            var custom_toggle_button = new OpenLayers.Control.Button({
-                displayClass: 'button3',
+
+			var kuk_knapp = new OpenLayers.Control.Button({
+                displayClass: "button4",
                 eventListeners: {
                     "activate": toggle_button_activate_func,
                     "deactivate": toggle_button_deactivate_func
                 },
                 type: OpenLayers.Control.TYPE_TOGGLE
                 
-            });
+      });
+			//ButtonPanel
+			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
+				vertical: true,
+				additionalClass: "vButtonPanel"
+			});
+			var topLeftPanel = new OpenLayers.Control.TextButtonPanel({
+          additionalClass:"topLeftPanel"
+            
+      });
+      
+      topLeftPanel.addControls(kuk_knapp);
+			vButtonPanel.addControls([b1,b2,b3]);
+
+             //Layer part 
+            var wms_layer = new OpenLayers.Layer.WMS(
+                   'OpenLayers WMS',
+                   'http://vmap0.tiles.osgeo.org/wms/vmap0',
+                   {layers: 'basic'},
+                   {}
+            );
+            
+            
+            var vectorLayer = new OpenLayers.Layer.Vector('Point Vector Layer');
+
+            map.addLayer(wms_layer,vectorLayer);
+
+
+           
+            function drawObject(layer){
+
+            }
+            function drawLayer(){
+
+            }
+            function mapEvent(event) {
+                    console.log(event.type);
+            }
+            function mapBaseLayerChanged(event) {
+                    console.log(event.type );
+            }
+            function mapLayerChanged(event) {
+                    console.log(event.type + " " + event.layer.name + " " + event.property);
+            }
+
+
+       
+           
+             //Create the toggle button object
+     
     
-            var vpanel = new OpenLayers.Control.Panel({
-                
-                displayClass: "vpanel"
-            });
+      
+     
+            
+      
 
 
 
       
-      vpanel.addControls([custom_toggle_button]);
-           
-      map.addControl(vpanel);
+      
+   
+      
 			map.addControl(vButtonPanel);
-			
+			map.addControl(topLeftPanel);
 			//Submenubuttons start hidden
 			$(".button2ItemInactive").hide();
 			$(".button2ItemActive").hide();
@@ -223,7 +224,7 @@
     </script>
   </head>
   <body onload="init()">   
-    <div id="panel"></div>
+   
     <div id="map" class="smallmap olMap" style='width: 500px; height: 500px;'></div>
     <div id ="output"></div>
   </body>
