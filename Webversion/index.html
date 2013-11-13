@@ -43,7 +43,7 @@
         }
         
         .button1ItemInactive:after{
-            content: "Menu";
+            content: "Menu "url('img/menu.png');
             
         }
         .button1ItemActive:after {
@@ -72,6 +72,18 @@
         .button5ItemActive:after {
             content:url('img/task_empty.png');
         }
+		
+		.userButtonItemInactive:after,
+        .userButtonItemActive:after {
+            content:"UserName "url('img/user.png');
+        }
+		
+		.layersButtonItemInactive:after,
+        .layersButtonItemActive:after {
+            content:"Layers";
+        }
+		
+		
     </style>
     
     <script type="text/javascript">
@@ -143,6 +155,10 @@ function init(){
 					             $(".button2ItemActive").toggle();
 					             $(".button3ItemInactive").toggle();
 					             $(".button3ItemActive").toggle();
+								 $(".userButtonItemInactive").toggle();
+					             $(".userButtonItemActive").toggle();
+								 $(".layersButtonItemInactive").toggle();
+					             $(".layersButtonItemActive").toggle();
 				              },
 				              displayClass: "button1"
 			         });
@@ -154,20 +170,28 @@ function init(){
 				              trigger: function(){},
 				              displayClass: "button3"
 			         });
+					 
+					 var userButton = new OpenLayers.Control.Button({
+							displayClass: "userButton"
+					 });
+					 
+					 var layersButton = new OpenLayers.Control.Button({
+							displayClass: "layersButton"
+					 })
               
 					var layerButton = new OpenLayers.Control.Button({
-						displayClass: "button5"
+						displayClass: "button4"
 					});
 
 			         var mapButton = new OpenLayers.Control.Button({
-                displayClass: "button4",
-                eventListeners: {
-                    "activate": toggle_button_activate_func,
-                    "deactivate": toggle_button_deactivate_func
-                },
-                type: OpenLayers.Control.TYPE_TOGGLE
+						displayClass: "button5",
+						eventListeners: {
+							"activate": toggle_button_activate_func,
+							"deactivate": toggle_button_deactivate_func
+						},
+						type: OpenLayers.Control.TYPE_TOGGLE
                 
-      });
+					});
 			//Panel block
 			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
 				vertical: true,
@@ -178,8 +202,8 @@ function init(){
             
       });
       
-      topLeftPanel.addControls([layerButton, mapButton]);
-			vButtonPanel.addControls([b1,b2,b3]);
+      topLeftPanel.addControls([mapButton, 	layerButton]);
+			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
 
              //Layer part 
 
@@ -208,6 +232,10 @@ function init(){
 			$(".button2ItemActive").hide();
 			$(".button3ItemInactive").hide();
 			$(".button3ItemActive").hide();
+			$(".userButtonItemInactive").hide();
+			$(".userButtonItemActive").hide();
+			$(".layersButtonItemInactive").hide();
+			$(".layersButtonItemActive").hide();
 
 
               
