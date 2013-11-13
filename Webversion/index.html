@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>OpenLayers: TextButtonPanel</title>
+    <title>GI Demola</title>
     <script src="lib/OpenLayers.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <!--<script src="lib/Firebug/firebug.js"></script>-->
@@ -11,48 +11,35 @@
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     
     <style type="text/css">
-	
-		html{
-			width:100%;
-			height:100%;
-		}
-         
         div.olControlZoom{
-          top: auto;
-          bottom: 8px;
+			top: auto;
+			bottom: 8px;
         }
-        
-
-
       
-        .olControlTextButtonPanel.topLeftPanel { 
-          
-          top: 8px;
-          right: auto;
-          left: 8px;
-          
+        .olControlTextButtonPanel.topLeftPanel {           
+			top: 8px;
+			right: auto;
+			left: 8px;
         }
 
         .olControlTextButtonPanel.BottomRightPanel { 
-           background: #858585;
-          top: 8px;
-          bottom: auto;
-          left: 8px;
-          right: auto;
+			background: #858585;
+			top: 8px;
+			bottom: auto;
+			left: 8px;
+			right: auto;
         }
 		
-		    .olControlTextButtonPanel.vButtonPanel { 
-          top: 8px;
-		      left: auto;
-          right: 8px;
+		.olControlTextButtonPanel.vButtonPanel { 
+			top: 8px;
+			left: auto;
+			right: 8px;
         }
         
-        .button1ItemInactive:after{
-            content: "Menu "url('img/menu.png');
+        .button1ItemInactive:after,
+		.button1ItemActive:after {
+			content: "Menu " url('img/menu.png');
             
-        }
-        .button1ItemActive:after {
-            content: "Menu";
         }
         
         .button2ItemInactive:after,
@@ -61,15 +48,12 @@
         }
         
         .button3ItemInactive:after,
-        .button3ItemActive:after {
-            
-          
+        .button3ItemActive:after {          
             content:url('img/task_empty.png');
         }
         
         .button4ItemInactive:after,
-        .button4ItemActive:after {
-            
+        .button4ItemActive:after {            
             content:url('img/update.png');
         }
         
@@ -80,140 +64,131 @@
 		
 		.userButtonItemInactive:after,
         .userButtonItemActive:after {
-            content:"UserName "url('img/user.png');
+            content:"UserName " url('img/user.png');
         }
 		
 		.layersButtonItemInactive:after,
         .layersButtonItemActive:after {
             content:"Layers";
-        }
-		
-		
+        }		
     </style>
     
     <script type="text/javascript">
-        
+        var map, layer;
 
-
-var map, layer;
-
-function init(){
-             //Functions block 
-             //map functions
-             var map_event_function = function(){
-                console.log('Klickar på kartan');
+		function init(){
+            //Functions block 
+            //map functions
+            var map_event_function = function(){
+				console.log('Klickar på kartan');
                 map.layers[0].setOpacity(0.3);
-                
-              }
-              //Layer block
-              
+            }
+            
+			//Layer block
 
-              //Button block
-              
+            //Button block
 
-              
-              //Då knappen är aktiv som så lyssnar man på kartans eventlistener !
-              //Create a function for the toggle button
-              
-              var toggle_button_activate_func = function(){
-                  console.log('toggle_button_activate_func');
-                 //Attach the map_event_function to the map
-                 map.events.register('click', map, map_event_function);
-              }
-              //Tar bort eventlistener
-              var toggle_button_deactivate_func = function(){
-                console.log('toggle_button_deactivate_func');
+			//Då knappen är aktiv som så lyssnar man på kartans eventlistener !
+            //Create a function for the toggle button
+            var toggle_button_activate_func = function(){
+                console.log('toggle_button_activate_func');
+                //Attach the map_event_function to the map
+                map.events.register('click', map, map_event_function);
+            }
+            //Tar bort eventlistener
+            var toggle_button_deactivate_func = function(){
+				console.log('toggle_button_deactivate_func');
                 //Remove the map_event_function from the map
                 map.events.unregister('click', map, map_event_function);
                 //Restore the layer's opacity
                 map.layers[0].setOpacity(1);
-              }
+            }
 
-
-              //Panel block
+			//Panel block
               
-              //--------------------------------------------------------End Functions block------------------------------------------------
-              //---------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------End Functions block------------------------------------------------
+            //---------------------------------------------------------------------------------------------------------------------------
+            
+			//--------------------------------------------------------Start Content block------------------------------------------------
+            //---------------------------------------------------------------------------------------------------------------------------
               
               //Map block
-              map = new OpenLayers.Map( 'map', {
-                
-              eventListeners: {
-                        "moveend": mapEvent,
-                        "zoomend": mapEvent,
-                        "changelayer": mapLayerChanged,
-                        "changebaselayer": mapBaseLayerChanged
-              }});
-              //Layer block
-              layer = new OpenLayers.Layer.OSM("Karta");
-              map.addLayer(layer);
-              var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
-              new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
-              map.setCenter(lonlat);
-              map.zoomTo(13);
+            map = new OpenLayers.Map( 'map', {
+				eventListeners: {
+                    "moveend": mapEvent,
+                    "zoomend": mapEvent,
+                    "changelayer": mapLayerChanged,
+                    "changebaselayer": mapBaseLayerChanged
+            }});
+            
+			//Layer block
+            layer = new OpenLayers.Layer.OSM("Karta");
+            map.addLayer(layer);
+            var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
+            new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+            map.setCenter(lonlat);
+            map.zoomTo(13);
       
 			         
-			         //Button block
-			         var b1 = new OpenLayers.Control.Button({
-				              trigger: function(){//Toggle visibility of submenubuttons
-					             $(".button2ItemInactive").toggle();
-					             $(".button2ItemActive").toggle();
-					             $(".button3ItemInactive").toggle();
-					             $(".button3ItemActive").toggle();
-								 $(".userButtonItemInactive").toggle();
-					             $(".userButtonItemActive").toggle();
-								 $(".layersButtonItemInactive").toggle();
-					             $(".layersButtonItemActive").toggle();
-				              },
-				              displayClass: "button1"
-			         });
-			         var b2 = new OpenLayers.Control.Button({
-				              trigger: function(){},
-				              displayClass: "button2"
-			         });
-			         var b3 = new OpenLayers.Control.Button({
-				              trigger: function(){},
-				              displayClass: "button3"
-			         });
-					 
-					 var userButton = new OpenLayers.Control.Button({
-							displayClass: "userButton"
-					 });
-					 
-					 var layersButton = new OpenLayers.Control.Button({
-							displayClass: "layersButton"
-					 })
-              
-					var layerButton = new OpenLayers.Control.Button({
-						displayClass: "button4"
-					});
+			//Button block
+			var b1 = new OpenLayers.Control.Button({
+				trigger: function(){//Toggle visibility of submenubuttons
+					$(".button2ItemInactive").toggle();
+					$(".button2ItemActive").toggle();
+					$(".button3ItemInactive").toggle();
+					$(".button3ItemActive").toggle();
+					$(".userButtonItemInactive").toggle();
+					$(".userButtonItemActive").toggle();
+					$(".layersButtonItemInactive").toggle();
+					$(".layersButtonItemActive").toggle();
+				},
+				displayClass: "button1"
+			});
+			
+			var b2 = new OpenLayers.Control.Button({
+				trigger: function(){},
+				displayClass: "button2"
+			});
+			
+			var b3 = new OpenLayers.Control.Button({
+				trigger: function(){},
+				displayClass: "button3"
+			});
+			 
+			var userButton = new OpenLayers.Control.Button({
+				displayClass: "userButton"
+			});
+			 
+			var layersButton = new OpenLayers.Control.Button({
+				displayClass: "layersButton"
+			})
+	  
+			var layerButton = new OpenLayers.Control.Button({
+				displayClass: "button4"
+			});
 
-			         var mapButton = new OpenLayers.Control.Button({
-						displayClass: "button5",
-						eventListeners: {
-							"activate": toggle_button_activate_func,
-							"deactivate": toggle_button_deactivate_func
-						},
-						type: OpenLayers.Control.TYPE_TOGGLE
-                
-					});
+			var mapButton = new OpenLayers.Control.Button({
+				displayClass: "button5",
+				eventListeners: {
+					"activate": toggle_button_activate_func,
+					"deactivate": toggle_button_deactivate_func
+				},
+				type: OpenLayers.Control.TYPE_TOGGLE
+			});
+			
 			//Panel block
 			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
 				vertical: true,
 				additionalClass: "vButtonPanel"
 			});
 			var topLeftPanel = new OpenLayers.Control.TextButtonPanel({
-          additionalClass:"topLeftPanel"
-            
-      });
+				additionalClass:"topLeftPanel"
+			});
       
-      topLeftPanel.addControls([mapButton, 	layerButton]);
+			topLeftPanel.addControls([mapButton, 	layerButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
 
-             //Layer part 
-
-     
-
+            //Layer part 
             function drawObject(layer){
 
             }
@@ -221,13 +196,13 @@ function init(){
 
             }
             function mapEvent(event) {
-                    console.log(event.type);
+                console.log(event.type);
             }
             function mapBaseLayerChanged(event) {
-                    console.log(event.type );
+                console.log(event.type );
             }
             function mapLayerChanged(event) {
-                    console.log(event.type + " " + event.layer.name + " " + event.property);
+                console.log(event.type + " " + event.layer.name + " " + event.property);
             }
 
 			map.addControl(vButtonPanel);
@@ -241,14 +216,10 @@ function init(){
 			$(".userButtonItemActive").hide();
 			$(".layersButtonItemInactive").hide();
 			$(".layersButtonItemActive").hide();
-
-
-              
         }
     </script>
   </head>
   <body onload="init()">   
-   
     <div id="map" class="smallmap olMap" ><!--style='width: 500px; height: 500px;'--></div>
     <div id ="output"></div>
   </body>
