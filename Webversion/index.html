@@ -117,12 +117,11 @@ function init(){
               
               //--------------------------------------------------------End Functions block------------------------------------------------
               //---------------------------------------------------------------------------------------------------------------------------
-              
+
               //Map block
               map = new OpenLayers.Map( 'map', {
                 
               eventListeners: {
-                        "click": knapptryck,
                         "moveend": mapEvent,
                         "zoomend": mapEvent,
                         "changelayer": mapLayerChanged,
@@ -130,9 +129,25 @@ function init(){
               }});
               //Layer block
               layer = new OpenLayers.Layer.OSM("Karta");
+              
+              var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+              
+              
+              
               map.addLayer(layer);
-              var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
-              new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+              //PointLayer is added above the OSM layer.
+
+              map.addLayer(pointLayer);
+
+
+
+
+
+
+              var lonlat = new OpenLayers.LonLat(16.19,58.59).transform( new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+
+              
+
               map.setCenter(lonlat);
               map.zoomTo(13);
       
