@@ -124,11 +124,38 @@
             
 			 //Layer block
             layer = new OpenLayers.Layer.OSM("Karta");
-            var vector_layer = new OpenLayers.Layer.Vector('Basic Vector Layer');
-            
+            var vector_layer = new OpenLayers.Layer.Vector('Basic Vector Layer',{
+				eventListeners:{
+					"featureselected":function(evt){
+						var feature = evt.feature;
+						var popup = new OpenLayers.Popup.Anchored("popup",
+							feature.geometry.getBounds().getCenterLonLat(),
+							null,
+							"HEJ!",
+							null,
+							true
+						);					
+						feature.popup = popup;
+						map.addPopup(popup);
+					},
+					"featureunselected":function(evt){
+						var feature = evt.feature;
+						map.removePopup(feature.popup);
+						feature.popup.destroy();
+						feature.popup = null;
+					}
+				}				
+			});
+			
             map.addLayer(layer);
-            map.addLayer(vector_layer);
+            map.addLayer(vector_layer);			
+			vector_layer.addFeatures(map.layers[1].features);
             
+			var selector = new OpenLayers.Control.SelectFeature(vector_layer,{
+				hover:true,
+				autoActivate:true
+			});
+			
             var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
             new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
             map.setCenter(lonlat);
@@ -213,7 +240,9 @@
 
 			map.addControl(vButtonPanel);
 			map.addControl(topLeftPanel);
-      map.addControl(new OpenLayers.Control.EditingToolbar(vector_layer));
+			map.addControl(new OpenLayers.Control.EditingToolbar(vector_layer));
+			map.addControl(selector);
+			
 			//Submenubuttons start hidden
 			$(".button2ItemInactive").hide();
 			$(".button2ItemActive").hide();
