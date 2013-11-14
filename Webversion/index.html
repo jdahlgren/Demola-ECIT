@@ -122,10 +122,12 @@
                     "changebaselayer": mapBaseLayerChanged
             }});
             
-			//Layer block
+			 //Layer block
             layer = new OpenLayers.Layer.OSM("Karta");
-            var pointLayer = new OpenLayers.Layer.Vector("Point Layer");
+            var vector_layer = new OpenLayers.Layer.Vector('Basic Vector Layer');
+            
             map.addLayer(layer);
+            map.addLayer(vector_layer);
             
             var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
             new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
@@ -191,7 +193,7 @@
       
 			topLeftPanel.addControls([mapButton, 	layerButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
-
+      
             //Layer part 
             function drawObject(layer){
 
@@ -211,6 +213,7 @@
 
 			map.addControl(vButtonPanel);
 			map.addControl(topLeftPanel);
+      map.addControl(new OpenLayers.Control.EditingToolbar(vector_layer));
 			//Submenubuttons start hidden
 			$(".button2ItemInactive").hide();
 			$(".button2ItemActive").hide();
