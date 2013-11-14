@@ -11,7 +11,12 @@
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     
     <style type="text/css">
-        div.olControlZoom{
+      div.olControlEditingToolbar{
+        top:60px;
+        right:auto;
+        left: 8px;
+      }
+      div.olControlZoom{
 			top: auto;
 			bottom: 8px;
         }
@@ -34,6 +39,12 @@
 			top: 8px;
 			left: auto;
 			right: 8px;
+        }
+
+      .olControlPanel.vectorPanel { 
+      top: 8px;
+      left: auto;
+      right: 8px;
         }
         
         .button1ItemInactive:after,
@@ -124,10 +135,10 @@
             
 			 //Layer block
             layer = new OpenLayers.Layer.OSM("Karta");
-            var vector_layer = new OpenLayers.Layer.Vector('Basic Vector Layer');
+            var vectorLayer = new OpenLayers.Layer.Vector("Basic Layer");
             
             map.addLayer(layer);
-            map.addLayer(vector_layer);
+            map.addLayer(vectorLayer);
             
             var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
             new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
@@ -190,32 +201,59 @@
 			var topLeftPanel = new OpenLayers.Control.TextButtonPanel({
 				additionalClass:"topLeftPanel"
 			});
-      
-			topLeftPanel.addControls([mapButton, 	layerButton]);
+      //var vectorPanel  = new OpenLayers.Control.EditingToolbar(vector_layer,{additionalClass:"vectorPanel"});
+			
+
+      /*
+      drawControls = {
+                      point: new OpenLayers.Control.DrawFeature(pointLayer,
+                            OpenLayers.Handler.Point),
+                      line: new OpenLayers.Control.DrawFeature(lineLayer,
+                            OpenLayers.Handler.Path),
+                      polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
+                            OpenLayers.Handler.Polygon),
+                      box: new OpenLayers.Control.DrawFeature(boxLayer,
+                                OpenLayers.Handler.RegularPolygon, {
+                                  handlerOptions: {
+                                  sides: 4,
+                                  irregular: true }})};
+      */
+
+    
+
+      topLeftPanel.addControls([mapButton, 	layerButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
       
             //Layer part 
-            function drawObject(layer){
+      function drawObject(layer){
 
-            }
-            function drawLayer(){
+      }
+      function drawLayer(){
 
-            }
-            function mapEvent(event) {
+      }
+      function mapEvent(event){
                 console.log(event.type);
-            }
-            function mapBaseLayerChanged(event) {
+      }
+      function mapBaseLayerChanged(event) {
                 console.log(event.type );
-            }
-            function mapLayerChanged(event) {
+      }
+      function mapLayerChanged(event) {
                 console.log(event.type + " " + event.layer.name + " " + event.property);
-            }
+      }
 
+      /*
+      for(var key in drawControls) {
+            map.addControl(drawControls[key]);
+      } 
+  */
 			map.addControl(vButtonPanel);
 			map.addControl(topLeftPanel);
-      map.addControl(new OpenLayers.Control.EditingToolbar(vector_layer));
-			//Submenubuttons start hidden
-			$(".button2ItemInactive").hide();
+      map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+			
+
+      //Submenubuttons start hidden
+			
+      $(".button2ItemInactive").hide();
 			$(".button2ItemActive").hide();
 			$(".button3ItemInactive").hide();
 			$(".button3ItemActive").hide();
@@ -223,11 +261,11 @@
 			$(".userButtonItemActive").hide();
 			$(".layersButtonItemInactive").hide();
 			$(".layersButtonItemActive").hide();
-        }
+    }
     </script>
   </head>
   <body onload="init()">   
-    <div id="map" class="smallmap olMap" ><!--style='width: 500px; height: 500px;'--></div>
+    <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
     <div id ="output"></div>
   </body>
 </html>
