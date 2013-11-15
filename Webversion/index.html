@@ -110,9 +110,51 @@
 		var alertEditToolbar, infoEditToolbar, vehicleEditToolbar, peopleEditToolbar;
 
 
+     var alert_style = new OpenLayers.Style({
+        'fillColor': '#FF0000',
+        'fillOpacity': .8,
+        'strokeColor': '#aaee77',
+        'strokeWidth': 3,
+         'pointRadius': 8
+      });
+     var vehicle_style = new OpenLayers.Style({
+        'fillColor': '#00ff00',
+        'fillOpacity': .8,
+        'strokeColor': '#aaee77',
+        'strokeWidth': 3,
+         'pointRadius': 8
+      });
+     var people_style = new OpenLayers.Style({
+        'fillColor': '#0000ff',
+        'fillOpacity': .8,
+        'strokeColor': '#aaee77',
+        'strokeWidth': 3,
+         'pointRadius': 8
+      });
+     var info_style = new OpenLayers.Style({
+        'fillColor': '#f0f30',
+        'fillOpacity': .8,
+        'strokeColor': '#aaee77',
+        'strokeWidth': 3,
+         'pointRadius': 8
+      });
+      var alert_style_map = new OpenLayers.StyleMap({
+           'default': alert_style
+      });
+      var vehicle_style_map = new OpenLayers.StyleMap({
+           'default': vehicle_style
+      });
+      var people_style_map = new OpenLayers.StyleMap({
+           'default': people_style
+      });
+
+      var info_style_map = new OpenLayers.StyleMap({
+           'default': info_style
+      });
+
 		function init(){
-            //Functions block 
-            //map functions
+      //Functions block 
+      //map functions
             var map_event_function = function(){
 				        console.log('Klickar på kartan');
                 map.layers[0].setOpacity(0.3);
@@ -173,8 +215,8 @@
 			//--------------------------------------------------------Start Content block------------------------------------------------
       //---------------------------------------------------------------------------------------------------------------------------
               
-              //Map block
-            map = new OpenLayers.Map( 'map', {
+      //Map block
+      map = new OpenLayers.Map( 'map', {
 				    eventListeners: {
                     "moveend": mapEvent,
                     "zoomend": mapEvent,
@@ -183,9 +225,9 @@
             }});
             
 			 //Layer block
-            layer = new OpenLayers.Layer.OSM("Karta");
+        layer = new OpenLayers.Layer.OSM("Karta");
 			
-            var vectorLayer = new OpenLayers.Layer.Vector('Basic Vector Layer',{
+        var vectorLayer = new OpenLayers.Layer.Vector('Basic Vector Layer',{
 				                      eventListeners:{
 					                     "featureselected":function(evt){
 						                    var feature = evt.feature;
@@ -229,6 +271,9 @@
 					}
 				}				
 			});
+     
+      alertLayer.styleMap = alert_style_map;
+
 			var infoLayer = new OpenLayers.Layer.Vector('Info Layer',{
 				eventListeners:{
 					"featureselected":function(evt){
@@ -251,6 +296,7 @@
 					}
 				}				
 			});
+      infoLayer.styleMap = info_style_map;
 			var peopleLayer = new OpenLayers.Layer.Vector('People Layer',{
 				eventListeners:{
 					"featureselected":function(evt){
@@ -273,6 +319,7 @@
 					}
 				}				
 			});
+      peopleLayer.styleMap = people_style_map;
 			var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
 				eventListeners:{
 					"featureselected":function(evt){
@@ -295,23 +342,20 @@
 					}
 				}				
 			});
-			
-            map.addLayer(layer);
-            map.addLayer(vectorLayer);			
+			vehicleLayer.styleMap = vehicle_style_map;
+      map.addLayer(layer);
+      map.addLayer(vectorLayer);			
 			map.addLayer(alertLayer);
 			map.addLayer(infoLayer);
 			map.addLayer(vehicleLayer);
 			map.addLayer(peopleLayer);
-			vectorLayer.addFeatures(map.layers[1].features);
-			alertLayer.addFeatures(map.layers[2].features);
-			infoLayer.addFeatures(map.layers[3].features);
-			peopleLayer.addFeatures(map.layers[4].features);
-			vehicleLayer.addFeatures(map.layers[5].features);
-			alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
+			
+      alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
 			infoEditToolbar = new OpenLayers.Control.EditingToolbar(infoLayer);
 			vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
 			peopleEditToolbar = new OpenLayers.Control.EditingToolbar(peopleLayer);
-			alertEditToolbar.autoActivate = false;
+			
+      alertEditToolbar.autoActivate = false;
 			infoEditToolbar.autoActivate = false;
 			vehicleEditToolbar.autoActivate = false;
 			peopleEditToolbar.autoActivate = false;
