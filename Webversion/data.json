@@ -1,0 +1,33 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": "OpenLayers.Feature.Vector_1489",
+            "properties": {},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            16.19,
+                            58.59
+                        ],
+                        [
+                            16.198,
+                            58.59
+                        ],
+                         [
+                            16.198,
+                            58.57
+                        ],
+                        [
+                            16.19,
+                            58.57
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
+}

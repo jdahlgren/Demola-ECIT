@@ -47,11 +47,11 @@
       right: 8px;
         }
         
-        .button1ItemInactive:after,
-		.button1ItemActive:after {
-			content: "Menu " url('img/menu.png');
+      .button1ItemInactive:after,
+		  .button1ItemActive:after {
+			     content: "Menu " url('img/menu.png');
             
-        }
+      }
         
         .button2ItemInactive:after,
         .button2ItemActive:after {
@@ -73,7 +73,7 @@
             content:url('img/task_empty.png');
         }
 		
-		.userButtonItemInactive:after,
+		    .userButtonItemInactive:after,
         .userButtonItemActive:after {
             content:"UserName " url('img/user.png');
         }
@@ -85,13 +85,13 @@
     </style>
     
     <script type="text/javascript">
-        var map, layer;
+    var map, layer;
 
 		function init(){
             //Functions block 
             //map functions
             var map_event_function = function(){
-				console.log('Klickar på kartan');
+				        console.log('Klickar på kartan');
                 map.layers[0].setOpacity(0.3);
             }
             
@@ -108,7 +108,7 @@
             }
             //Tar bort eventlistener
             var toggle_button_deactivate_func = function(){
-				console.log('toggle_button_deactivate_func');
+				        console.log('toggle_button_deactivate_func');
                 //Remove the map_event_function from the map
                 map.events.unregister('click', map, map_event_function);
                 //Restore the layer's opacity
@@ -118,15 +118,15 @@
 			//Panel block
               
 
-            //--------------------------------------------------------End Functions block------------------------------------------------
-            //---------------------------------------------------------------------------------------------------------------------------
+      //--------------------------------------------------------End Functions block------------------------------------------------
+      //---------------------------------------------------------------------------------------------------------------------------
             
 			//--------------------------------------------------------Start Content block------------------------------------------------
-            //---------------------------------------------------------------------------------------------------------------------------
+      //---------------------------------------------------------------------------------------------------------------------------
               
               //Map block
             map = new OpenLayers.Map( 'map', {
-				eventListeners: {
+				    eventListeners: {
                     "moveend": mapEvent,
                     "zoomend": mapEvent,
                     "changelayer": mapLayerChanged,
@@ -137,15 +137,15 @@
             layer = new OpenLayers.Layer.OSM("Karta");
 			
             var vectorLayer = new OpenLayers.Layer.Vector('Basic Vector Layer',{
-				eventListeners:{
-					"featureselected":function(evt){
-						var feature = evt.feature;
-						var popup = new OpenLayers.Popup.Anchored("popup",
-							feature.geometry.getBounds().getCenterLonLat(),
-							null,
-							"HEJ!",
-							null,
-							true
+				                      eventListeners:{
+					                     "featureselected":function(evt){
+						                    var feature = evt.feature;
+						                    var popup = new OpenLayers.Popup.Anchored("popup",
+							                               feature.geometry.getBounds().getCenterLonLat(),
+							                               null,
+							                               "HEJ!",
+							                               null,
+							                               true
 						);					
 						feature.popup = popup;
 						map.addPopup(popup);
@@ -175,8 +175,17 @@
             map.setCenter(lonlat);
             map.zoomTo(13);
 
-      
-			         
+      //Format object for reading fromfiles !
+      //Create a Format object
+     var geojson_layer = new OpenLayers.Layer.Vector("GeoJSON", {
+            projection: "EPSG:4326",
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "data.json",
+                format: new OpenLayers.Format.GeoJSON()
+            })
+        });
+       map.addLayer(geojson_layer);
 			//Button block
 			var b1 = new OpenLayers.Control.Button({
 				trigger: function(){//Toggle visibility of submenubuttons
@@ -275,7 +284,7 @@
       for(var key in drawControls) {
             map.addControl(drawControls[key]);
       } 
-  */
+      */
 			map.addControl(vButtonPanel);
 			map.addControl(topLeftPanel);
 			map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
