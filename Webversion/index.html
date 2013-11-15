@@ -81,11 +81,34 @@
 		.layersButtonItemInactive:after,
         .layersButtonItemActive:after {
             content:"Layers";
+        }	
+		.alertButtonItemInactive:after,
+        .alertButtonItemActive:after {
+            content: "Alert";
+        }
+		.infoButtonItemInactive:after,
+        .infoButtonItemActive:after {
+            content: "Info";
+        }
+		.vehicleButtonItemInactive:after,
+        .vehicleButtonItemActive:after {
+            content: "Vehicles";
+        }
+		.peopleButtonItemInactive:after,
+        .peopleButtonItemActive:after {
+            content: "People";
         }		
     </style>
     
     <script type="text/javascript">
+
     var map, layer;
+		var alert = false;
+		var info = false;
+		var vehicles = false;
+		var people = false;
+		var alertEditToolbar, infoEditToolbar, vehicleEditToolbar, peopleEditToolbar;
+
 
 		function init(){
             //Functions block 
@@ -96,6 +119,32 @@
             }
             
 			//Layer block
+			var setLayerToDrawFeature = function(){
+				if(alert){
+					alertEditToolbar.activate();
+					infoEditToolbar.deactivate();
+					vehicleEditToolbar.deactivate();
+					peopleEditToolbar.deactivate();
+				}
+				else if(info){
+					alertEditToolbar.deactivate();
+					infoEditToolbar.activate();
+					vehicleEditToolbar.deactivate();
+					peopleEditToolbar.deactivate();
+				}
+				else if(vehicles){
+					alertEditToolbar.deactivate();
+					infoEditToolbar.deactivate();
+					vehicleEditToolbar.activate();
+					peopleEditToolbar.deactivate();
+				}
+				else if(people){
+					alertEditToolbar.deactivate();
+					infoEditToolbar.deactivate();
+					vehicleEditToolbar.deactivate();
+					peopleEditToolbar.activate();
+				}
+			}
 
             //Button block
 
@@ -158,13 +207,117 @@
 					}
 				}				
 			});
+			var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
+				eventListeners:{
+					"featureselected":function(evt){
+						var feature = evt.feature;
+						var popup = new OpenLayers.Popup.Anchored("alert popup",
+							feature.geometry.getBounds().getCenterLonLat(),
+							null,
+							"ALERT!",
+							null,
+							true
+						);					
+						feature.popup = popup;
+						map.addPopup(popup);
+					},
+					"featureunselected":function(evt){
+						var feature = evt.feature;
+						map.removePopup(feature.popup);
+						feature.popup.destroy();
+						feature.popup = null;
+					}
+				}				
+			});
+			var infoLayer = new OpenLayers.Layer.Vector('Info Layer',{
+				eventListeners:{
+					"featureselected":function(evt){
+						var feature = evt.feature;
+						var popup = new OpenLayers.Popup.Anchored("info popup",
+							feature.geometry.getBounds().getCenterLonLat(),
+							null,
+							"Information",
+							null,
+							true
+						);					
+						feature.popup = popup;
+						map.addPopup(popup);
+					},
+					"featureunselected":function(evt){
+						var feature = evt.feature;
+						map.removePopup(feature.popup);
+						feature.popup.destroy();
+						feature.popup = null;
+					}
+				}				
+			});
+			var peopleLayer = new OpenLayers.Layer.Vector('People Layer',{
+				eventListeners:{
+					"featureselected":function(evt){
+						var feature = evt.feature;
+						var popup = new OpenLayers.Popup.Anchored("people popup",
+							feature.geometry.getBounds().getCenterLonLat(),
+							null,
+							"Fredrik Reinfeldt",
+							null,
+							true
+						);					
+						feature.popup = popup;
+						map.addPopup(popup);
+					},
+					"featureunselected":function(evt){
+						var feature = evt.feature;
+						map.removePopup(feature.popup);
+						feature.popup.destroy();
+						feature.popup = null;
+					}
+				}				
+			});
+			var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
+				eventListeners:{
+					"featureselected":function(evt){
+						var feature = evt.feature;
+						var popup = new OpenLayers.Popup.Anchored("vehicle popup",
+							feature.geometry.getBounds().getCenterLonLat(),
+							null,
+							"Fire truck",
+							null,
+							true
+						);					
+						feature.popup = popup;
+						map.addPopup(popup);
+					},
+					"featureunselected":function(evt){
+						var feature = evt.feature;
+						map.removePopup(feature.popup);
+						feature.popup.destroy();
+						feature.popup = null;
+					}
+				}				
+			});
 			
             map.addLayer(layer);
             map.addLayer(vectorLayer);			
+			map.addLayer(alertLayer);
+			map.addLayer(infoLayer);
+			map.addLayer(vehicleLayer);
+			map.addLayer(peopleLayer);
 			vectorLayer.addFeatures(map.layers[1].features);
+			alertLayer.addFeatures(map.layers[2].features);
+			infoLayer.addFeatures(map.layers[3].features);
+			peopleLayer.addFeatures(map.layers[4].features);
+			vehicleLayer.addFeatures(map.layers[5].features);
+			alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
+			infoEditToolbar = new OpenLayers.Control.EditingToolbar(infoLayer);
+			vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
+			peopleEditToolbar = new OpenLayers.Control.EditingToolbar(peopleLayer);
+			alertEditToolbar.autoActivate = false;
+			infoEditToolbar.autoActivate = false;
+			vehicleEditToolbar.autoActivate = false;
+			peopleEditToolbar.autoActivate = false;
 
             
-			var selector = new OpenLayers.Control.SelectFeature(vectorLayer,{
+			var selector = new OpenLayers.Control.SelectFeature([vectorLayer, alertLayer, infoLayer, vehicleLayer, peopleLayer],{
 				hover:false,
 				toggle:true,
 				autoActivate:true
@@ -232,6 +385,51 @@
 				type: OpenLayers.Control.TYPE_TOGGLE
 			});
 			
+			var alertButton = new OpenLayers.Control.Button({
+				displayClass: "alertButton",
+				trigger: function(){
+					
+					alert = true;
+					info = false;
+					vehicles = false;
+					people = false;
+					setLayerToDrawFeature();
+				}
+			});
+			var infoButton = new OpenLayers.Control.Button({
+				displayClass: "infoButton",
+				trigger: function(){
+					
+					alert = false;
+					info = true;
+					vehicles = false;
+					people = false;
+					setLayerToDrawFeature();
+				}
+			});
+			var vehicleButton = new OpenLayers.Control.Button({
+				displayClass: "vehicleButton",
+				trigger: function(){
+					
+					alert = false;
+					info = false;
+					vehicles = true;
+					people = false;
+					setLayerToDrawFeature();
+				}
+			});
+			var peopleButton = new OpenLayers.Control.Button({
+				displayClass: "peopleButton",
+				trigger: function(){
+					
+					alert = false;
+					info = false;
+					vehicles = false;
+					people = true;
+					setLayerToDrawFeature();
+				}
+			});
+			
 			//Panel block
 			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
 				vertical: true,
@@ -260,7 +458,7 @@
 
     
 
-      topLeftPanel.addControls([mapButton, 	layerButton]);
+      topLeftPanel.addControls([mapButton, layerButton, alertButton, infoButton, vehicleButton, peopleButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
       
             //Layer part 
@@ -287,7 +485,13 @@
       */
 			map.addControl(vButtonPanel);
 			map.addControl(topLeftPanel);
-			map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+			//Choose layer to add features
+			
+			//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+			map.addControl(alertEditToolbar);
+			map.addControl(infoEditToolbar);
+			map.addControl(vehicleEditToolbar);
+			map.addControl(peopleEditToolbar);
 			map.addControl(selector);
 
 			//Submenubuttons start hidden
