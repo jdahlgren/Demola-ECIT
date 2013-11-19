@@ -11,6 +11,14 @@
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     
     <style type="text/css">
+      
+      #geo_popup{
+
+        border-radius: 5px;
+        color: red;
+
+      }
+
       div.olControlEditingToolbar{
         top:60px;
         right:auto;
@@ -101,273 +109,37 @@
     </style>
     
     <script type="text/javascript">
-
-    var map, layer;
-		var alert = false;
-		var info = false;
-		var vehicles = false;
-		var people = false;
-		var alertEditToolbar, infoEditToolbar, vehicleEditToolbar, peopleEditToolbar;
-
-
-     var alert_style = new OpenLayers.Style({
-        'fillColor': '#FF0000',
-        'fillOpacity': .8,
-        'strokeColor': '#aaee77',
-        'strokeWidth': 3,
-         'pointRadius': 8
-      });
-     var vehicle_style = new OpenLayers.Style({
+var map;
+var geo_style = new OpenLayers.Style({
         'fillColor': '#00ff00',
         'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
          'pointRadius': 8
       });
-     var people_style = new OpenLayers.Style({
-        'fillColor': '#0000ff',
-        'fillOpacity': .8,
-        'strokeColor': '#aaee77',
-        'strokeWidth': 3,
+var alert_style = new OpenLayers.Style({
+        'fillColor': '#b61a1e',
+        'fillOpacity': .2,
+        'strokeColor': '#FF0000',
+        'strokeWidth': 1,
          'pointRadius': 8
       });
-     var info_style = new OpenLayers.Style({
-        'fillColor': '#f0f30',
-        'fillOpacity': .8,
-        'strokeColor': '#aaee77',
-        'strokeWidth': 3,
-         'pointRadius': 8
-      });
-      var alert_style_map = new OpenLayers.StyleMap({
+var alert_style_map = new OpenLayers.StyleMap({
            'default': alert_style
       });
-      var vehicle_style_map = new OpenLayers.StyleMap({
-           'default': vehicle_style
+var geo_style_map = new OpenLayers.StyleMap({
+           'default': geo_style
       });
-      var people_style_map = new OpenLayers.StyleMap({
-           'default': people_style
-      });
-
-      var info_style_map = new OpenLayers.StyleMap({
-           'default': info_style
-      });
-
-		function init(){
-      //Functions block 
-      //map functions
-            var map_event_function = function(){
-				        console.log('Klickar på kartan');
-                map.layers[0].setOpacity(0.3);
-            }
-            
-			//Layer block
-			var setLayerToDrawFeature = function(){
-				if(alert){
-					alertEditToolbar.activate();
-					infoEditToolbar.deactivate();
-					vehicleEditToolbar.deactivate();
-					peopleEditToolbar.deactivate();
-				}
-				else if(info){
-					alertEditToolbar.deactivate();
-					infoEditToolbar.activate();
-					vehicleEditToolbar.deactivate();
-					peopleEditToolbar.deactivate();
-				}
-				else if(vehicles){
-					alertEditToolbar.deactivate();
-					infoEditToolbar.deactivate();
-					vehicleEditToolbar.activate();
-					peopleEditToolbar.deactivate();
-				}
-				else if(people){
-					alertEditToolbar.deactivate();
-					infoEditToolbar.deactivate();
-					vehicleEditToolbar.deactivate();
-					peopleEditToolbar.activate();
-				}
-			}
-
-            //Button block
-
-			//Då knappen är aktiv som så lyssnar man på kartans eventlistener !
-            //Create a function for the toggle button
-            var toggle_button_activate_func = function(){
-                console.log('toggle_button_activate_func');
-                //Attach the map_event_function to the map
-                map.events.register('click', map, map_event_function);
-            }
-            //Tar bort eventlistener
-            var toggle_button_deactivate_func = function(){
-				        console.log('toggle_button_deactivate_func');
-                //Remove the map_event_function from the map
-                map.events.unregister('click', map, map_event_function);
-                //Restore the layer's opacity
-                map.layers[0].setOpacity(1);
-            }
-
-			//Panel block
-              
-
-      //--------------------------------------------------------End Functions block------------------------------------------------
-      //---------------------------------------------------------------------------------------------------------------------------
-            
-			//--------------------------------------------------------Start Content block------------------------------------------------
-      //---------------------------------------------------------------------------------------------------------------------------
-              
+function init(){
+      
       //Map block
-      map = new OpenLayers.Map( 'map', {
-				    eventListeners: {
-                    "moveend": mapEvent,
-                    "zoomend": mapEvent,
-                    "changelayer": mapLayerChanged,
-                    "changebaselayer": mapBaseLayerChanged
-            }});
+      map = new OpenLayers.Map('map');
             
-			 //Layer block
-        layer = new OpenLayers.Layer.OSM("Karta");
-			
-        var vectorLayer = new OpenLayers.Layer.Vector('Basic Vector Layer',{
-				                      eventListeners:{
-					                     "featureselected":function(evt){
-						                    var feature = evt.feature;
-						                    var popup = new OpenLayers.Popup.Anchored("popup",
-							                               feature.geometry.getBounds().getCenterLonLat(),
-							                               null,
-							                               "HEJ!",
-							                               null,
-							                               true
-						);					
-						feature.popup = popup;
-						map.addPopup(popup);
-					},
-					"featureunselected":function(evt){
-						var feature = evt.feature;
-						map.removePopup(feature.popup);
-						feature.popup.destroy();
-						feature.popup = null;
-					}
-				}				
-			});
-			var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
-				eventListeners:{
-					"featureselected":function(evt){
-						var feature = evt.feature;
-						var popup = new OpenLayers.Popup.Anchored("alert popup",
-							feature.geometry.getBounds().getCenterLonLat(),
-							null,
-							"ALERT!",
-							null,
-							true
-						);					
-						feature.popup = popup;
-						map.addPopup(popup);
-					},
-					"featureunselected":function(evt){
-						var feature = evt.feature;
-						map.removePopup(feature.popup);
-						feature.popup.destroy();
-						feature.popup = null;
-					}
-				}				
-			});
-     
-      alertLayer.styleMap = alert_style_map;
-
-			var infoLayer = new OpenLayers.Layer.Vector('Info Layer',{
-				eventListeners:{
-					"featureselected":function(evt){
-						var feature = evt.feature;
-						var popup = new OpenLayers.Popup.Anchored("info popup",
-							feature.geometry.getBounds().getCenterLonLat(),
-							null,
-							"Information",
-							null,
-							true
-						);					
-						feature.popup = popup;
-						map.addPopup(popup);
-					},
-					"featureunselected":function(evt){
-						var feature = evt.feature;
-						map.removePopup(feature.popup);
-						feature.popup.destroy();
-						feature.popup = null;
-					}
-				}				
-			});
-      infoLayer.styleMap = info_style_map;
-			var peopleLayer = new OpenLayers.Layer.Vector('People Layer',{
-				eventListeners:{
-					"featureselected":function(evt){
-						var feature = evt.feature;
-						var popup = new OpenLayers.Popup.Anchored("people popup",
-							feature.geometry.getBounds().getCenterLonLat(),
-							null,
-							"Fredrik Reinfeldt",
-							null,
-							true
-						);					
-						feature.popup = popup;
-						map.addPopup(popup);
-					},
-					"featureunselected":function(evt){
-						var feature = evt.feature;
-						map.removePopup(feature.popup);
-						feature.popup.destroy();
-						feature.popup = null;
-					}
-				}				
-			});
-      peopleLayer.styleMap = people_style_map;
-			var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
-				eventListeners:{
-					"featureselected":function(evt){
-						var feature = evt.feature;
-						var popup = new OpenLayers.Popup.Anchored("vehicle popup",
-							feature.geometry.getBounds().getCenterLonLat(),
-							null,
-							"Fire truck",
-							null,
-							true
-						);					
-						feature.popup = popup;
-						map.addPopup(popup);
-					},
-					"featureunselected":function(evt){
-						var feature = evt.feature;
-						map.removePopup(feature.popup);
-						feature.popup.destroy();
-						feature.popup = null;
-					}
-				}				
-			});
-			vehicleLayer.styleMap = vehicle_style_map;
+      //Layer block
+      var layer = new OpenLayers.Layer.OSM("Karta");
       map.addLayer(layer);
-      map.addLayer(vectorLayer);			
-			map.addLayer(alertLayer);
-			map.addLayer(infoLayer);
-			map.addLayer(vehicleLayer);
-			map.addLayer(peopleLayer);
-			
-      alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
-			infoEditToolbar = new OpenLayers.Control.EditingToolbar(infoLayer);
-			vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
-			peopleEditToolbar = new OpenLayers.Control.EditingToolbar(peopleLayer);
-			
-      alertEditToolbar.autoActivate = false;
-			infoEditToolbar.autoActivate = false;
-			vehicleEditToolbar.autoActivate = false;
-			peopleEditToolbar.autoActivate = false;
-
-            
-			var selector = new OpenLayers.Control.SelectFeature([vectorLayer, alertLayer, infoLayer, vehicleLayer, peopleLayer],{
-				hover:false,
-				toggle:true,
-				autoActivate:true
-			});
-			
-            var lonlat = new OpenLayers.LonLat(16.19,58.59).transform(
+      var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+      var lonlat = new OpenLayers.LonLat(125.01085281372072,11.243735509183928).transform(
             new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
             map.setCenter(lonlat);
             map.zoomTo(13);
@@ -380,179 +152,50 @@
             protocol: new OpenLayers.Protocol.HTTP({
                 url: "data.json",
                 format: new OpenLayers.Format.GeoJSON()
-            })
+            }),
+            eventListeners:{
+          "featureselected":function(evt){
+            var feature = evt.feature;
+
+            var popup = new OpenLayers.Popup.Anchored("geo_popup",
+              feature.geometry.getBounds().getCenterLonLat(),
+              null,
+              evt.feature.data.Vem,
+              null,
+              true
+            );
+            popup.setOpacity(0.8); 
+            popup.setBackgroundColor('#212121');
+                  
+            feature.popup = popup;
+
+            map.addPopup(popup);
+          },
+          "featureunselected":function(evt){
+            var feature = evt.feature;
+            map.removePopup(feature.popup);
+            feature.popup.destroy();
+            feature.popup = null;
+          }
+        }
         });
+      var selector = new OpenLayers.Control.SelectFeature([geojson_layer],{
+        hover:false,
+        toggle:true,
+        autoActivate:true
+      });
+      geojson_layer.styleMap = alert_style_map;
        map.addLayer(geojson_layer);
-			//Button block
-			var b1 = new OpenLayers.Control.Button({
-				trigger: function(){//Toggle visibility of submenubuttons
-					$(".button2ItemInactive").toggle();
-					$(".button2ItemActive").toggle();
-					$(".button3ItemInactive").toggle();
-					$(".button3ItemActive").toggle();
-					$(".userButtonItemInactive").toggle();
-					$(".userButtonItemActive").toggle();
-					$(".layersButtonItemInactive").toggle();
-					$(".layersButtonItemActive").toggle();
-				},
-				displayClass: "button1"
-			});
-			
-			var b2 = new OpenLayers.Control.Button({
-				trigger: function(){},
-				displayClass: "button2"
-			});
-			
-			var b3 = new OpenLayers.Control.Button({
-				trigger: function(){},
-				displayClass: "button3"
-			});
-			 
-			var userButton = new OpenLayers.Control.Button({
-				displayClass: "userButton"
-			});
-			 
-			var layersButton = new OpenLayers.Control.Button({
-				displayClass: "layersButton"
-			})
-	  
-			var layerButton = new OpenLayers.Control.Button({
-				displayClass: "button4"
-			});
-
-			var mapButton = new OpenLayers.Control.Button({
-				displayClass: "button5",
-				eventListeners: {
-					"activate": toggle_button_activate_func,
-					"deactivate": toggle_button_deactivate_func
-				},
-				type: OpenLayers.Control.TYPE_TOGGLE
-			});
-			
-			var alertButton = new OpenLayers.Control.Button({
-				displayClass: "alertButton",
-				trigger: function(){
-					
-					alert = true;
-					info = false;
-					vehicles = false;
-					people = false;
-					setLayerToDrawFeature();
-				}
-			});
-			var infoButton = new OpenLayers.Control.Button({
-				displayClass: "infoButton",
-				trigger: function(){
-					
-					alert = false;
-					info = true;
-					vehicles = false;
-					people = false;
-					setLayerToDrawFeature();
-				}
-			});
-			var vehicleButton = new OpenLayers.Control.Button({
-				displayClass: "vehicleButton",
-				trigger: function(){
-					
-					alert = false;
-					info = false;
-					vehicles = true;
-					people = false;
-					setLayerToDrawFeature();
-				}
-			});
-			var peopleButton = new OpenLayers.Control.Button({
-				displayClass: "peopleButton",
-				trigger: function(){
-					
-					alert = false;
-					info = false;
-					vehicles = false;
-					people = true;
-					setLayerToDrawFeature();
-				}
-			});
-			
-			//Panel block
-			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
-				vertical: true,
-				additionalClass: "vButtonPanel"
-			});
-			var topLeftPanel = new OpenLayers.Control.TextButtonPanel({
-				additionalClass:"topLeftPanel"
-			});
-      //var vectorPanel  = new OpenLayers.Control.EditingToolbar(vector_layer,{additionalClass:"vectorPanel"});
-			
-
-      /*
-      drawControls = {
-                      point: new OpenLayers.Control.DrawFeature(pointLayer,
-                            OpenLayers.Handler.Point),
-                      line: new OpenLayers.Control.DrawFeature(lineLayer,
-                            OpenLayers.Handler.Path),
-                      polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
-                            OpenLayers.Handler.Polygon),
-                      box: new OpenLayers.Control.DrawFeature(boxLayer,
-                                OpenLayers.Handler.RegularPolygon, {
-                                  handlerOptions: {
-                                  sides: 4,
-                                  irregular: true }})};
-      */
-
-    
-
-      topLeftPanel.addControls([mapButton, layerButton, alertButton, infoButton, vehicleButton, peopleButton]);
-			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
-      
-            //Layer part 
-      function drawObject(layer){
-
-      }
-      function drawLayer(){
-
-      }
-      function mapEvent(event){
-                console.log(event.type);
-      }
-      function mapBaseLayerChanged(event) {
-                console.log(event.type );
-      }
-      function mapLayerChanged(event) {
-                console.log(event.type + " " + event.layer.name + " " + event.property);
-      }
-
-      /*
-      for(var key in drawControls) {
-            map.addControl(drawControls[key]);
-      } 
-      */
-			map.addControl(vButtonPanel);
-			map.addControl(topLeftPanel);
-			//Choose layer to add features
-			
-			//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
-			map.addControl(alertEditToolbar);
-			map.addControl(infoEditToolbar);
-			map.addControl(vehicleEditToolbar);
-			map.addControl(peopleEditToolbar);
-			map.addControl(selector);
-
-			//Submenubuttons start hidden
-			
-			$(".button2ItemInactive").hide();
-			$(".button2ItemActive").hide();
-			$(".button3ItemInactive").hide();
-			$(".button3ItemActive").hide();
-			$(".userButtonItemInactive").hide();
-			$(".userButtonItemActive").hide();
-			$(".layersButtonItemInactive").hide();
-			$(".layersButtonItemActive").hide();
-    }
-    </script>
+     map.addControl(selector);
+     
+}
+   </script>
   </head>
-  <body onload="init()">   
+  <body onload="init()">
+  
     <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
-    <div id ="output"></div>
+  
   </body>
 </html>
+         
+      
