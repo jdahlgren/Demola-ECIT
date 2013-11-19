@@ -15,10 +15,13 @@
       #geo_popup{
 
         border-radius: 5px;
-        color: red;
+        color: white;
 
       }
-
+      .olPopupCloseBox {
+             background: url("shutdown.png") no-repeat;
+            cursor: pointer;
+      }
       div.olControlEditingToolbar{
         top:60px;
         right:auto;
@@ -160,34 +163,73 @@ function init(){
             var popup = new OpenLayers.Popup.Anchored("geo_popup",
               feature.geometry.getBounds().getCenterLonLat(),
               null,
-              evt.feature.data.Vem,
+              null,
               null,
               true
             );
+
             popup.setOpacity(0.8); 
             popup.setBackgroundColor('#212121');
-                  
+            popup.setContentHTML(evt.feature.data.Vem + " \n" +evt.feature.data.Vad);      
             feature.popup = popup;
 
             map.addPopup(popup);
           },
           "featureunselected":function(evt){
             var feature = evt.feature;
+            feature.select.deactive();
             map.removePopup(feature.popup);
             feature.popup.destroy();
             feature.popup = null;
           }
         }
         });
-      var selector = new OpenLayers.Control.SelectFeature([geojson_layer],{
+      var geojson_point_layer = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
+            projection: "EPSG:4326",
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "points.json",
+                format: new OpenLayers.Format.GeoJSON()
+            }),
+            eventListeners:{
+          "featureselected":function(evt){
+            var feature = evt.feature;
+
+            var popup = new OpenLayers.Popup.Anchored("geo_popup",
+              feature.geometry.getBounds().getCenterLonLat(),
+              null,
+              null,
+              null,
+              true
+            );
+
+            popup.setOpacity(0.8); 
+            popup.setBackgroundColor('#212121');
+            popup.setContentHTML(evt.feature.data.Vem + " \n" +evt.feature.data.Vad);      
+            feature.popup = popup;
+
+            map.addPopup(popup);
+          },
+          "featureunselected":function(evt){
+            var feature = evt.feature;
+
+            map.removePopup(feature.popup);
+            feature.popup.destroy();
+            feature.popup = null;
+          }
+        }
+        });
+      var selector = new OpenLayers.Control.SelectFeature([geojson_layer,geojson_point_layer],{
         hover:false,
         toggle:true,
         autoActivate:true
       });
-      geojson_layer.styleMap = alert_style_map;
-       map.addLayer(geojson_layer);
-     map.addControl(selector);
-     
+    geojson_layer.styleMap = alert_style_map;
+    geojson_point_layer.styleMap = alert_style_map;
+    map.addLayer(geojson_layer);
+    map.addLayer(geojson_point_layer);
+    map.addControl(selector);
+       
 }
    </script>
   </head>
