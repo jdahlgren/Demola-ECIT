@@ -3,7 +3,7 @@
 "features": [
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Läkare"},
 "geometry": {
 "type": "Point",
 "coordinates": [
@@ -14,7 +14,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Läkare"},
 "geometry": {
 "type": "Point",
 "coordinates": [
@@ -25,7 +25,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Olycksområde","Vad":"Hög smittorisk , pga många lik"},
 "geometry": {
 "type": "Polygon",
 "coordinates": [
@@ -76,7 +76,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Olycksområde","Vad":"Jordskred"},
 "geometry": {
 "type": "Polygon",
 "coordinates": [
@@ -159,7 +159,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Läkare"},
 "geometry": {
 "type": "Point",
 "coordinates": [
@@ -170,7 +170,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Läkare"},
 "geometry": {
 "type": "Point",
 "coordinates": [
@@ -181,7 +181,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Läkare"},
 "geometry": {
 "type": "Point",
 "coordinates": [
@@ -236,7 +236,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Olycksområde","Vad":"Brand"},
 "geometry": {
 "type": "Polygon",
 "coordinates": [
@@ -285,57 +285,7 @@
 ]
 }
 },
-{
-"type": "Feature",
-"properties": {},
-"geometry": {
-"type": "Polygon",
-"coordinates": [
-[
-[
-124.97549057006836,
-11.260740035122165
-],
-[
-124.97428894042969,
-11.24036815726794
-],
-[
-124.98184204101561,
-11.223867564554029
-],
-[
-124.9869918823242,
-11.210902151503833
-],
-[
-124.99368667602538,
-11.209555062242996
-],
-[
-125.02355575561523,
-11.207534416583222
-],
-[
-125.02904891967772,
-11.20601892307196
-],
-[
-124.97257232666014,
-11.206355700094146
-],
-[
-124.9559211730957,
-11.222520535742673
-],
-[
-124.97549057006836,
-11.260740035122165
-]
-]
-]
-}
-},
+
 {
 "type": "Feature",
 "properties": {},
@@ -369,7 +319,7 @@
 },
 {
 "type": "Feature",
-"properties": {},
+"properties": {"Vem":"Olycksområde","Vad":"Utsläpp"},
 "geometry": {
 "type": "Polygon",
 "coordinates": [

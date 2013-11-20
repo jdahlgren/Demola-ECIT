@@ -127,11 +127,21 @@ var alert_style = new OpenLayers.Style({
         'strokeWidth': 1,
          'pointRadius': 8
       });
+var black_style = new OpenLayers.Style({
+        'fillColor': '#212121',
+        'fillOpacity': .2,
+        'strokeColor': '#212121',
+        'strokeWidth': 1,
+         'pointRadius': 8
+      });
 var alert_style_map = new OpenLayers.StyleMap({
            'default': alert_style
       });
 var geo_style_map = new OpenLayers.StyleMap({
            'default': geo_style
+      });
+var black_style_map = new OpenLayers.StyleMap({
+           'default': black_style
       });
 function init(){
       
@@ -219,15 +229,52 @@ function init(){
           }
         }
         });
-      var selector = new OpenLayers.Control.SelectFeature([geojson_layer,geojson_point_layer],{
+        var geojson_point_layer3 = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
+            projection: "EPSG:4326",
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "area.json",
+                format: new OpenLayers.Format.GeoJSON()
+            }),
+            eventListeners:{
+          "featureselected":function(evt){
+            var feature = evt.feature;
+
+            var popup = new OpenLayers.Popup.Anchored("geo_popup",
+              feature.geometry.getBounds().getCenterLonLat(),
+              null,
+              null,
+              null,
+              true
+            );
+
+            popup.setOpacity(0.8); 
+            popup.setBackgroundColor('#212121');
+            popup.setContentHTML(evt.feature.data.Vem + " \n" +evt.feature.data.Vad);      
+            feature.popup = popup;
+
+            map.addPopup(popup);
+          },
+          "featureunselected":function(evt){
+            var feature = evt.feature;
+
+            map.removePopup(feature.popup);
+            feature.popup.destroy();
+            feature.popup = null;
+          }
+        }
+        });
+      var selector = new OpenLayers.Control.SelectFeature([geojson_layer,geojson_point_layer,geojson_point_layer3],{
         hover:false,
         toggle:true,
         autoActivate:true
       });
-    geojson_layer.styleMap = alert_style_map;
+    geojson_layer.styleMap = geo_style_map;
     geojson_point_layer.styleMap = alert_style_map;
+    geojson_point_layer3.styleMap = black_style_map;
     map.addLayer(geojson_layer);
     map.addLayer(geojson_point_layer);
+    map.addLayer(geojson_point_layer3);
     map.addControl(selector);
        
 }
