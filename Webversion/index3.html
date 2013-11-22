@@ -9,104 +9,7 @@
     <!--<script src="lib/Firebug/firebug.js"></script>-->
     <link rel="stylesheet" href="style.css" type="text/css"> 
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
-    
-    <style type="text/css">
-      
-      #geo_popup{
-
-        border-radius: 5px;
-        color: red;
-
-      }
-
-      div.olControlEditingToolbar{
-        top:60px;
-        right:auto;
-        left: 8px;
-      }
-      div.olControlZoom{
-			top: auto;
-			bottom: 8px;
-        }
-      
-        .olControlTextButtonPanel.topLeftPanel {           
-			top: 8px;
-			right: auto;
-			left: 8px;
-        }
-
-        .olControlTextButtonPanel.BottomRightPanel { 
-			background: #858585;
-			top: 8px;
-			bottom: auto;
-			left: 8px;
-			right: auto;
-        }
-		
-		.olControlTextButtonPanel.vButtonPanel { 
-			top: 8px;
-			left: auto;
-			right: 8px;
-        }
-
-      .olControlPanel.vectorPanel { 
-      top: 8px;
-      left: auto;
-      right: 8px;
-        }
-        
-      .button1ItemInactive:after,
-		  .button1ItemActive:after {
-			     content: "Menu " url('img/menu.png');
-            
-      }
-        
-        .button2ItemInactive:after,
-        .button2ItemActive:after {
-            content: "Settings";
-        }
-        
-        .button3ItemInactive:after,
-        .button3ItemActive:after {          
-            content:url('img/task_empty.png');
-        }
-        
-        .button4ItemInactive:after,
-        .button4ItemActive:after {            
-            content:url('img/update.png');
-        }
-        
-        .button5ItemInactive:after,
-        .button5ItemActive:after {
-            content:url('img/task_empty.png');
-        }
-		
-		    .userButtonItemInactive:after,
-        .userButtonItemActive:after {
-            content:"UserName " url('img/user.png');
-        }
-		
-		.layersButtonItemInactive:after,
-        .layersButtonItemActive:after {
-            content:"Layers";
-        }	
-		.alertButtonItemInactive:after,
-        .alertButtonItemActive:after {
-            content: "Alert";
-        }
-		.infoButtonItemInactive:after,
-        .infoButtonItemActive:after {
-            content: "Info";
-        }
-		.vehicleButtonItemInactive:after,
-        .vehicleButtonItemActive:after {
-            content: "Vehicles";
-        }
-		.peopleButtonItemInactive:after,
-        .peopleButtonItemActive:after {
-            content: "People";
-        }		
-    </style>
+     <link rel="stylesheet" href="demola.css" type="text/css">
     
     <script type="text/javascript">
 
@@ -281,10 +184,8 @@ function init(){
                     "changebaselayer": mapBaseLayerChanged}});
             
 	 //Layer block
-    layer = new OpenLayers.Layer.OSM("Karta");
-			
-
-	var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
+layer = new OpenLayers.Layer.OSM("Karta");
+var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
 				eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
@@ -308,22 +209,22 @@ function init(){
 					"featureunselected":featureUnSelected	
 				}});
 	vehicleLayer.styleMap = vehicle_style_map;
-    map.addLayer(layer);
-      		
+  
+  map.addLayer(layer);    		
 	map.addLayer(alertLayer);
 	map.addLayer(infoLayer);
 	map.addLayer(vehicleLayer);
 	map.addLayer(peopleLayer);
 			
-    alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
-			infoEditToolbar = new OpenLayers.Control.EditingToolbar(infoLayer);
-			vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
-			peopleEditToolbar = new OpenLayers.Control.EditingToolbar(peopleLayer);
+  alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
+	infoEditToolbar = new OpenLayers.Control.EditingToolbar(infoLayer);
+	vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
+	peopleEditToolbar = new OpenLayers.Control.EditingToolbar(peopleLayer);
 			
-      alertEditToolbar.autoActivate = false;
-			infoEditToolbar.autoActivate = false;
-			vehicleEditToolbar.autoActivate = false;
-			peopleEditToolbar.autoActivate = false;
+  alertEditToolbar.autoActivate = false;
+	infoEditToolbar.autoActivate = false;
+	vehicleEditToolbar.autoActivate = false;
+	peopleEditToolbar.autoActivate = false;
 
 			/*            
 			var selector = new OpenLayers.Control.SelectFeature([vectorLayer, alertLayer, infoLayer, vehicleLayer, peopleLayer],{
@@ -332,14 +233,13 @@ function init(){
 				autoActivate:true
 			});
 			*/
-            var lonlat = new OpenLayers.LonLat(125.01085281372072,11.243735509183928).transform(
-            new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
-            map.setCenter(lonlat);
-            map.zoomTo(13);
+  var lonlat = new OpenLayers.LonLat(125.01085281372072,11.243735509183928).transform( new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+  map.setCenter(lonlat);
+  map.zoomTo(13);
 
-      //Format object for reading fromfiles !
-      //Create a Format object
-     var geojson_layer = new OpenLayers.Layer.Vector("GeoJSON", {
+  //Format object for reading fromfiles !
+  //Create a Format object
+  var geojson_layer = new OpenLayers.Layer.Vector("GeoJSON", {
             projection: "EPSG:4326",
             strategies: [new OpenLayers.Strategy.Fixed()],
             protocol: new OpenLayers.Protocol.HTTP({
@@ -413,7 +313,12 @@ function init(){
 			});
 			 
 			var layersButton = new OpenLayers.Control.Button({
-				displayClass: "layersButton"
+				trigger: function(){
+          alert("HEj");
+          map.addLayer(new OpenLayers.Layer.Vector('Vehicle Layer'));
+        },
+        displayClass: "layersButton"
+
 			})
 	  
 			var layerButton = new OpenLayers.Control.Button({
@@ -512,7 +417,7 @@ function init(){
 			map.addControl(topLeftPanel);
 			//Choose layer to add features
 			
-			map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+			//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
 			map.addControl(alertEditToolbar);
 			map.addControl(infoEditToolbar);
 			map.addControl(vehicleEditToolbar);
@@ -530,7 +435,7 @@ function init(){
 			$(".userButtonItemActive").hide();
 			$(".layersButtonItemInactive").hide();
 			$(".layersButtonItemActive").hide();
-      readTextFile("file:///Users/ek/Desktop/DEMOLA/Webversion/data.json");
+      //readTextFile("file:///Users/ek/Desktop/DEMOLA/Webversion/data.json");
 
     }
     </script>

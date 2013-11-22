@@ -275,16 +275,20 @@ function init(){
     map.addLayer(geojson_layer);
     map.addLayer(geojson_point_layer);
     map.addLayer(geojson_point_layer3);
+    console.log(geojson_point_layer.features);
     map.addControl(selector);
+
+    
        
 }
-   </script>
-  </head>
-  <body onload="init()">
+</script>
+</head>
+<body onload="init()">
   
-    <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
+<div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
   
-  </body>
+</body>
+
 </html>
          
       

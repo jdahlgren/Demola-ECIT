@@ -3,7 +3,7 @@
   "features": [
     {
       "type": "Feature",
-      "properties":{"Vem": "Basområde","Vad": "Klassificerat:säkertområde"
+      "properties":{"Vem": "Basområde","Vad": "Klassificerat: säkert område"
       },
       "geometry": {
         "type": "Polygon",
