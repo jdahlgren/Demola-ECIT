@@ -1,0 +1,92 @@
+#geo_popup{
+
+        border-radius: 5px;
+        color: red;
+}
+
+div.olControlEditingToolbar{
+        top:60px;
+        right:auto;
+        left: 8px;
+}
+div.olControlZoom{
+     top: auto;
+     bottom: 8px;
+ }
+ .olControlTextButtonPanel.topLeftPanel {           
+     top: 8px;
+     right: auto;
+     left: 8px;
+ }
+
+ .olControlTextButtonPanel.BottomRightPanel { 
+     background: #858585;
+     top: 8px;
+     bottom: auto;
+     left: 8px;
+     right: auto;
+ }
+
+ .olControlTextButtonPanel.vButtonPanel { 
+     top: 8px;
+     left: auto;
+     right: 8px;
+ }
+
+ .olControlPanel.vectorPanel { 
+  top: 8px;
+  left: auto;
+  right: 8px;
+}
+
+.button1ItemInactive:after,
+.button1ItemActive:after {
+    content: "Menu " url('img/menu.png');
+
+}
+
+.button2ItemInactive:after,
+.button2ItemActive:after {
+    content: "Settings";
+}
+
+.button3ItemInactive:after,
+.button3ItemActive:after {          
+    content:url('img/task_empty.png');
+}
+
+.button4ItemInactive:after,
+.button4ItemActive:after {            
+    content:url('img/update.png');
+}
+
+.button5ItemInactive:after,
+.button5ItemActive:after {
+    content:url('img/task_empty.png');
+}
+
+.userButtonItemInactive:after,
+.userButtonItemActive:after {
+    content:"UserName " url('img/user.png');
+}
+
+.layersButtonItemInactive:after,
+.layersButtonItemActive:after {
+    content:"Layers";
+}	
+.alertButtonItemInactive:after,
+.alertButtonItemActive:after {
+    content: "Alert";
+}
+.infoButtonItemInactive:after,
+.infoButtonItemActive:after {
+    content: "Info";
+}
+.vehicleButtonItemInactive:after,
+.vehicleButtonItemActive:after {
+    content: "Vehicles";
+}
+.peopleButtonItemInactive:after,
+.peopleButtonItemActive:after {
+    content: "People";
+}		
