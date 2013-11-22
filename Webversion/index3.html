@@ -165,6 +165,8 @@ function init(){
                 //Restore the layer's opacity
                 map.layers[0].setOpacity(1);
             }
+			
+			
 
 			//Panel block
               
@@ -387,6 +389,10 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
 			var topLeftPanel = new OpenLayers.Control.TextButtonPanel({
 				additionalClass:"topLeftPanel"
 			});
+			var drawPanel = new OpenLayers.Control.TextButtonPanel({
+				vertical: true,
+				additionalClass: "drawPanel"
+			});
     
       topLeftPanel.addControls([mapButton, layerButton, alertButton, infoButton, vehicleButton, peopleButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
@@ -408,13 +414,26 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
                 console.log(event.type + " " + event.layer.name + " " + event.property);
       }
 
-      /*
-      for(var key in drawControls) {
-            map.addControl(drawControls[key]);
-      } 
-      */
+	  var drawMoveButton = new OpenLayers.Control.Button({
+		displayClass: "drawMoveButton",
+		trigger: function(){
+			drawPoint.deactivate();
+			drawPolygon.deactivate();
+		}
+	  });
+	  
+      
+		var drawPoint = new OpenLayers.Control.DrawFeature(alertLayer, OpenLayers.Handler.Point);
+		var drawPolygon = new OpenLayers.Control.DrawFeature(infoLayer, OpenLayers.Handler.Polygon);
+	  
+       
+	  drawPanel.addControls(drawPoint);
+	  drawPanel.addControls(drawPolygon);
+	  drawPanel.addControls(drawMoveButton);
+	  
 			map.addControl(vButtonPanel);
 			map.addControl(topLeftPanel);
+			map.addControl(drawPanel);
 			//Choose layer to add features
 			
 			//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
@@ -440,7 +459,7 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
     }
     </script>
   </head>
-  <body onload="init()">   
+  <body onload="init()"> 
     <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
     <div id ="output"></div>
   </body>

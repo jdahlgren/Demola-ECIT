@@ -39,6 +39,12 @@ div.olControlZoom{
   right: 8px;
 }
 
+ .olControlTextButtonPanel.drawPanel { 
+  top: 8px;
+  left: 500px;
+}
+
+
 .button1ItemInactive:after,
 .button1ItemActive:after {
     content: "Menu " url('img/menu.png');
@@ -89,4 +95,8 @@ div.olControlZoom{
 .peopleButtonItemInactive:after,
 .peopleButtonItemActive:after {
     content: "People";
-}		
+}
+.drawMoveButtonItemInactive:after,
+.layersButtonItemActive:after {
+    content:"move";
+}	
