@@ -6,10 +6,12 @@
     <title>GI Demola</title>
     <script src="lib/OpenLayers.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <!--<script src="lib/Firebug/firebug.js"></script>-->
+     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" href="style.css" type="text/css"> 
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
-     <link rel="stylesheet" href="demola.css" type="text/css">
+    <link rel="stylesheet" href="demola.css" type="text/css">
     
     <script type="text/javascript">
 
@@ -24,14 +26,19 @@
 		var people   = false;
 
 		var alertEditToolbar, infoEditToolbar, vehicleEditToolbar, peopleEditToolbar;
-
+    var Task = $('#Task');    
+        /*email = $( "#email" ),
+        password = $( "#password" ),
+        allFields = $( [] ).add( name ).add( email ).add( password );*/
+        //tips = $( ".validateTips" );
 
      var alert_style = new OpenLayers.Style({
         'fillColor': '#b61a1e',
         'fillOpacity': .2,
         'strokeColor': '#FF0000',
         'strokeWidth': 1,
-         'pointRadius': 8
+        'pointRadius': 8,
+        'label': '${name}'
       });
      var vehicle_style = new OpenLayers.Style({
         'fillColor': '#00ff00',
@@ -145,49 +152,40 @@ function init(){
 						feature.popup.destroy();
 						feature.popup = null;
 		}
-        //Button block
+    //Button block
 
-			//Då knappen är aktiv som så lyssnar man på kartans eventlistener !
-            //Create a function for the toggle button
-            var toggle_button_activate_func = function(){
+		//Då knappen är aktiv som så lyssnar man på kartans eventlistener !
+    //Create a function for the toggle button
+    var toggle_button_activate_func = function(){
                 console.log('toggle_button_activate_func');
                 //Attach the map_event_function to the map
                 map.events.register('click', map, map_event_function);
                 //map.events.register('click', layer, map_event_function);
-
-            }
-            //Tar bort eventlistener
-            
-            var toggle_button_deactivate_func = function(){
+    }
+    //Tar bort eventlistener
+    var toggle_button_deactivate_func = function(){
 				        console.log('toggle_button_deactivate_func');
                 //Remove the map_event_function from the map
                 map.events.unregister('click', map, map_event_function);
                 //Restore the layer's opacity
                 map.layers[0].setOpacity(1);
-            }
-			
-			
-
-			//Panel block
-              
-
-    //--------------------------------------------------------End Functions block------------------------------------------------
-    //---------------------------------------------------------------------------------------------------------------------------
+    }
+	//Panel block
+  //--------------------------------------------------------End Functions block------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------------------------
             
 	//--------------------------------------------------------Start Content block------------------------------------------------
-    //---------------------------------------------------------------------------------------------------------------------------
-              
-    //Map block
-    map = new OpenLayers.Map( 'map', {
+  //---------------------------------------------------------------------------------------------------------------------------          
+  //Map block
+  map = new OpenLayers.Map( 'map', {
 				    eventListeners: {
                     "moveend": mapEvent,
                     "zoomend": mapEvent,
                     "changelayer": mapLayerChanged,
-                    "changebaselayer": mapBaseLayerChanged}});
-            
-	 //Layer block
-layer = new OpenLayers.Layer.OSM("Karta");
-var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
+                    "changebaselayer": mapBaseLayerChanged}});         
+  //Layer block
+  layer = new OpenLayers.Layer.OSM("Karta");
+  var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
 				eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
@@ -397,13 +395,7 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
       topLeftPanel.addControls([mapButton, layerButton, alertButton, infoButton, vehicleButton, peopleButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
       
-            //Layer part 
-      function drawObject(layer){
-
-      }
-      function drawLayer(){
-
-      }
+      //Layer part 
       function mapEvent(event){
                 console.log(event.type);
       }
@@ -422,8 +414,50 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
 		}
 	  });
 	  
+    
+
+
+
+    var drawPoint = new OpenLayers.Control.DrawFeature(alertLayer,OpenLayers.Handler.Point,{
+     
+      featureAdded:function(){
+         console.log("Högst upp !");
+         console.log(this.layer.features.size);
+         console.log(this.layer.name);
+         var e = this.layer.name;
+         console.log(this.map.getLayersByName(e));
+         var b = this.map.getLayersByName(e);
+         console.log(b[0].features.length);
+         var c = b[0].features.length;
+         var that = this.layer;
+         $("#dialog").dialog({
+          buttons:{
+              Add: function(){
+                console.log($("#Task").val());
+                console.log(that.features[0]);
+                that.features[c-1].attributes = { name: $("#Task").val(),age: 21, favColor: 'purple', align: 'lb'
+                }; 
+                $('#dialog').dialog('close');   
+              }
+          },
+          open:function(){
+            console.log('Nu öppnas poupen !')
+            map.layers[0].setOpacity(0.3);
+          },
+          close:function(){
+            //Skriv ut datan här 
+            console.log('Nu stängs poupen !');
+            map.layers[0].setOpacity(1.0);
+          }
+         });
+        console.log("Bajs");
+       
+    
+
+      }});
+
       
-		var drawPoint = new OpenLayers.Control.DrawFeature(alertLayer, OpenLayers.Handler.Point);
+		
 		var drawPolygon = new OpenLayers.Control.DrawFeature(infoLayer, OpenLayers.Handler.Polygon);
 	  
        
@@ -431,21 +465,21 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
 	  drawPanel.addControls(drawPolygon);
 	  drawPanel.addControls(drawMoveButton);
 	  
-			map.addControl(vButtonPanel);
-			map.addControl(topLeftPanel);
-			map.addControl(drawPanel);
-			//Choose layer to add features
+		map.addControl(vButtonPanel);
+		map.addControl(topLeftPanel);
+		map.addControl(drawPanel);
+		//Choose layer to add features
 			
-			//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
-			map.addControl(alertEditToolbar);
-			map.addControl(infoEditToolbar);
-			map.addControl(vehicleEditToolbar);
-			map.addControl(peopleEditToolbar);
-			map.addControl(selector);
+		//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+		map.addControl(alertEditToolbar);
+		map.addControl(infoEditToolbar);
+		map.addControl(vehicleEditToolbar);
+		map.addControl(peopleEditToolbar);
+		map.addControl(selector);
 
 
 			//Submenubuttons start hidden
-			
+	     
 			$(".button2ItemInactive").hide();
 			$(".button2ItemActive").hide();
 			$(".button3ItemInactive").hide();
@@ -460,7 +494,12 @@ var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
     </script>
   </head>
   <body onload="init()"> 
-    <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
+    <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
     <div id ="output"></div>
+    <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
+          <input type="textfield" id="Task" value="Add task !" />
+          <input type="submit" id="AddUserButton" />
+    </div>
+   
   </body>
 </html>

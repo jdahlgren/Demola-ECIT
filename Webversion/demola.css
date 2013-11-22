@@ -1,9 +1,18 @@
+/*jquery ui */
+.ui-dialog {
+    left: 0;
+    outline: 0 none;
+    padding: 0.2em;
+    position: absolute;
+    top: 0;
+    z-index: 80000;
+}
+
 #geo_popup{
 
         border-radius: 5px;
         color: red;
 }
-
 div.olControlEditingToolbar{
         top:60px;
         right:auto;
