@@ -7,12 +7,13 @@
     <script src="lib/OpenLayers.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    
     <!--<script src="lib/Firebug/firebug.js"></script>-->
-     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" href="style.css" type="text/css"> 
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     <link rel="stylesheet" href="demola.css" type="text/css">
-    
     <script type="text/javascript">
 
     var map;
@@ -27,8 +28,9 @@
 
 		var alertEditToolbar, infoEditToolbar, vehicleEditToolbar, peopleEditToolbar;
     var Task = $('#Task');    
-        /*email = $( "#email" ),
-        password = $( "#password" ),
+    var Vad  = $('#Vad');
+    var När  = $('När');
+        /*password = $( "#password" ),
         allFields = $( [] ).add( name ).add( email ).add( password );*/
         //tips = $( ".validateTips" );
 
@@ -139,9 +141,8 @@ function init(){
               null,
               true
             );
-            popup.setOpacity(0.8); 
-            popup.setBackgroundColor('#212121');
-                  
+            //popup.setOpacity(0.8); 
+            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.Time+" <br>" + " Name : "+evt.feature.attributes.name+" "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -253,12 +254,12 @@ function init(){
             var popup = new OpenLayers.Popup.Anchored("geo_popup",
               feature.geometry.getBounds().getCenterLonLat(),
               null,
-              evt.feature.data.label,
+              evt.feature.attributes.age,
               null,
               true
             );
-            popup.setOpacity(0.8); 
-            popup.setBackgroundColor('#212121');
+            //popup.setOpacity(0.8); 
+           
                   
             feature.popup = popup;
 
@@ -421,22 +422,20 @@ function init(){
     var drawPoint = new OpenLayers.Control.DrawFeature(alertLayer,OpenLayers.Handler.Point,{
      
       featureAdded:function(){
-         console.log("Högst upp !");
-         console.log(this.layer.features.size);
-         console.log(this.layer.name);
+      
          var e = this.layer.name;
-         console.log(this.map.getLayersByName(e));
          var b = this.map.getLayersByName(e);
-         console.log(b[0].features.length);
          var c = b[0].features.length;
          var that = this.layer;
          $("#dialog").dialog({
-          buttons:{
+            buttons:{
               Add: function(){
-                console.log($("#Task").val());
+                
+                var d = new Date(); // for now
                 console.log(that.features[0]);
-                that.features[c-1].attributes = { name: $("#Task").val(),age: 21, favColor: 'purple', align: 'lb'
-                }; 
+                that.features[c-1].attributes = { name: $("#Task").val(),Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), favColor: 'purple'
+                };
+                that.redraw(true); 
                 $('#dialog').dialog('close');   
               }
           },
@@ -447,10 +446,11 @@ function init(){
           close:function(){
             //Skriv ut datan här 
             console.log('Nu stängs poupen !');
+            //that.features[c-1].destroy();
             map.layers[0].setOpacity(1.0);
           }
          });
-        console.log("Bajs");
+        
        
     
 
@@ -495,11 +495,20 @@ function init(){
   </head>
   <body onload="init()"> 
     <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
-    <div id ="output"></div>
-    <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
-          <input type="textfield" id="Task" value="Add task !" />
-          <input type="submit" id="AddUserButton" />
-    </div>
+<div id ="output"></div>
+  <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
+    <ul>
+      <li>
+      Task <input type="textfield" id="Task"/>
+      </li>
+      <li>
+      Vad <input type="textfield id="Vad"/>
+      </li>
+      <li>            
+      Vem <input type="textfield id="Vad"/>
+      </li>
+    </ul>  
+</div>
    
   </body>
 </html>

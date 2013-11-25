@@ -7,11 +7,12 @@
     top: 0;
     z-index: 80000;
 }
-
 #geo_popup{
+        border-radius: 10px;
+        border:1px solid black !important;
+        background-color:blue;
+        color: black;
 
-        border-radius: 5px;
-        color: red;
 }
 div.olControlEditingToolbar{
         top:60px;
