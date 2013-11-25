@@ -247,7 +247,6 @@ function init(){
               null,
               true
             );
-
             popup.setOpacity(0.8); 
             popup.setBackgroundColor('#212121');
             popup.setContentHTML(evt.feature.data.Vem + " \n" +evt.feature.data.Vad);      
@@ -263,7 +262,7 @@ function init(){
             feature.popup = null;
           }
         }
-        });
+      });
       var selector = new OpenLayers.Control.SelectFeature([geojson_layer,geojson_point_layer,geojson_point_layer3],{
         hover:false,
         toggle:true,

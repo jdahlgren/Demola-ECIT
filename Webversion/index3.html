@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="style.css" type="text/css"> 
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     <link rel="stylesheet" href="demola.css" type="text/css">
-    <script type="text/javascript">
+<script type="text/javascript">
 
     var map;
     var layer_array   = [];
@@ -30,55 +30,68 @@
     var Task = $('#Task');    
     var Vad  = $('#Vad');
     var När  = $('När');
-        /*password = $( "#password" ),
-        allFields = $( [] ).add( name ).add( email ).add( password );*/
-        //tips = $( ".validateTips" );
+    
 
-     var alert_style = new OpenLayers.Style({
+    var alert_style = new OpenLayers.Style({
         'fillColor': '#b61a1e',
         'fillOpacity': .2,
         'strokeColor': '#FF0000',
         'strokeWidth': 1,
-        'pointRadius': 8,
-        'label': '${name}'
-      });
-     var vehicle_style = new OpenLayers.Style({
+        'pointRadius': 8
+      }); 
+    var vehicle_style = new OpenLayers.Style({
         'fillColor': '#00ff00',
         'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
          'pointRadius': 8
       });
-     var people_style = new OpenLayers.Style({
+    var people_style = new OpenLayers.Style({
         'fillColor': '#0000ff',
         'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
          'pointRadius': 8
       });
-     var info_style = new OpenLayers.Style({
+    var info_style = new OpenLayers.Style({
         'fillColor': '#f0f30',
         'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
-        'pointRadius': 8,
-        'label': '${label}'
-
-      });
-      var alert_style_map = new OpenLayers.StyleMap({
+        'pointRadius': 8
+    });
+    var alert_style_map = new OpenLayers.StyleMap({
            'default': alert_style
-      });
-      var vehicle_style_map = new OpenLayers.StyleMap({
+    });
+    var vehicle_style_map = new OpenLayers.StyleMap({
            'default': vehicle_style
-      });
-      var people_style_map = new OpenLayers.StyleMap({
+    });
+    var people_style_map = new OpenLayers.StyleMap({
            'default': people_style
-      });
-
-      var info_style_map = new OpenLayers.StyleMap({
+    });
+    var info_style_map = new OpenLayers.StyleMap({
            'default': info_style
-      });
+    });
+    
+    var featAdded = function(){
+                var d = new Date(); // for now
+                console.log(this.List);
+                //Sätter marker beroende på vilken typ !
+                if($('#Vad').val()==1){
+                  this.that.features[this.featureVectorLength-1].st
+                }
+                this.that.features[this.featureVectorLength-1].attributes = { Vem: $("#Vem").val(),
+                                                                    Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
+                                                                    Vad: $("#Vad").val(),
+                                                                    Hur: $("#Hur").val(),
+                                                                    Var: $("#Var").val()
+                };
+                this.that.redraw(true); 
+                $('#dialog').dialog('close');
+                $(""+this.List+"").hide();   
+              
 
+    }
 function init(){
       //Functions block 
       //map functions
@@ -137,12 +150,12 @@ function init(){
             var popup = new OpenLayers.Popup.Anchored("geo_popup",
               feature.geometry.getBounds().getCenterLonLat(),
               null,
-              evt.feature.data.label,
+              null,
               null,
               true
             );
             //popup.setOpacity(0.8); 
-            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.Time+" <br>" + " Name : "+evt.feature.attributes.name+" "+"</div>");  
+            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.Time+" <br>" + " Vem : "+evt.feature.attributes.Vem+" "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -186,41 +199,56 @@ function init(){
                     "changebaselayer": mapBaseLayerChanged}});         
   //Layer block
   layer = new OpenLayers.Layer.OSM("Karta");
-  var alertLayer = new OpenLayers.Layer.Vector('Alert Layer',{
+  var areaOneLayer = new OpenLayers.Layer.Vector('Area One Layer',{
 				eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
 				}});
-    alertLayer.styleMap = alert_style_map;
-	var infoLayer = new OpenLayers.Layer.Vector('Info Layer',{
+  areaOneLayer.styleMap = alert_style_map;
+
+  var areaTwoLayer = new OpenLayers.Layer.Vector('Area Two Layer',{
+        eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected
+        }});
+  areaTwoLayer.styleMap = alert_style_map;
+	
+  var assetLayer = new OpenLayers.Layer.Vector('Tillgång Layer',{
 				eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
 				}});
-    infoLayer.styleMap = info_style_map;
-	var peopleLayer = new OpenLayers.Layer.Vector('People Layer',{
-				eventListeners:{
+    assetLayer.styleMap = info_style_map;
+	
+  var personLayer = new OpenLayers.Layer.Vector('Person Layer',{
+        eventListeners:{ 
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
 				}});
-    peopleLayer.styleMap = people_style_map;
-	var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
+    personLayer.styleMap = people_style_map;
+	
+  var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
 				eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected	
 				}});
-	vehicleLayer.styleMap = vehicle_style_map;
+	
+
+
+  vehicleLayer.styleMap = vehicle_style_map;
   
   map.addLayer(layer);    		
-	map.addLayer(alertLayer);
-	map.addLayer(infoLayer);
-	map.addLayer(vehicleLayer);
-	map.addLayer(peopleLayer);
-			
-  alertEditToolbar = new OpenLayers.Control.EditingToolbar(alertLayer);
-	infoEditToolbar = new OpenLayers.Control.EditingToolbar(infoLayer);
-	vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
-	peopleEditToolbar = new OpenLayers.Control.EditingToolbar(peopleLayer);
+	map.addLayer(areaOneLayer);
+	map.addLayer(areaTwoLayer);
+	map.addLayer(assetLayer);
+	map.addLayer(personLayer);
+  map.addLayer(vehicleLayer);
+	
+
+  alertEditToolbar = new OpenLayers.Control.EditingToolbar(areaOneLayer);
+	infoEditToolbar = new OpenLayers.Control.EditingToolbar(areaTwoLayer);
+	vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(assetLayer);
+	peopleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
 			
   alertEditToolbar.autoActivate = false;
 	infoEditToolbar.autoActivate = false;
@@ -254,13 +282,10 @@ function init(){
             var popup = new OpenLayers.Popup.Anchored("geo_popup",
               feature.geometry.getBounds().getCenterLonLat(),
               null,
-              evt.feature.attributes.age,
+              null,
               null,
               true
-            );
-            //popup.setOpacity(0.8); 
-           
-                  
+            );      
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -277,7 +302,7 @@ function init(){
       
       map.addLayer(geojson_layer);
 			
-      var selector = new OpenLayers.Control.SelectFeature([ alertLayer, infoLayer, vehicleLayer, peopleLayer,geojson_layer],{
+      var selector = new OpenLayers.Control.SelectFeature([ areaOneLayer, areaTwoLayer, vehicleLayer,personLayer ,assetLayer,geojson_layer],{
         hover:false,
         toggle:true,
         autoActivate:true
@@ -315,8 +340,8 @@ function init(){
 			 
 			var layersButton = new OpenLayers.Control.Button({
 				trigger: function(){
-          alert("HEj");
-          map.addLayer(new OpenLayers.Layer.Vector('Vehicle Layer'));
+            console.log("Layers är triggat");
+
         },
         displayClass: "layersButton"
 
@@ -408,63 +433,98 @@ function init(){
       }
 
 	  var drawMoveButton = new OpenLayers.Control.Button({
-		displayClass: "drawMoveButton",
-		trigger: function(){
-			drawPoint.deactivate();
-			drawPolygon.deactivate();
-		}
+		  displayClass: "drawMoveButton",
+		  trigger: function(){
+			 drawPoint.deactivate();
+			 drawPolygon.deactivate();
+		  }
 	  });
-	  
-    
-
-
-
-    var drawPoint = new OpenLayers.Control.DrawFeature(alertLayer,OpenLayers.Handler.Point,{
-     
+    var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,{
       featureAdded:function(){
-      
-         var e = this.layer.name;
-         var b = this.map.getLayersByName(e);
-         var c = b[0].features.length;
+        $("#assetList").show();
+        $("#vehicleList").hide();
+        $("#personList").hide();
+     
+         var List = "assetList";
+         var LayerName = this.layer.name;
+         var currentLayer = this.map.getLayersByName(LayerName);
+         //get the first layer !
+         var featureVectorLength = currentLayer[0].features.length;
          var that = this.layer;
          $("#dialog").dialog({
             buttons:{
-              Add: function(){
-                
-                var d = new Date(); // for now
-                console.log(that.features[0]);
-                that.features[c-1].attributes = { name: $("#Task").val(),Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), favColor: 'purple'
-                };
-                that.redraw(true); 
-                $('#dialog').dialog('close');   
-              }
+              //Binder that och featureVectorLength till featAdded funktionen 
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+            },
+            open:function(){
+           
+            map.layers[0].setOpacity(0.3);
+            },
+            close:function(){
+            map.layers[0].setOpacity(1.0);
+            }
+       });
+
+        
+      }});
+    var drawPointPerson = new OpenLayers.Control.DrawFeature(personLayer,OpenLayers.Handler.Point,{
+      featureAdded:function(){
+        $("#assetList").hide();
+        $("#vehicleList").hide();
+        $("#personList").show();
+         var List = "personList";
+         var LayerName = this.layer.name;
+         var currentLayer = this.map.getLayersByName(LayerName);
+         //get the first layer !
+         var featureVectorLength = currentLayer[0].features.length;
+         var that = this.layer;
+         $("#dialog").dialog({
+            buttons:{
+              //Binder that och featureVectorLength till featAdded funktionen 
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+            },
+            open:function(){
+           
+            map.layers[0].setOpacity(0.3);
+            },
+            close:function(){
+            map.layers[0].setOpacity(1.0);
+            }
+       });
+
+        
+      }});
+
+
+    var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,{
+        featureAdded:function(){
+         //Shit solution,but i works !!!
+         var LayerName = this.layer.name;
+         var currentLayer = this.map.getLayersByName(LayerName);
+         //get the first layer !
+         var featureVectorLength = currentLayer[0].features.length;
+         var that = this.layer;
+         $("#dialog").dialog({
+            buttons:{
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength})
           },
           open:function(){
-            console.log('Nu öppnas poupen !')
+           
             map.layers[0].setOpacity(0.3);
           },
           close:function(){
-            //Skriv ut datan här 
-            console.log('Nu stängs poupen !');
-            //that.features[c-1].destroy();
             map.layers[0].setOpacity(1.0);
           }
          });
-        
-       
-    
+    }});
+    //Draw point functions
+	  drawPanel.addControls(drawPointAsset);
+    drawPanel.addControls(drawPointPerson);
+    //drawPanel.addControls(drawPointVehicle);
 
-      }});
-
-      
-		
-		var drawPolygon = new OpenLayers.Control.DrawFeature(infoLayer, OpenLayers.Handler.Polygon);
-	  
-       
-	  drawPanel.addControls(drawPoint);
-	  drawPanel.addControls(drawPolygon);
+	  drawPanel.addControls(drawPolygonAreaOne);
 	  drawPanel.addControls(drawMoveButton);
-	  
+   
 		map.addControl(vButtonPanel);
 		map.addControl(topLeftPanel);
 		map.addControl(drawPanel);
@@ -488,10 +548,14 @@ function init(){
 			$(".userButtonItemActive").hide();
 			$(".layersButtonItemInactive").hide();
 			$(".layersButtonItemActive").hide();
-      //readTextFile("file:///Users/ek/Desktop/DEMOLA/Webversion/data.json");
+      //------------------------------------------
+      $("#dialog").hide();
+      $("#vehicleList").hide();
+      $("#personList").hide();
+      $("#assetList").hide();
 
     }
-    </script>
+</script>
   </head>
   <body onload="init()"> 
     <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
@@ -499,13 +563,36 @@ function init(){
   <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
     <ul>
       <li>
-      Task <input type="textfield" id="Task"/>
+      Vem <input type="textfield"id="Vem"/>
       </li>
       <li>
-      Vad <input type="textfield id="Vad"/>
+      Vad <input type="textfield"id="Vad"/>
       </li>
       <li>            
-      Vem <input type="textfield id="Vad"/>
+      Hur <input type="textfield" id="Hur"/>
+      </li>
+      <li>            
+      Var <input type="textfield" id="Var"/>
+      </li>
+      <li>
+      <select id="vehicleList">
+          <option>Brandbil</option>
+          <option>Helikopter</option>
+      </select>
+      <select id="personList">
+          <option>Brandbil</option>
+          <option>Volontär</option>
+          <option>Sjukvård</option>
+          <option>Brandledare</option>
+          <option>Polis/Militär</option>
+      </select>
+      <select id="assetList">
+          <option>Vattenpost</option>
+      </select>
+      </li>
+      <li>
+        <input type="radio" name="typ" value="Brukbar"> Brukbar<br>
+        <input type="radio" name="typ" value="Obrukbar"> Obrukbar
       </li>
     </ul>  
 </div>
