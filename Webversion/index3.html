@@ -37,7 +37,7 @@
         'fillOpacity': .2,
         'strokeColor': '#FF0000',
         'strokeWidth': 1,
-        'pointRadius': 8
+        'pointRadius': 8,
       }); 
     var vehicle_style = new OpenLayers.Style({
         'fillColor': '#00ff00',
@@ -51,7 +51,10 @@
         'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
-         'pointRadius': 8
+         'pointRadius': 8,
+         symbolizer: {
+              externalGraphic: "img/marker-blue.png"
+          } 
       });
     var info_style = new OpenLayers.Style({
         'fillColor': '#f0f30',
@@ -60,9 +63,14 @@
         'strokeWidth': 3,
         'pointRadius': 8
     });
+
     var alert_style_map = new OpenLayers.StyleMap({
            'default': alert_style
     });
+
+    
+
+
     var vehicle_style_map = new OpenLayers.StyleMap({
            'default': vehicle_style
     });
@@ -77,8 +85,9 @@
                 var d = new Date(); // for now
                 console.log(this.List);
                 //Sätter marker beroende på vilken typ !
+                this.that.features[0].style.externalGraphic = "'img/Eld.png'";
                 if($('#Vad').val()==1){
-                  this.that.features[this.featureVectorLength-1].st
+                  //this.that.features[this.featureVectorLength-1].st
                 }
                 this.that.features[this.featureVectorLength-1].attributes = { Vem: $("#Vem").val(),
                                                                     Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
@@ -92,6 +101,7 @@
               
 
     }
+
 function init(){
       //Functions block 
       //map functions
@@ -146,7 +156,6 @@ function init(){
 		}
 		var featureSelected = function(evt){
             var feature = evt.feature;
-
             var popup = new OpenLayers.Popup.Anchored("geo_popup",
               feature.geometry.getBounds().getCenterLonLat(),
               null,
@@ -160,22 +169,23 @@ function init(){
 
             map.addPopup(popup);
           }
-          var featureUnSelected = function(evt){
+    var featureUnSelected = function(evt){
 						var feature = evt.feature;
 						map.removePopup(feature.popup);
 						feature.popup.destroy();
 						feature.popup = null;
 		}
     //Button block
-
 		//Då knappen är aktiv som så lyssnar man på kartans eventlistener !
     //Create a function for the toggle button
+    
     var toggle_button_activate_func = function(){
                 console.log('toggle_button_activate_func');
                 //Attach the map_event_function to the map
                 map.events.register('click', map, map_event_function);
                 //map.events.register('click', layer, map_event_function);
     }
+    
     //Tar bort eventlistener
     var toggle_button_deactivate_func = function(){
 				        console.log('toggle_button_deactivate_func');
@@ -186,8 +196,7 @@ function init(){
     }
 	//Panel block
   //--------------------------------------------------------End Functions block------------------------------------------------
-  //---------------------------------------------------------------------------------------------------------------------------
-            
+  //---------------------------------------------------------------------------------------------------------------------------         
 	//--------------------------------------------------------Start Content block------------------------------------------------
   //---------------------------------------------------------------------------------------------------------------------------          
   //Map block
@@ -435,8 +444,10 @@ function init(){
 	  var drawMoveButton = new OpenLayers.Control.Button({
 		  displayClass: "drawMoveButton",
 		  trigger: function(){
-			 drawPoint.deactivate();
-			 drawPolygon.deactivate();
+			 drawPointAsset.deactivate();
+			 drawPointPerson.deactivate();
+       drawPolygonAreaOne.deactivate();
+       drawPolygonAreaTwo.deactivate();
 		  }
 	  });
     var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,{
@@ -557,8 +568,8 @@ function init(){
     }
 </script>
   </head>
-  <body onload="init()"> 
-    <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
+<body onload="init()"> 
+  <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
 <div id ="output"></div>
   <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
     <ul>
@@ -591,7 +602,7 @@ function init(){
       </select>
       </li>
       <li>
-        <input type="radio" name="typ" value="Brukbar"> Brukbar<br>
+        <input type="radio" name="typ" value="Brukbar">  Brukbar<br>
         <input type="radio" name="typ" value="Obrukbar"> Obrukbar
       </li>
     </ul>  
