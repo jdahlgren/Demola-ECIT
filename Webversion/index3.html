@@ -363,7 +363,7 @@ function init(){
 		  }
 	  });
     var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
-	{'displayClass':'drawPointAsset'},{
+	{'displayClass':'drawPointAsset',
       featureAdded:function(){
         $("#assetList").show();
         $("#vehicleList").hide();
@@ -392,7 +392,7 @@ function init(){
         
       }});
     var drawPointPerson = new OpenLayers.Control.DrawFeature(personLayer,OpenLayers.Handler.Point,
-	{'displayClass':'drawPointPerson'},{
+	{'displayClass':'drawPointPerson',
       featureAdded:function(){
         $("#assetList").hide();
         $("#vehicleList").hide();
@@ -422,7 +422,7 @@ function init(){
 
 
     var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,
-	{'displayClass':'drawPolygonAreaOne'},{
+	{'displayClass':'drawPolygonAreaOne',
         featureAdded:function(){
          //Shit solution,but i works !!!
          var LayerName = this.layer.name;
