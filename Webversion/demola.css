@@ -107,6 +107,19 @@ div.olControlZoom{
     content: "People";
 }
 .drawMoveButtonItemInactive:after,
-.layersButtonItemActive:after {
-    content:"move";
-}	
+.drawMoveButtonItemActive:after {
+    content:"drawNoMore";
+}
+.drawPolygonAreaOneItemInactive:after,
+.drawPolygonAreaOneItemActive:after {
+    content:"drawPolygonAreaOne";
+}
+.drawPointPersonItemInactive:after,
+.drawPointPersonItemActive:after {
+    content:"drawPointPerson";
+}
+.drawPointAssetItemInactive:after,
+.drawPointAssetItemActive:after {
+    content:"drawPointAsset";
+}
+	
