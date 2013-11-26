@@ -19,14 +19,6 @@
     var map;
     var layer_array   = [];
     var control_array = [];
-		
-    var alert    = false;
-		var info     = false;
-		
-    var vehicles = false;
-		var people   = false;
-
-		var alertEditToolbar, infoEditToolbar, vehicleEditToolbar, peopleEditToolbar;
     var Task = $('#Task');    
     var Vad  = $('#Vad');
     var När  = $('När');
@@ -118,32 +110,7 @@ function init(){
               rawFile.send(null);
       }    
 	    //Layer block
-	    var setLayerToDrawFeature = function(){
-				if(alert){
-					alertEditToolbar.activate();
-					infoEditToolbar.deactivate();
-					vehicleEditToolbar.deactivate();
-					peopleEditToolbar.deactivate();
-				}
-				else if(info){
-					alertEditToolbar.deactivate();
-					infoEditToolbar.activate();
-					vehicleEditToolbar.deactivate();
-					peopleEditToolbar.deactivate();
-				}
-				else if(vehicles){
-					alertEditToolbar.deactivate();
-					infoEditToolbar.deactivate();
-					vehicleEditToolbar.activate();
-					peopleEditToolbar.deactivate();
-				}
-				else if(people){
-					alertEditToolbar.deactivate();
-					infoEditToolbar.deactivate();
-					vehicleEditToolbar.deactivate();
-					peopleEditToolbar.activate();
-				}
-		}
+	    
 		var featureSelected = function(evt){
             var feature = evt.feature;
 
@@ -244,16 +211,6 @@ function init(){
 	map.addLayer(personLayer);
   map.addLayer(vehicleLayer);
 	
-
-  alertEditToolbar = new OpenLayers.Control.EditingToolbar(areaOneLayer);
-	infoEditToolbar = new OpenLayers.Control.EditingToolbar(areaTwoLayer);
-	vehicleEditToolbar = new OpenLayers.Control.EditingToolbar(assetLayer);
-	peopleEditToolbar = new OpenLayers.Control.EditingToolbar(vehicleLayer);
-			
-  alertEditToolbar.autoActivate = false;
-	infoEditToolbar.autoActivate = false;
-	vehicleEditToolbar.autoActivate = false;
-	peopleEditToolbar.autoActivate = false;
 
 			/*            
 			var selector = new OpenLayers.Control.SelectFeature([vectorLayer, alertLayer, infoLayer, vehicleLayer, peopleLayer],{
@@ -360,50 +317,6 @@ function init(){
 				type: OpenLayers.Control.TYPE_TOGGLE
 			});
 			
-			var alertButton = new OpenLayers.Control.Button({
-				displayClass: "alertButton",
-				trigger: function(){
-					
-					alert = true;
-					info = false;
-					vehicles = false;
-					people = false;
-					setLayerToDrawFeature();
-				}
-			});
-			var infoButton = new OpenLayers.Control.Button({
-				displayClass: "infoButton",
-				trigger: function(){
-					
-					alert = false;
-					info = true;
-					vehicles = false;
-					people = false;
-					setLayerToDrawFeature();
-				}
-			});
-			var vehicleButton = new OpenLayers.Control.Button({
-				displayClass: "vehicleButton",
-				trigger: function(){
-					
-					alert = false;
-					info = false;
-					vehicles = true;
-					people = false;
-					setLayerToDrawFeature();
-				}
-			});
-			var peopleButton = new OpenLayers.Control.Button({
-				displayClass: "peopleButton",
-				trigger: function(){
-					
-					alert = false;
-					info = false;
-					vehicles = false;
-					people = true;
-					setLayerToDrawFeature();
-				}
-			});
 			
 			//Panel block
 			var vButtonPanel = new OpenLayers.Control.TextButtonPanel({
@@ -418,7 +331,7 @@ function init(){
 				additionalClass: "drawPanel"
 			});
     
-      topLeftPanel.addControls([mapButton, layerButton, alertButton, infoButton, vehicleButton, peopleButton]);
+      topLeftPanel.addControls([mapButton, layerButton]);
 			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
       
       //Layer part 
@@ -435,11 +348,13 @@ function init(){
 	  var drawMoveButton = new OpenLayers.Control.Button({
 		  displayClass: "drawMoveButton",
 		  trigger: function(){
-			 drawPoint.deactivate();
-			 drawPolygon.deactivate();
+			 drawPointAsset.deactivate();
+			 drawPolygonAreaOne.deactivate();
+			 drawPointPerson.deactivate();
 		  }
 	  });
-    var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,{
+    var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
+	{'displayClass':'drawPointAsset'},{
       featureAdded:function(){
         $("#assetList").show();
         $("#vehicleList").hide();
@@ -467,7 +382,8 @@ function init(){
 
         
       }});
-    var drawPointPerson = new OpenLayers.Control.DrawFeature(personLayer,OpenLayers.Handler.Point,{
+    var drawPointPerson = new OpenLayers.Control.DrawFeature(personLayer,OpenLayers.Handler.Point,
+	{'displayClass':'drawPointPerson'},{
       featureAdded:function(){
         $("#assetList").hide();
         $("#vehicleList").hide();
@@ -496,7 +412,8 @@ function init(){
       }});
 
 
-    var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,{
+    var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,
+	{'displayClass':'drawPolygonAreaOne'},{
         featureAdded:function(){
          //Shit solution,but i works !!!
          var LayerName = this.layer.name;
@@ -531,10 +448,10 @@ function init(){
 		//Choose layer to add features
 			
 		//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
-		map.addControl(alertEditToolbar);
+		/*map.addControl(alertEditToolbar);
 		map.addControl(infoEditToolbar);
 		map.addControl(vehicleEditToolbar);
-		map.addControl(peopleEditToolbar);
+		map.addControl(peopleEditToolbar);*/
 		map.addControl(selector);
 
 
