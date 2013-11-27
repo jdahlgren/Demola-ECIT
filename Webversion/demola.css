@@ -49,12 +49,6 @@ div.olControlZoom{
   right: 8px;
 }
 
- .olControlTextButtonPanel.drawPanel { 
-  top: 8px;
-  left: 140px;
-}
-
-
 .button1ItemInactive:after,
 .button1ItemActive:after {
     content: "Menu " url('img/menu.png');
@@ -90,22 +84,7 @@ div.olControlZoom{
 .layersButtonItemActive:after {
     content:"Layers";
 }	
-.alertButtonItemInactive:after,
-.alertButtonItemActive:after {
-    content: "Alert";
-}
-.infoButtonItemInactive:after,
-.infoButtonItemActive:after {
-    content: "Info";
-}
-.vehicleButtonItemInactive:after,
-.vehicleButtonItemActive:after {
-    content: "Vehicles";
-}
-.peopleButtonItemInactive:after,
-.peopleButtonItemActive:after {
-    content: "People";
-}
+
 .drawMoveButtonItemInactive:after,
 .drawMoveButtonItemActive:after {
     content:"stop";
@@ -117,6 +96,10 @@ div.olControlZoom{
 .drawPointPersonItemInactive:after,
 .drawPointPersonItemActive:after {
     content:"Person";
+}
+.drawPointVehicleItemInactive:after,
+.drawPointVehicleItemActive:after {
+    content:"Vehicle";
 }
 .drawPointAssetItemInactive:after,
 .drawPointAssetItemActive:after {
