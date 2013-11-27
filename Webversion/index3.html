@@ -29,7 +29,8 @@
         'fillOpacity': .2,
         'strokeColor': '#FF0000',
         'strokeWidth': 1,
-        'pointRadius': 8,
+        'label':'Brand',
+        BackgroundGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/personer/1.png',
       }); 
     var vehicle_style = new OpenLayers.Style({
         'fillColor': '#00ff00',
@@ -38,23 +39,86 @@
         'strokeWidth': 3,
          'pointRadius': 8
       });
+    var FireMan = new OpenLayers.Rule({
+    filter: new OpenLayers.Filter.Comparison({
+        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+        property: 'Typ',
+        value: 'Brandman',
+    }),
+    symbolizer: {
+        label: "Brandman",
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/personer/3.png', 
+        labelOutlineColor: "black",
+        labelOutlineWidth: 3,
+        fontColor: "white",
+        fontSize: "8"
+        
+    }
+    });
+    var PoliceMan = new OpenLayers.Rule({
+    filter: new OpenLayers.Filter.Comparison({
+        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+        property: 'Typ',
+        value: 'Polis',
+    }),
+    symbolizer: {
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/personer/polismili.png', 
+        label: "Polis",
+        labelOutlineColor: "black",
+        labelOutlineWidth: 3,
+        fontColor: "white",
+        fontSize: "8"
+    }
+    });
+
     var people_style = new OpenLayers.Style({
-        'fillColor': '#0000ff',
-        'fillOpacity': .8,
-        'strokeColor': '#aaee77',
-        'strokeWidth': 3,
-         'pointRadius': 8,
-         symbolizer: {
-              externalGraphic: "img/marker-blue.png"
-          } 
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/personer/1.png', 
+        graphicWidth: 21, 
+        graphicHeight: 25,
+        graphicYOffset: -4
+         
       });
-    var info_style = new OpenLayers.Style({
+    
+    people_style.addRules([FireMan,PoliceMan]);
+
+    var asset_style = new OpenLayers.Style({
         'fillColor': '#f0f30',
         'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
-        'pointRadius': 8
+        'pointRadius': 8,
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/brandpost.png', 
+        graphicWidth: 20, 
+        graphicHeight: 20
     });
+    var AssetRule = new OpenLayers.Rule({
+    filter: new OpenLayers.Filter.Comparison({
+        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+        property: 'Skick',
+        value: 'Obrukbar',
+    }),
+    symbolizer: {
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/brandpost_o.png'
+    }
+
+    });
+
+    var AssetRuleBrukbar = new OpenLayers.Rule({
+    filter: new OpenLayers.Filter.Comparison({
+        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+        property: 'Skick',
+        value: 'Brukbar',
+    }),
+    symbolizer: {
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/brandpost.png'
+    }
+
+    });
+
+    asset_style.addRules([AssetRule,AssetRuleBrukbar]);
+    
+
+
 
     var alert_style_map = new OpenLayers.StyleMap({
            'default': alert_style
@@ -69,15 +133,25 @@
     var people_style_map = new OpenLayers.StyleMap({
            'default': people_style
     });
-    var info_style_map = new OpenLayers.StyleMap({
-           'default': info_style
+    var asset_style_map = new OpenLayers.StyleMap({
+           'default': asset_style
     });
     
     var featAdded = function(){
                 var d = new Date(); // for now
-                console.log(this.List);
+                console.log(this.that.features[this.featureVectorLength-1].geometry.x);
+                console.log(this.that.features[this.featureVectorLength-1].geometry.y);
+                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME);
                 //Sätter marker beroende på vilken typ !
-                //this.that.features[0].style.externalGraphic = "'img/Eld.png'";
+                /*
+
+                var layer = new OpenLayers.Layer.Vector("Simple Geometry", {style: style});
+                var point = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
+                var feature = new OpenLayers.Feature.Vector(point,{icon:"icon.png"});
+
+                */
+                
+                console.log();
                 if($('#Vad').val()==1){
                   //this.that.features[this.featureVectorLength-1].st
                 }
@@ -85,8 +159,10 @@
                                                                     Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
                                                                     Vad: $("#Vad").val(),
                                                                     Hur: $("#Hur").val(),
-                                                                    Var: $("#Var").val()
-                };
+                                                                    Var: $("#Var").val(),
+                                                                    Typ: $("#"+this.List+" option:selected").text(),
+                                                                    Skick:$('input[name="Skick"]:checked').val()
+                };  
                 this.that.redraw(true); 
                 $('#dialog').dialog('close');
                 $(""+this.List+"").hide();   
@@ -194,7 +270,7 @@ function init(){
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
 				}});
-    assetLayer.styleMap = info_style_map;
+    assetLayer.styleMap = asset_style_map;
 	
   var personLayer = new OpenLayers.Layer.Vector('Person Layer',{
         eventListeners:{ 
@@ -363,7 +439,7 @@ function init(){
 		  }
 	  });
     var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
-	{'displayClass':'drawPointAsset',
+	  {'displayClass':'drawPointAsset',
       featureAdded:function(){
         $("#assetList").show();
         $("#vehicleList").hide();
@@ -424,7 +500,10 @@ function init(){
     var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,
 	{'displayClass':'drawPolygonAreaOne',
         featureAdded:function(){
-         //Shit solution,but i works !!!
+         $("#assetList").hide();
+         $("#vehicleList").hide();
+         $("#personList").hide();
+         
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
          //get the first layer !
@@ -506,19 +585,20 @@ function init(){
           <option>Helikopter</option>
       </select>
       <select id="personList">
-          <option>Brandbil</option>
+          <option>Brandman</option>
           <option>Volontär</option>
-          <option>Sjukvård</option>
+          <option>Sjukvårdare</option>
           <option>Brandledare</option>
-          <option>Polis/Militär</option>
+          <option>Polis</option>
+          <option>Militär</option>
       </select>
       <select id="assetList">
           <option>Vattenpost</option>
       </select>
       </li>
       <li>
-        <input type="radio" name="typ" value="Brukbar">  Brukbar<br>
-        <input type="radio" name="typ" value="Obrukbar"> Obrukbar
+        <input type="radio" name="Skick" value="Brukbar">Brukbar<br>
+        <input type="radio" name="Skick" value="Obrukbar">Obrukbar
       </li>
     </ul>  
 </div>
