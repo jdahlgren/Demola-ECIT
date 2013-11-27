@@ -28,11 +28,11 @@
         'fillColor': '#b61a1e',
         'fillOpacity': .2,
         'strokeColor': '#FF0000',
-        'strokeWidth': 1,
-        'label':Null
+        'strokeWidth': 1
       });
     //------------------------------------------------vehicle_style------------------------------------------ 
     
+
     var vehicle_style = new OpenLayers.Style({
       });
 
@@ -182,6 +182,14 @@
     }
     });
 
+    var people_style = new OpenLayers.Style({
+        externalGraphic: 'file:///Users/ek/Desktop/DEMOLA/Webversion/img/personer/1.png', 
+        graphicWidth: 21, 
+        graphicHeight: 25,
+        graphicYOffset: -4
+         
+      });
+
     
     people_style.addRules([FireMan,PoliceMan]);
     
@@ -268,7 +276,22 @@
                                                                     Var: $("#Var").val(),
                                                                     Typ: $("#"+this.List+" option:selected").text(),
                                                                     Skick:$('input[name="Skick"]:checked').val()
-                };  
+                }; 
+				        console.log(this.that.name);
+                if(this.that.name == 'Area One Layer'){
+                        console.log("I if satsen !");
+                        var style = OpenLayers.Util.applyDefaults(style, OpenLayers.Feature.Vector.style['default']);
+                        style.fillOpacity = 0.2;
+                        style.strokeWidth = 1;
+                        style.strokeColor = "#ff0000";
+                        style.fillColor = "#b61a1e";
+                        style.label = $("#"+this.List+" option:selected").text();
+
+                        this.that.features[this.featureVectorLength-1].style = style;
+                }
+				
+
+				
                 this.that.redraw(true); 
                 $('#dialog').dialog('close');
                 $(""+this.List+"").hide();   
@@ -559,6 +582,7 @@ function init(){
 			 drawPointAsset.deactivate();
 			 drawPolygonAreaOne.deactivate();
 			 drawPointPerson.deactivate();
+			 drawPointVehicle.deactivate();
 		  }
 	  });
     var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
@@ -567,6 +591,8 @@ function init(){
         $("#assetList").show();
         $("#vehicleList").hide();
         $("#personList").hide();
+		$("#area1List").hide();
+		 $("#area2List").hide();
      
          var List = "assetList";
          var LayerName = this.layer.name;
@@ -596,6 +622,8 @@ function init(){
         $("#assetList").hide();
         $("#vehicleList").hide();
         $("#personList").show();
+		$("#area1List").hide();
+		 $("#area2List").hide();
          var List = "personList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -624,6 +652,8 @@ function init(){
         $("#assetList").hide();
         $("#vehicleList").show();
         $("#personList").hide();
+		$("#area1List").hide();
+		 $("#area2List").hide();
          var List = "vehicleList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -654,6 +684,10 @@ function init(){
          $("#assetList").hide();
          $("#vehicleList").hide();
          $("#personList").hide();
+		 $("#area1List").show();
+		 $("#area2List").show();
+		 
+		 var List = "area2List";
          
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -662,7 +696,7 @@ function init(){
          var that = this.layer;
          $("#dialog").dialog({
             buttons:{
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength})
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
           },
           open:function(){
            
@@ -670,6 +704,7 @@ function init(){
           },
           close:function(){
             map.layers[0].setOpacity(1.0);
+
           }
          });
     }});
@@ -745,6 +780,18 @@ function init(){
       </select>
       <select id="assetList">
           <option>Vattenpost</option>
+      </select>
+	  <select id="area1List">
+          <option>Sjö</option>
+		  <option>Land</option>
+		  <option>Vägar</option>
+		  <option>Bostadsområde</option>
+      </select>
+	  <select id="area2List">
+          <option>Radioaktivt</option>
+		  <option>Brand</option>
+		  <option>Översvämmning</option>
+		  <option>Jordbävning</option>
       </select>
       </li>
       <li>
