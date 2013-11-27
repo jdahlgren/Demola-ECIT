@@ -362,6 +362,14 @@ function init(){
 					$(".userButtonItemActive").toggle();
 					$(".layersButtonItemInactive").toggle();
 					$(".layersButtonItemActive").toggle();
+					$(".drawPointAssetItemInactive").hide();
+					$(".drawPointAssetItemActive").hide();
+					$(".drawPointPersonItemInactive").hide();
+					$(".drawPointPersonItemActive").hide();
+					$(".drawPolygonAreaOneItemInactive").hide();
+					$(".drawPolygonAreaOneItemActive").hide();
+					$(".drawMoveButtonItemInactive").hide();
+					$(".drawMoveButtonItemActive").hide();
 				},
 				displayClass: "button1"
 			});
@@ -382,7 +390,14 @@ function init(){
 			 
 			var layersButton = new OpenLayers.Control.Button({
 				trigger: function(){
-            console.log("Layers är triggat");
+					$(".drawPointAssetItemInactive").toggle();
+					$(".drawPointAssetItemActive").toggle();
+					$(".drawPointPersonItemInactive").toggle();
+					$(".drawPointPersonItemActive").toggle();
+					$(".drawPolygonAreaOneItemInactive").toggle();
+					$(".drawPolygonAreaOneItemActive").toggle();
+					$(".drawMoveButtonItemInactive").toggle();
+					$(".drawMoveButtonItemActive").toggle();
 
         },
         displayClass: "layersButton"
@@ -411,13 +426,12 @@ function init(){
 			var topLeftPanel = new OpenLayers.Control.TextButtonPanel({
 				additionalClass:"topLeftPanel"
 			});
-			var drawPanel = new OpenLayers.Control.TextButtonPanel({
-				vertical: true,
+			/*var drawPanel = new OpenLayers.Control.TextButtonPanel({
 				additionalClass: "drawPanel"
-			});
+			});*/
     
       topLeftPanel.addControls([mapButton, layerButton]);
-			vButtonPanel.addControls([b1, b2, b3, layersButton, userButton]);
+			vButtonPanel.addControls([b1, b2, b3, layersButton]);
       
       //Layer part 
       function mapEvent(event){
@@ -523,16 +537,17 @@ function init(){
          });
     }});
     //Draw point functions
-	  drawPanel.addControls(drawPointAsset);
+	  /*drawPanel.addControls(drawPointAsset);
     drawPanel.addControls(drawPointPerson);
     //drawPanel.addControls(drawPointVehicle);
 
 	  drawPanel.addControls(drawPolygonAreaOne);
-	  drawPanel.addControls(drawMoveButton);
+	  drawPanel.addControls(drawMoveButton);*/
    
+		vButtonPanel.addControls([drawPointAsset, drawPointPerson, drawPolygonAreaOne, drawMoveButton, userButton])
 		map.addControl(vButtonPanel);
 		map.addControl(topLeftPanel);
-		map.addControl(drawPanel);
+		//map.addControl(drawPanel);
 		//Choose layer to add features
 			
 		//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
@@ -544,7 +559,8 @@ function init(){
 
 
 			//Submenubuttons start hidden
-	     
+			$(".drawPanelInactive").hide();
+			$(".drawPanelActive").hide();
 			$(".button2ItemInactive").hide();
 			$(".button2ItemActive").hide();
 			$(".button3ItemInactive").hide();
@@ -553,6 +569,15 @@ function init(){
 			$(".userButtonItemActive").hide();
 			$(".layersButtonItemInactive").hide();
 			$(".layersButtonItemActive").hide();
+			//layers submenubuttons start hidden
+			$(".drawPointAssetItemInactive").hide();
+			$(".drawPointAssetItemActive").hide();
+			$(".drawPointPersonItemInactive").hide();
+			$(".drawPointPersonItemActive").hide();
+			$(".drawPolygonAreaOneItemInactive").hide();
+			$(".drawPolygonAreaOneItemActive").hide();
+			$(".drawMoveButtonItemInactive").hide();
+			$(".drawMoveButtonItemActive").hide();
       //------------------------------------------
       $("#dialog").hide();
       $("#vehicleList").hide();

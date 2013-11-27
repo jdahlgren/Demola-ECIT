@@ -51,7 +51,7 @@ div.olControlZoom{
 
  .olControlTextButtonPanel.drawPanel { 
   top: 8px;
-  left: 500px;
+  left: 140px;
 }
 
 
@@ -108,18 +108,17 @@ div.olControlZoom{
 }
 .drawMoveButtonItemInactive:after,
 .drawMoveButtonItemActive:after {
-    content:"drawNoMore";
+    content:"stop";
 }
 .drawPolygonAreaOneItemInactive:after,
 .drawPolygonAreaOneItemActive:after {
-    content:"drawPolygonAreaOne";
+    content:"Area";
 }
 .drawPointPersonItemInactive:after,
 .drawPointPersonItemActive:after {
-    content:"drawPointPerson";
+    content:"Person";
 }
 .drawPointAssetItemInactive:after,
 .drawPointAssetItemActive:after {
-    content:"drawPointAsset";
+    content:"Asset";
 }
-	
