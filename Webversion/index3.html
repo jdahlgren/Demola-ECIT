@@ -366,6 +366,8 @@ function init(){
 					$(".drawPointAssetItemActive").hide();
 					$(".drawPointPersonItemInactive").hide();
 					$(".drawPointPersonItemActive").hide();
+					$(".drawPointVehicleItemInactive").hide();
+					$(".drawPointVehicleItemActive").hide();
 					$(".drawPolygonAreaOneItemInactive").hide();
 					$(".drawPolygonAreaOneItemActive").hide();
 					$(".drawMoveButtonItemInactive").hide();
@@ -394,6 +396,8 @@ function init(){
 					$(".drawPointAssetItemActive").toggle();
 					$(".drawPointPersonItemInactive").toggle();
 					$(".drawPointPersonItemActive").toggle();
+					$(".drawPointVehicleItemInactive").toggle();
+					$(".drawPointVehicleItemActive").toggle();
 					$(".drawPolygonAreaOneItemInactive").toggle();
 					$(".drawPolygonAreaOneItemActive").toggle();
 					$(".drawMoveButtonItemInactive").toggle();
@@ -509,6 +513,34 @@ function init(){
 
         
       }});
+	  var drawPointVehicle = new OpenLayers.Control.DrawFeature(vehicleLayer,OpenLayers.Handler.Point,
+	{'displayClass':'drawPointVehicle',
+      featureAdded:function(){
+        $("#assetList").hide();
+        $("#vehicleList").show();
+        $("#personList").hide();
+         var List = "vehicleList";
+         var LayerName = this.layer.name;
+         var currentLayer = this.map.getLayersByName(LayerName);
+         //get the first layer !
+         var featureVectorLength = currentLayer[0].features.length;
+         var that = this.layer;
+         $("#dialog").dialog({
+            buttons:{
+              //Binder that och featureVectorLength till featAdded funktionen 
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+            },
+            open:function(){
+           
+            map.layers[0].setOpacity(0.3);
+            },
+            close:function(){
+            map.layers[0].setOpacity(1.0);
+            }
+       });
+
+        
+      }});
 
 
     var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,
@@ -537,24 +569,11 @@ function init(){
          });
     }});
     //Draw point functions
-	  /*drawPanel.addControls(drawPointAsset);
-    drawPanel.addControls(drawPointPerson);
-    //drawPanel.addControls(drawPointVehicle);
-
-	  drawPanel.addControls(drawPolygonAreaOne);
-	  drawPanel.addControls(drawMoveButton);*/
+	  
    
-		vButtonPanel.addControls([drawPointAsset, drawPointPerson, drawPolygonAreaOne, drawMoveButton, userButton])
+		vButtonPanel.addControls([drawPointAsset, drawPointPerson, drawPointVehicle, drawPolygonAreaOne, drawMoveButton, userButton])
 		map.addControl(vButtonPanel);
 		map.addControl(topLeftPanel);
-		//map.addControl(drawPanel);
-		//Choose layer to add features
-			
-		//map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
-		/*map.addControl(alertEditToolbar);
-		map.addControl(infoEditToolbar);
-		map.addControl(vehicleEditToolbar);
-		map.addControl(peopleEditToolbar);*/
 		map.addControl(selector);
 
 
@@ -574,6 +593,8 @@ function init(){
 			$(".drawPointAssetItemActive").hide();
 			$(".drawPointPersonItemInactive").hide();
 			$(".drawPointPersonItemActive").hide();
+			$(".drawPointVehicleItemInactive").hide();
+			$(".drawPointVehicleItemActive").hide();
 			$(".drawPolygonAreaOneItemInactive").hide();
 			$(".drawPolygonAreaOneItemActive").hide();
 			$(".drawMoveButtonItemInactive").hide();
