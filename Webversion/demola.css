@@ -49,12 +49,27 @@ div.olControlZoom{
   right: 8px;
 }
 
-.button1ItemInactive:after,
-.button1ItemActive:after {
-    content: "Menu " url('img/menu.png');
-
+.button1ItemInactive,
+.button1ItemActive{
+    margin:0 0 0 0;
+    width:120px;
+    height:40px;
+    text-align:left;
 }
 
+.button1ItemInactive:after,
+.button1ItemActive:after {
+    content: url('img/menu.png');
+    float:right;
+}
+
+.button2ItemInactive,
+.button2ItemActive{
+    margin:0 0 0 0;
+    width:120px;
+    height:40px;
+    text-align:left;
+}
 .button2ItemInactive:after,
 .button2ItemActive:after {
     content: "Settings";
@@ -75,6 +90,13 @@ div.olControlZoom{
     content:url('img/task_empty.png');
 }
 
+.userButtonItemInactive,
+.userButtonItemActive{
+    margin:0 0 0 0;
+    width:120px;
+    height:40px;
+    text-align:left;
+}
 .userButtonItemInactive:after,
 .userButtonItemActive:after {
     content:"UserName " url('img/user.png');
@@ -91,17 +113,17 @@ div.olControlZoom{
 }
 .drawPolygonAreaOneItemInactive:after,
 .drawPolygonAreaOneItemActive:after {
-    content:"Area";
+    content:url('img/area.png');
 }
 .drawPointPersonItemInactive:after,
 .drawPointPersonItemActive:after {
-    content:"Person";
+    content:url('img/personer.png');
 }
 .drawPointVehicleItemInactive:after,
 .drawPointVehicleItemActive:after {
-    content:"Vehicle";
+    content:url('img/fordon.png');
 }
 .drawPointAssetItemInactive:after,
 .drawPointAssetItemActive:after {
-    content:"Asset";
+    content:url('img/asset.png');
 }

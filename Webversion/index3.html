@@ -90,6 +90,27 @@
         }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Obrukbar' })
         ]
     });
+	
+	var doctorFilterBrukbar = new OpenLayers.Filter.Logical({
+      type: OpenLayers.Filter.Logical.AND,
+      filters:[
+        new OpenLayers.Filter.Comparison({
+          type: OpenLayers.Filter.Comparison.EQUAL_TO,
+          property: 'Typ',
+          value:'Sjukvårdare'
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Brukbar' })
+        ]
+    });
+	var doctorFilterObrukbar = new OpenLayers.Filter.Logical({
+      type: OpenLayers.Filter.Logical.AND,
+      filters:[
+        new OpenLayers.Filter.Comparison({
+          type: OpenLayers.Filter.Comparison.EQUAL_TO,
+          property: 'Typ',
+          value:'Sjukvårdare'
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Obrukbar' })
+        ]
+    });
 
     var vehicleFire = new OpenLayers.Rule({
     
@@ -134,6 +155,26 @@
         
     }
     });
+	var doctor1 = new OpenLayers.Rule({
+    filter: doctorFilterObrukbar,
+    symbolizer: {
+        externalGraphic: 'img/personer/upptagen.png', 
+        graphicWidth: 25, 
+        graphicHeight: 25,
+        graphicYOffset: -4  
+        
+    }
+    });
+	var doctor2 = new OpenLayers.Rule({
+    filter: doctorFilterBrukbar,
+    symbolizer: {
+        externalGraphic: 'img/personer/1.png', 
+        graphicWidth: 25, 
+        graphicHeight: 25,
+        graphicYOffset: -4  
+        
+    }
+    });
 
 
     vehicle_style.addRules([vehicleFire,vehicleFire2,vehicleFire3,vehicleFire4]);
@@ -143,9 +184,7 @@
     var people_style = new OpenLayers.Style({
         externalGraphic: 'img/personer/1.png', 
         graphicWidth: 21, 
-        graphicHeight: 25,
-        graphicYOffset: -4
-         
+        graphicHeight: 25,         
       });
     
 
@@ -161,6 +200,7 @@
         externalGraphic: 'img/personer/3.png', 
         labelOutlineColor: "black",
         labelOutlineWidth: 3,
+		fontFamily: "Arial",
         fontColor: "white",
         fontSize: "8"
         
@@ -182,16 +222,8 @@
     }
     });
 
-    var people_style = new OpenLayers.Style({
-        externalGraphic: 'img/personer/1.png', 
-        graphicWidth: 21, 
-        graphicHeight: 25,
-        graphicYOffset: -4
-         
-      });
-
     
-    people_style.addRules([FireMan,PoliceMan]);
+    people_style.addRules([FireMan,PoliceMan, doctor1, doctor2]);
     
     //------------------------------------------asset_style-------------------------------------------------
     
@@ -255,7 +287,7 @@
                 var d = new Date(); // for now
                 console.log(this.that.features[this.featureVectorLength-1].geometry.x);
                 console.log(this.that.features[this.featureVectorLength-1].geometry.y);
-                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME);
+                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME+'sksksks');
                 //Sätter marker beroende på vilken typ !
                 /*
 
@@ -273,7 +305,6 @@
                                                                     Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
                                                                     Vad: $("#Vad").val(),
                                                                     Hur: $("#Hur").val(),
-                                                                    Var: $("#Var").val(),
                                                                     Typ: $("#"+this.List+" option:selected").text(),
                                                                     Skick:$('input[name="Skick"]:checked').val()
                 }; 
@@ -294,7 +325,9 @@
 				
                 this.that.redraw(true); 
                 $('#dialog').dialog('close');
-                $(""+this.List+"").hide();   
+                $(""+this.List+"").hide();
+				
+				this.select.deactivate();
               
 
     }
@@ -335,7 +368,10 @@ function init(){
               true
             );
             //popup.setOpacity(0.8); 
-            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.Time+" <br>" + " Vem : "+evt.feature.attributes.Vem+" "+"</div>");  
+            popup.setContentHTML("<div class=PopUpContent>"+"Time : "+evt.feature.attributes.Time+" <br>" + 
+				" Who : "+evt.feature.attributes.Vem+"<br> "+
+				" What : "+evt.feature.attributes.Vad+"<br> "+
+				" How : "+evt.feature.attributes.Hur+"<br> "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -432,9 +468,9 @@ function init(){
 				autoActivate:true
 			});
 			*/
-  var lonlat = new OpenLayers.LonLat(125.01085281372072,11.243735509183928).transform( new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+  var lonlat = new OpenLayers.LonLat(151.47056579589844,-32.810361684869).transform( new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
   map.setCenter(lonlat);
-  map.zoomTo(13);
+  map.zoomTo(12);
 
   //Format object for reading fromfiles !
   //Create a Format object
@@ -488,9 +524,7 @@ function init(){
 					$(".button3ItemActive").toggle();
 					$(".userButtonItemInactive").toggle();
 					$(".userButtonItemActive").toggle();
-					$(".layersButtonItemInactive").toggle();
-					$(".layersButtonItemActive").toggle();
-					$(".drawPointAssetItemInactive").hide();
+					/*$(".drawPointAssetItemInactive").hide();
 					$(".drawPointAssetItemActive").hide();
 					$(".drawPointPersonItemInactive").hide();
 					$(".drawPointPersonItemActive").hide();
@@ -499,7 +533,7 @@ function init(){
 					$(".drawPolygonAreaOneItemInactive").hide();
 					$(".drawPolygonAreaOneItemActive").hide();
 					$(".drawMoveButtonItemInactive").hide();
-					$(".drawMoveButtonItemActive").hide();
+					$(".drawMoveButtonItemActive").hide();*/
 				},
 				displayClass: "button1"
 			});
@@ -518,7 +552,7 @@ function init(){
 				displayClass: "userButton"
 			});
 			 
-			var layersButton = new OpenLayers.Control.Button({
+			/*var layersButton = new OpenLayers.Control.Button({
 				trigger: function(){
 					$(".drawPointAssetItemInactive").toggle();
 					$(".drawPointAssetItemActive").toggle();
@@ -534,10 +568,13 @@ function init(){
         },
         displayClass: "layersButton"
 
-			})
+			});*/
 	  
 			var layerButton = new OpenLayers.Control.Button({
 				displayClass: "button4",
+				trigger: function(){
+					location.reload();
+				}
 			});
 
 			var mapButton = new OpenLayers.Control.Button({
@@ -562,8 +599,8 @@ function init(){
 				additionalClass: "drawPanel"
 			});*/
     
-      topLeftPanel.addControls([mapButton, layerButton]);
-			vButtonPanel.addControls([b1, b2, b3, layersButton]);
+      topLeftPanel.addControls([mapButton]);
+			vButtonPanel.addControls([b1, b2, b3]);
       
       //Layer part 
       function mapEvent(event){
@@ -576,7 +613,7 @@ function init(){
                 console.log(event.type + " " + event.layer.name + " " + event.property);
       }
 
-	  var drawMoveButton = new OpenLayers.Control.Button({
+	  /*var drawMoveButton = new OpenLayers.Control.Button({
 		  displayClass: "drawMoveButton",
 		  trigger: function(){
 			 drawPointAsset.deactivate();
@@ -584,16 +621,15 @@ function init(){
 			 drawPointPerson.deactivate();
 			 drawPointVehicle.deactivate();
 		  }
-	  });
+	  });*/
     var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
 	  {'displayClass':'drawPointAsset',
       featureAdded:function(){
         $("#assetList").show();
         $("#vehicleList").hide();
         $("#personList").hide();
-		$("#area1List").hide();
 		 $("#area2List").hide();
-     
+		$("#skick").show();
          var List = "assetList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -603,7 +639,7 @@ function init(){
          $("#dialog").dialog({
             buttons:{
               //Binder that och featureVectorLength till featAdded funktionen 
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List, select:drawPointAsset})
             },
             open:function(){
            
@@ -622,8 +658,8 @@ function init(){
         $("#assetList").hide();
         $("#vehicleList").hide();
         $("#personList").show();
-		$("#area1List").hide();
 		 $("#area2List").hide();
+		 $("#skick").show();
          var List = "personList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -633,7 +669,7 @@ function init(){
          $("#dialog").dialog({
             buttons:{
               //Binder that och featureVectorLength till featAdded funktionen 
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List, select:drawPointPerson})
             },
             open:function(){
            
@@ -652,8 +688,8 @@ function init(){
         $("#assetList").hide();
         $("#vehicleList").show();
         $("#personList").hide();
-		$("#area1List").hide();
 		 $("#area2List").hide();
+		 $("#skick").show();
          var List = "vehicleList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -663,7 +699,7 @@ function init(){
          $("#dialog").dialog({
             buttons:{
               //Binder that och featureVectorLength till featAdded funktionen 
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List,select:drawPointVehicle})
             },
             open:function(){
            
@@ -684,9 +720,8 @@ function init(){
          $("#assetList").hide();
          $("#vehicleList").hide();
          $("#personList").hide();
-		 $("#area1List").show();
 		 $("#area2List").show();
-		 
+		 $("#skick").hide();
 		 var List = "area2List";
          
          var LayerName = this.layer.name;
@@ -696,7 +731,7 @@ function init(){
          var that = this.layer;
          $("#dialog").dialog({
             buttons:{
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List})
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List, select:drawPolygonAreaOne})
           },
           open:function(){
            
@@ -711,7 +746,8 @@ function init(){
     //Draw point functions
 	  
    
-		vButtonPanel.addControls([drawPointAsset, drawPointPerson, drawPointVehicle, drawPolygonAreaOne, drawMoveButton, userButton])
+		vButtonPanel.addControls([userButton]);
+		topLeftPanel.addControls([drawPointAsset, drawPointPerson, drawPointVehicle, drawPolygonAreaOne, layerButton])
 		map.addControl(vButtonPanel);
 		map.addControl(topLeftPanel);
 		map.addControl(selector);
@@ -726,9 +762,7 @@ function init(){
 			$(".button3ItemActive").hide();
 			$(".userButtonItemInactive").hide();
 			$(".userButtonItemActive").hide();
-			$(".layersButtonItemInactive").hide();
-			$(".layersButtonItemActive").hide();
-			//layers submenubuttons start hidden
+			/*//layers submenubuttons start hidden
 			$(".drawPointAssetItemInactive").hide();
 			$(".drawPointAssetItemActive").hide();
 			$(".drawPointPersonItemInactive").hide();
@@ -738,7 +772,7 @@ function init(){
 			$(".drawPolygonAreaOneItemInactive").hide();
 			$(".drawPolygonAreaOneItemActive").hide();
 			$(".drawMoveButtonItemInactive").hide();
-			$(".drawMoveButtonItemActive").hide();
+			$(".drawMoveButtonItemActive").hide();*/
       //------------------------------------------
       $("#dialog").hide();
       $("#vehicleList").hide();
@@ -762,9 +796,6 @@ function init(){
       <li>            
       Hur <input type="textfield" id="Hur"/>
       </li>
-      <li>            
-      Var <input type="textfield" id="Var"/>
-      </li>
       <li>
       <select id="vehicleList">
           <option>Brandbil</option>
@@ -781,12 +812,6 @@ function init(){
       <select id="assetList">
           <option>Vattenpost</option>
       </select>
-	  <select id="area1List">
-          <option>Sjö</option>
-		  <option>Land</option>
-		  <option>Vägar</option>
-		  <option>Bostadsområde</option>
-      </select>
 	  <select id="area2List">
           <option>Radioaktivt</option>
 		  <option>Brand</option>
@@ -795,8 +820,10 @@ function init(){
       </select>
       </li>
       <li>
+		<div id="skick">
         <input type="radio" name="Skick" value="Brukbar">Brukbar<br>
         <input type="radio" name="Skick" value="Obrukbar">Obrukbar
+		</div>
       </li>
     </ul>  
 </div>
