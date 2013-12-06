@@ -24,12 +24,13 @@
     var När  = $('När');
     
 
-    var alert_style = new OpenLayers.Style({
+    var fire_style = new OpenLayers.Style({
         'fillColor': '#b61a1e',
         'fillOpacity': .2,
-        'strokeColor': '#FF0000',
+        'strokeColor': '#b61a1e',
         'strokeWidth': 1
       });
+	
     //------------------------------------------------vehicle_style------------------------------------------ 
     
 
@@ -117,8 +118,8 @@
     filter:vehicleFireTruckFilterBrukbar,
     symbolizer: {
         externalGraphic: 'img/brandbil.png',
-        graphicWidth: 25, 
-        graphicHeight: 25,
+        graphicWidth: 35, 
+        graphicHeight: 35,
         graphicYOffset: -4  
     }
     });
@@ -127,8 +128,8 @@
     filter: vehicleFireTruckFilterObrukbar,
     symbolizer: {
         externalGraphic: 'img/brandbil.png', 
-        graphicWidth: 25, 
-        graphicHeight: 25,
+        graphicWidth: 35, 
+        graphicHeight: 35,
         graphicYOffset: -4  
         
     }
@@ -138,8 +139,8 @@
     filter: HelicopterFilterBrukbar,
     symbolizer: {
         externalGraphic: 'img/helikopter.png', 
-        graphicWidth: 25, 
-        graphicHeight: 25,
+        graphicWidth: 35, 
+        graphicHeight: 35,
         graphicYOffset: -4  
         
     }
@@ -149,8 +150,8 @@
     filter: HelicopterFilterObrukbar,
     symbolizer: {
         externalGraphic: 'img/helikopter_o.png', 
-        graphicWidth: 25, 
-        graphicHeight: 25,
+        graphicWidth: 35, 
+        graphicHeight: 35,
         graphicYOffset: -4  
         
     }
@@ -159,8 +160,8 @@
     filter: doctorFilterObrukbar,
     symbolizer: {
         externalGraphic: 'img/personer/upptagen.png', 
-        graphicWidth: 25, 
-        graphicHeight: 25,
+        graphicWidth: 35, 
+        graphicHeight: 35,
         graphicYOffset: -4  
         
     }
@@ -169,8 +170,8 @@
     filter: doctorFilterBrukbar,
     symbolizer: {
         externalGraphic: 'img/personer/1.png', 
-        graphicWidth: 25, 
-        graphicHeight: 25,
+        graphicWidth: 35, 
+        graphicHeight: 35,
         graphicYOffset: -4  
         
     }
@@ -183,8 +184,8 @@
     
     var people_style = new OpenLayers.Style({
         externalGraphic: 'img/personer/1.png', 
-        graphicWidth: 21, 
-        graphicHeight: 25,         
+        graphicWidth: 26, 
+        graphicHeight: 30,         
       });
     
 
@@ -234,8 +235,8 @@
         'strokeWidth': 3,
         'pointRadius': 8,
         externalGraphic: 'img/brandpost.png', 
-        graphicWidth: 20, 
-        graphicHeight: 20
+        graphicWidth: 35, 
+        graphicHeight: 35
     });
     var AssetRule = new OpenLayers.Rule({
     filter: new OpenLayers.Filter.Comparison({
@@ -267,7 +268,7 @@
 
 
     var alert_style_map = new OpenLayers.StyleMap({
-           'default': alert_style
+           'default': fire_style
     });
 
     
@@ -287,7 +288,7 @@
                 var d = new Date(); // for now
                 console.log(this.that.features[this.featureVectorLength-1].geometry.x);
                 console.log(this.that.features[this.featureVectorLength-1].geometry.y);
-                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME+'sksksks');
+                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME);
                 //Sätter marker beroende på vilken typ !
                 /*
 
@@ -312,10 +313,31 @@
                 if(this.that.name == 'Area One Layer'){
                         console.log("I if satsen !");
                         var style = OpenLayers.Util.applyDefaults(style, OpenLayers.Feature.Vector.style['default']);
-                        style.fillOpacity = 0.2;
-                        style.strokeWidth = 1;
-                        style.strokeColor = "#ff0000";
-                        style.fillColor = "#b61a1e";
+						if($("#"+this.List+" option:selected").text() === 'Brand'){
+							style.fillOpacity = 0.2;
+							style.strokeWidth = 1;
+							style.strokeColor = "#b61a1e";
+							style.fillColor = "#b61a1e";
+						}
+						else if($("#"+this.List+" option:selected").text() === 'Jordbävning'){
+							style.fillOpacity = 0.2;
+							style.strokeWidth = 1;
+							style.strokeColor = "#634729";
+							style.fillColor = "#634729";
+						}
+						else if($("#"+this.List+" option:selected").text() === 'Översvämmning'){
+							style.fillOpacity = 0.2;
+							style.strokeWidth = 1;
+							style.strokeColor = "#384bff";
+							style.fillColor = "#384bff";
+						}
+						else if($("#"+this.List+" option:selected").text() === 'Radioaktivt'){
+							style.fillOpacity = 0.2;
+							style.strokeWidth = 1;
+							style.strokeColor = "#fffc00";
+							style.fillColor = "#fffc00";
+						}
+						style.font = "Arial";
                         style.label = $("#"+this.List+" option:selected").text();
 
                         this.that.features[this.featureVectorLength-1].style = style;
@@ -629,6 +651,7 @@ function init(){
         $("#vehicleList").hide();
         $("#personList").hide();
 		 $("#area2List").hide();
+		 $("#whoList").hide();
 		$("#skick").show();
          var List = "assetList";
          var LayerName = this.layer.name;
@@ -659,6 +682,7 @@ function init(){
         $("#vehicleList").hide();
         $("#personList").show();
 		 $("#area2List").hide();
+		 $("#whoList").show();
 		 $("#skick").show();
          var List = "personList";
          var LayerName = this.layer.name;
@@ -689,6 +713,7 @@ function init(){
         $("#vehicleList").show();
         $("#personList").hide();
 		 $("#area2List").hide();
+		 $("#whoList").hide();
 		 $("#skick").show();
          var List = "vehicleList";
          var LayerName = this.layer.name;
@@ -721,6 +746,7 @@ function init(){
          $("#vehicleList").hide();
          $("#personList").hide();
 		 $("#area2List").show();
+		 $("#whoList").hide();
 		 $("#skick").hide();
 		 var List = "area2List";
          
@@ -747,7 +773,7 @@ function init(){
 	  
    
 		vButtonPanel.addControls([userButton]);
-		topLeftPanel.addControls([drawPointAsset, drawPointPerson, drawPointVehicle, drawPolygonAreaOne, layerButton])
+		topLeftPanel.addControls([drawPointPerson, drawPolygonAreaOne, drawPointAsset, drawPointVehicle, layerButton])
 		map.addControl(vButtonPanel);
 		map.addControl(topLeftPanel);
 		map.addControl(selector);
@@ -788,7 +814,14 @@ function init(){
   <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
     <ul>
       <li>
-      Vem <input type="textfield"id="Vem"/>
+      Vem 
+	  <select id="whoList">
+          <option>q1</option>
+		  <option>q2</option>
+		  <option>q3</option>
+		  <option>q4</option>
+		  <option>q5</option>
+      </select>
       </li>
       <li>
       Vad <input type="textfield"id="Vad"/>
