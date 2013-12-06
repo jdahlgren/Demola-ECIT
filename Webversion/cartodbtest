@@ -1,0 +1,20 @@
+http://{account}.cartodb.com/api/v2/sql?q={SQL statement}&api_key={Your API key}
+
+
+http://ekke.cartodb.com/api/v2/sql?q=INSERT INTO points (vem) VALUES ('Läkare')&api_key={Your API key}
+
+http://ekke.cartodb.com/api/v2/sql?q=UPDATE points SET vad = 'upptagen' WHERE vem = 'Läkare' &api_key=d36df91a79308f99c9469c57df807b6eb53825fb
+
+http://ekke.cartodb.com/api/v2/sql?q=INSERT INTO table_name (the_geom, observation) VALUES (’POINT(-71.2 42.5)’,'rare bird spotted')&api_key=d36df91a79308f99c9469c57df807b6eb53825fb
+
+
+http://ekke.cartodb.com/api/v2/sql?q=INSERT%20INTO%20datastorage%20(the_geom)%20VALUES%20(POINT(-71.2::float),'rare%20bird%20spotted')&api_key=d36df91a79308f99c9469c57df807b6eb53825fb
+
+
+
+
+http://ekke.cartodb.com/api/v2/sql?q=INSERT%20INTO%20datastorage%20(the_geom)%20VALUES%20(ST_SetSRID(ST_MakePoint(30::float,30::float),4326))&api_key=d36df91a79308f99c9469c57df807b6eb53825fb
+
+ST_SetSRID(ST_MakePoint(lng::float,lat::float),4326)
+
+http://ekke.cartodb.com/api/v2/sql?q=INSERT%20INTO%20datastorage%20(the_geom)%20VALUES%20(ST_SetSRID(ST_MakePoint(30::float,30::float),4326))&api_key=d36df91a79308f99c9469c57df807b6eb53825fb

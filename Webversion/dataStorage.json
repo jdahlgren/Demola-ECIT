@@ -1,0 +1,107 @@
+{
+  "type": "FeatureCollection",
+  "features": [{
+      "type": "Feature",
+      "properties": {
+        "Vem": "Läkare"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.00638961791992,
+          11.244240608578309
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {
+        "Vem": "Läkare",
+        "Vad":"",
+        "Status":""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.99840736389162,
+          11.242556940487976
+        ]
+      }
+    },{
+      "type": "Feature",
+      "properties": {
+        "Vem": "Läkare"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.9980640411377,
+          11.239273759426156
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {
+        "Vem": "Läkare"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.99681949615477,
+          11.230097491050714
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {
+        "Vem": "Läkare"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.00051021575928,
+          11.236958673381103
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.00321388244629,
+          11.227571861379818
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.00381469726562,
+          11.232538912054155
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.00450134277344,
+          11.237758432479831
+        ]
+      }
+    }, {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.00922203063965,
+          11.245755901449801
+        ]
+      }
+    }
+  ]
+}

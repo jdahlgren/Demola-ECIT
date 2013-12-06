@@ -255,10 +255,10 @@ formats = {
           console.log(this.features.length);
         }
         });
-        
+        var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
         var kuk  =  new OpenLayers.Layer.Vector("från cartodb",{
           projection: new OpenLayers.Projection("EPSG:4326"),
-          strategies: [new OpenLayers.Strategy.Fixed()],
+          strategies: [new OpenLayers.Strategy.Fixed(),refresh],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
@@ -360,16 +360,27 @@ formats = {
     map.addControl(selector);
     console.log("antal features : "+map.layers[2].features.length);
     function serialize(feature) {
+    
+      //point.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+      //feature.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+      console.log(feature.geometry.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326")));
+      var pos = feature.geometry.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326").x);
+      console.log(pos.x+" :pos");
       var type = 'geojson';
-      //console.log(feature.data);
-      //$.post("ekke.cartodb.com/api/v2/sql?q=UPDATE points SET vad = \'fk\' WHERE vem = \'Läkare\' &api_key=d36df91a79308f99c9469c57df807b6eb53825fb",function(data){console.log(data);},"json");
-      var sql = 'UPDATE points SET vad = \'sdlkfjds\' WHERE vem = \'Läkare\' '
+      test = '125.00922203';
+      var sql = 'UPDATE points SET vad = \'HEJ\' WHERE vem = \'Läkare\' ';
+      var sql2 = 'INSERT INTO datastorage(the_geom,vad,vem) VALUES(';
+        sql2  +=  'ST_GeomFromText(’POINT(-71.2 42.5)’, 4326)';
+        sql2  +=',\'zxc\', \'Läkare1\') ';
+      var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad) VALUES (ST_SetSRID(ST_MakePoint(';
+        sql3  += pos.x+'::float,'+pos.y+'::float),4326),\'HEJ\',\'Läkare\')';
+
       $.ajax({
         type: 'POST',
         url: 'https://ekke.cartodb.com/api/v2/sql',
         crossDomain: true,
         data: {
-          "q": sql,
+          "q": sql3,
           "api_key":'d36df91a79308f99c9469c57df807b6eb53825fb'
         },
         dataType: 'json',
@@ -383,14 +394,10 @@ formats = {
           console.log("Problem saving the data");
           console.log("Data saved"+responseData+textStatus+errorThrown);
 
-        }
-      });
-      // second argument for pretty printing (geojson only)
-      //var pretty = document.getElementById("prettyPrint").checked;
-      //var str = formats['out'][type].write(feature, false);
-      // not a good idea in general, just for this demo
-      //str = str.replace(/,/g, ', ');
-      //console.log(str);
+        }});
+ 
+	     refresh.refresh();
+
     }
 
   
@@ -412,6 +419,4 @@ formats = {
   
 </body>
 
-</html>
-         
-      
+</html>  
