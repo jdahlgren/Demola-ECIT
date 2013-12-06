@@ -255,14 +255,14 @@ formats = {
           console.log(this.features.length);
         }
         });
-        var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
-        var kuk  =  new OpenLayers.Layer.Vector("från cartodb",{
+  var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
+  var kuk  =  new OpenLayers.Layer.Vector("från cartodb",{
           projection: new OpenLayers.Projection("EPSG:4326"),
           strategies: [new OpenLayers.Strategy.Fixed(),refresh],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
-              q: "select * from points LIMIT 50",
+              q: "select * from datastorage ",
               format: "geojson",
           },
             format: new OpenLayers.Format.GeoJSON({

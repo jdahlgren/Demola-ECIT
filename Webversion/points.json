@@ -25,7 +25,7 @@
 },
 {
 "type": "Feature",
-"properties": {"Vem":"Olycksområde","Vad":"Hög smittorisk , pga många lik"},
+"properties": {"Vem":"Olycksområde","Vad":"Hög smittorisk , pga många lik","status":"true"},
 "geometry": {
 "type": "Polygon",
 "coordinates": [

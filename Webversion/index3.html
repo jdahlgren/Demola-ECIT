@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="theme/default/style.css" type="text/css">
     <link rel="stylesheet" href="demola.css" type="text/css">
 <script type="text/javascript">
-   
+    
     var map;
     var layer_array   = [];
     var control_array = [];
@@ -282,20 +282,11 @@
     var asset_style_map = new OpenLayers.StyleMap({
            'default': asset_style
     });
-    
+
+
     var featAdded = function(){
                 var d = new Date(); // for now
-                console.log(this.that.features[this.featureVectorLength-1].geometry.x);
-                console.log(this.that.features[this.featureVectorLength-1].geometry.y);
-                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME+'sksksks');
-                //Sätter marker beroende på vilken typ !
-                /*
-
-                var layer = new OpenLayers.Layer.Vector("Simple Geometry", {style: style});
-                var point = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
-                var feature = new OpenLayers.Feature.Vector(point,{icon:"icon.png"});
-
-                */
+                
                 
                 console.log();
                 if($('#Vad').val()==1){
@@ -327,10 +318,35 @@
                 $('#dialog').dialog('close');
                 $(""+this.List+"").hide();
 				
-				this.select.deactivate();
-              
+				        this.select.deactivate();
 
-    }
+                console.log(this.that.features[this.featureVectorLength-1].geometry.x);
+                console.log(this.that.features[this.featureVectorLength-1].geometry.y);
+                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME);
+                
+                
+                 var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength-1].geometry.x,this.that.features[this.featureVectorLength-1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
+                 console.log(lonlat.lon);
+                var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad) VALUES (ST_SetSRID(ST_MakePoint(';
+                sql3  += lonlat.lon+'::float,'+lonlat.lat+'::float),4326)';
+                sql3  += ',\''+$("#Vad").val()+'\',\'Läkare\')';
+                $.ajax({
+                     type: 'POST',
+                     url: 'https://ekke.cartodb.com/api/v2/sql',
+                     crossDomain: true,
+                data: {
+                     "q": sql3,
+                     "api_key":'d36df91a79308f99c9469c57df807b6eb53825fb'
+                },
+                dataType: 'json',
+                success: function(responseData, textStatus, jqXHR) {
+                            console.log("Data saved"+responseData);
+                },
+                error: function(responseData, textStatus, errorThrown) {
+                           console.log("Problem saving the data");
+                           console.log("Data saved"+responseData+textStatus+errorThrown);
+                         }});
+}
 function init(){
       //Functions block 
       //map functions
@@ -435,11 +451,28 @@ function init(){
 					"featureunselected":featureUnSelected
 				}});
     assetLayer.styleMap = asset_style_map;
-	
-  var personLayer = new OpenLayers.Layer.Vector('Person Layer',{
-        eventListeners:{ 
-					"featureselected":featureSelected,
-					"featureunselected":featureUnSelected
+	var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
+  var personLayer = new OpenLayers.Layer.Vector('från cartodb',{
+          projection: new OpenLayers.Projection("EPSG:4326"),
+          strategies: [new OpenLayers.Strategy.Fixed(),refresh],
+          protocol: new OpenLayers.Protocol.Script({
+          url: "http://ekke.cartodb.com/api/v2/sql",
+          params: {
+              q: "select * from points ",
+              format: "geojson",
+          },
+            format: new OpenLayers.Format.GeoJSON({
+            ignoreExtraDims: true
+          }),
+            callbackKey: "callback"
+          }),
+            format: new OpenLayers.Format.GeoJSON({
+            ignoreExtraDims: true
+          }),
+            callbackKey: "callback",
+                eventListeners:{
+					           "featureselected":featureSelected,
+					           "featureunselected":featureUnSelected
 				}});
     personLayer.styleMap = people_style_map;
 	
@@ -454,11 +487,11 @@ function init(){
   vehicleLayer.styleMap = vehicle_style_map;
   
   map.addLayer(layer);    		
-	map.addLayer(areaOneLayer);
-	map.addLayer(areaTwoLayer);
-	map.addLayer(assetLayer);
+	//map.addLayer(areaOneLayer);
+	//map.addLayer(areaTwoLayer);
+	//map.addLayer(assetLayer);
 	map.addLayer(personLayer);
-  map.addLayer(vehicleLayer);
+  //map.addLayer(vehicleLayer);
 	
 
 			/*            
@@ -506,7 +539,7 @@ function init(){
         });
       geojson_layer.styleMap = vehicle_style_map;
       
-      map.addLayer(geojson_layer);
+      //map.addLayer(geojson_layer);
 			
       var selector = new OpenLayers.Control.SelectFeature([ areaOneLayer, areaTwoLayer, vehicleLayer,personLayer ,assetLayer,geojson_layer],{
         hover:false,
@@ -778,8 +811,25 @@ function init(){
       $("#vehicleList").hide();
       $("#personList").hide();
       $("#assetList").hide();
+   refresh.refresh();
 
+    var animationTimer = true;
+    var time = 0;
+    var startDate = new Date(1272736800000); // lower bound of when values
+    var endDate = new Date(1272737100000); // upper value of when values
+    var step = 8; // sencods to advance each interval
+    var interval = 0.125; // seconds between each step in the animation
+
+    var doSuff = function(){
+      console.log("Hej");
     }
+
+   function update(){
+          setInterval(doSuff,3000);
+    }
+    update();
+  }
+
 </script>
   </head>
 <body onload="init()"> 
