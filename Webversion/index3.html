@@ -42,9 +42,9 @@
       filters:[
         new OpenLayers.Filter.Comparison({
           type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
+          property: 'typ',
           value:'Brandbil'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Brukbar' })
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
         ]
     });
 
@@ -53,9 +53,9 @@
       filters:[
         new OpenLayers.Filter.Comparison({
           type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
+          property: 'typ',
           value:'Brandbil'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Brukbar' })
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
         ]
     });
 
@@ -64,9 +64,9 @@
       filters:[
         new OpenLayers.Filter.Comparison({
           type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
+          property: 'typ',
           value:'Brandbil'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Obrukbar' })
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Obrukbar' })
         ]
     });
 
@@ -75,9 +75,9 @@
       filters:[
         new OpenLayers.Filter.Comparison({
           type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
+          property: 'typ',
           value:'Helikopter'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Brukbar' })
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
         ]
     });
 
@@ -86,32 +86,12 @@
       filters:[
         new OpenLayers.Filter.Comparison({
           type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
+          property: 'typ',
           value:'Helikopter'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Obrukbar' })
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Obrukbar' })
         ]
     });
 	
-	var doctorFilterBrukbar = new OpenLayers.Filter.Logical({
-      type: OpenLayers.Filter.Logical.AND,
-      filters:[
-        new OpenLayers.Filter.Comparison({
-          type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
-          value:'Sjukvårdare'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Brukbar' })
-        ]
-    });
-	var doctorFilterObrukbar = new OpenLayers.Filter.Logical({
-      type: OpenLayers.Filter.Logical.AND,
-      filters:[
-        new OpenLayers.Filter.Comparison({
-          type: OpenLayers.Filter.Comparison.EQUAL_TO,
-          property: 'Typ',
-          value:'Sjukvårdare'
-        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'Skick',value:'Obrukbar' })
-        ]
-    });
 
     var vehicleFire = new OpenLayers.Rule({
     
@@ -156,7 +136,37 @@
         
     }
     });
-	var doctor1 = new OpenLayers.Rule({
+	
+
+
+    vehicle_style.addRules([vehicleFire,vehicleFire2,vehicleFire3,vehicleFire4]);
+    
+    //-----------------------------------------people_style--------------------------------------------------
+    
+      var doctorFilterBrukbar = new OpenLayers.Filter.Logical({
+      type: OpenLayers.Filter.Logical.AND,
+      filters:[
+        new OpenLayers.Filter.Comparison({
+          type: OpenLayers.Filter.Comparison.EQUAL_TO,
+          property: 'typ',
+          value:'Sjukvårdare'
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
+        ]
+    });
+  var doctorFilterObrukbar = new OpenLayers.Filter.Logical({
+      type: OpenLayers.Filter.Logical.AND,
+      filters:[
+        new OpenLayers.Filter.Comparison({
+          type: OpenLayers.Filter.Comparison.EQUAL_TO,
+          property: 'typ',
+          value:'Sjukvårdare'
+        }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Obrukbar' })
+        ]
+    });
+
+
+
+    var doctor1 = new OpenLayers.Rule({
     filter: doctorFilterObrukbar,
     symbolizer: {
         externalGraphic: 'img/personer/upptagen.png', 
@@ -166,7 +176,7 @@
         
     }
     });
-	var doctor2 = new OpenLayers.Rule({
+  var doctor2 = new OpenLayers.Rule({
     filter: doctorFilterBrukbar,
     symbolizer: {
         externalGraphic: 'img/personer/1.png', 
@@ -177,11 +187,6 @@
     }
     });
 
-
-    vehicle_style.addRules([vehicleFire,vehicleFire2,vehicleFire3,vehicleFire4]);
-    
-    //-----------------------------------------people_style--------------------------------------------------
-    
     var people_style = new OpenLayers.Style({
         externalGraphic: 'img/personer/1.png', 
         graphicWidth: 26, 
@@ -193,7 +198,7 @@
     var FireMan = new OpenLayers.Rule({
     filter: new OpenLayers.Filter.Comparison({
         type: OpenLayers.Filter.Comparison.EQUAL_TO,
-        property: 'Typ',
+        property: 'typ',
         value: 'Brandman',
     }),
     symbolizer: {
@@ -210,7 +215,7 @@
     var PoliceMan = new OpenLayers.Rule({
     filter: new OpenLayers.Filter.Comparison({
         type: OpenLayers.Filter.Comparison.EQUAL_TO,
-        property: 'Typ',
+        property: 'typ',
         value: 'Polis',
     }),
     symbolizer: {
@@ -241,7 +246,7 @@
     var AssetRule = new OpenLayers.Rule({
     filter: new OpenLayers.Filter.Comparison({
         type: OpenLayers.Filter.Comparison.EQUAL_TO,
-        property: 'Skick',
+        property: 'skick',
         value: 'Obrukbar',
     }),
     symbolizer: {
@@ -253,7 +258,7 @@
     var AssetRuleBrukbar = new OpenLayers.Rule({
     filter: new OpenLayers.Filter.Comparison({
         type: OpenLayers.Filter.Comparison.EQUAL_TO,
-        property: 'Skick',
+        property: 'skick',
         value: 'Brukbar',
     }),
     symbolizer: {
@@ -295,8 +300,8 @@ var featAdded = function(){
                                                                     Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
                                                                     Vad: $("#Vad").val(),
                                                                     Hur: $("#Hur").val(),
-                                                                    Typ: $("#"+this.List+" option:selected").text(),
-                                                                    Skick:$('input[name="Skick"]:checked').val()
+                                                                    typ: $("#"+this.List+" option:selected").text(),
+                                                                    skick:$('input[name="Skick"]:checked').val()
                 }; 
 				        console.log(this.that.name);
                 if(this.that.name == 'Area One Layer'){
@@ -347,9 +352,13 @@ var featAdded = function(){
                 
                  var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength-1].geometry.x,this.that.features[this.featureVectorLength-1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
                  console.log(lonlat.lon);
-                var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad) VALUES (ST_SetSRID(ST_MakePoint(';
+                var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
                 sql3  += lonlat.lon+'::float,'+lonlat.lat+'::float),4326)';
-                sql3  += ',\''+$("#Vad").val()+'\',\'Läkare\')';
+                sql3  += ',\''+$("#Vad").val()+'\',';
+                sql3  += '\''+$("#Hur").val()+'\',';
+                sql3  += '\''+$('input[name="Skick"]:checked').val()+'\',';
+                sql3  += '\''+$("#"+this.List+" option:selected").text()+'\',';
+                sql3  += '\''+(d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()+'\')';
                 $.ajax({
                      type: 'POST',
                      url: 'https://ekke.cartodb.com/api/v2/sql',
@@ -404,10 +413,10 @@ function init(){
               true
             );
             //popup.setOpacity(0.8); 
-            popup.setContentHTML("<div class=PopUpContent>"+"Time : "+evt.feature.attributes.Time+" <br>" + 
-				" Who : "+evt.feature.attributes.Vem+"<br> "+
-				" What : "+evt.feature.attributes.Vad+"<br> "+
-				" How : "+evt.feature.attributes.Hur+"<br> "+"</div>");  
+            popup.setContentHTML("<div class=PopUpContent>"+"Time : "+evt.feature.attributes.tid+" <br>" + 
+				" Who : "+evt.feature.attributes.vem+"<br> "+
+				" What : "+evt.feature.attributes.vad+"<br> "+
+				" How : "+evt.feature.attributes.hur+"<br> "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -471,14 +480,35 @@ function init(){
 					"featureunselected":featureUnSelected
 				}});
     assetLayer.styleMap = asset_style_map;
-	var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
+	
+  var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
   var personLayer = new OpenLayers.Layer.Vector('från cartodb',{
           projection: new OpenLayers.Projection("EPSG:4326"),
           strategies: [new OpenLayers.Strategy.Fixed(),refresh],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
-              q: "select * from points ",
+              q: "select * from datastorage ",
+              format: "geojson",
+          },
+            format: new OpenLayers.Format.GeoJSON({
+            ignoreExtraDims: true
+          }),
+            callbackKey: "callback"
+          }),  
+          eventListeners:{
+					           "featureselected":featureSelected,
+					           "featureunselected":featureUnSelected
+				}});
+  personLayer.styleMap = people_style_map;
+	
+  var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
+        projection: new OpenLayers.Projection("EPSG:4326"),
+          strategies: [new OpenLayers.Strategy.Fixed(),refresh],
+          protocol: new OpenLayers.Protocol.Script({
+          url: "http://ekke.cartodb.com/api/v2/sql",
+          params: {
+              q: "select * from datastorage ",
               format: "geojson",
           },
             format: new OpenLayers.Format.GeoJSON({
@@ -486,17 +516,6 @@ function init(){
           }),
             callbackKey: "callback"
           }),
-            format: new OpenLayers.Format.GeoJSON({
-            ignoreExtraDims: true
-          }),
-            callbackKey: "callback",
-                eventListeners:{
-					           "featureselected":featureSelected,
-					           "featureunselected":featureUnSelected
-				}});
-    personLayer.styleMap = people_style_map;
-	
-  var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
 				eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected	
@@ -507,11 +526,11 @@ function init(){
   vehicleLayer.styleMap = vehicle_style_map;
   
   map.addLayer(layer);    		
-	//map.addLayer(areaOneLayer);
-	//map.addLayer(areaTwoLayer);
-	//map.addLayer(assetLayer);
+	map.addLayer(areaOneLayer);
+	map.addLayer(areaTwoLayer);
+	map.addLayer(assetLayer);
 	map.addLayer(personLayer);
-  //map.addLayer(vehicleLayer);
+  map.addLayer(vehicleLayer);
 	
 
 			/*            
@@ -770,19 +789,19 @@ function init(){
       }});
 
 
-    var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,
-	{'displayClass':'drawPolygonAreaOne',
+    var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,{'displayClass':'drawPolygonAreaOne',
         featureAdded:function(){
          $("#assetList").hide();
          $("#vehicleList").hide();
          $("#personList").hide();
-		 $("#area2List").show();
-		 $("#whoList").hide();
+		     $("#area2List").show();
+		     $("#whoList").hide();
 		 $("#skick").hide();
 		 var List = "area2List";
          
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
+         console.log(this.layer.name);
          //get the first layer !
          var featureVectorLength = currentLayer[0].features.length;
          var that = this.layer;
@@ -835,7 +854,7 @@ function init(){
       $("#vehicleList").hide();
       $("#personList").hide();
       $("#assetList").hide();
-   refresh.refresh();
+   
 
     var animationTimer = true;
     var time = 0;
@@ -843,15 +862,17 @@ function init(){
     var endDate = new Date(1272737100000); // upper value of when values
     var step = 8; // sencods to advance each interval
     var interval = 0.125; // seconds between each step in the animation
-
+     
     var doSuff = function(){
       console.log("Hej");
+      refresh.refresh();
     }
 
    function update(){
-          setInterval(doSuff,3000);
+          setInterval(doSuff,5000);
     }
     update();
+    
   }
 
 </script>
@@ -902,8 +923,8 @@ function init(){
       </li>
       <li>
 		<div id="skick">
-        <input type="radio" name="Skick" value="Brukbar">Brukbar<br>
-        <input type="radio" name="Skick" value="Obrukbar">Obrukbar
+        <input type="radio" name="skick" value="Brukbar">Brukbar<br>
+        <input type="radio" name="skick" value="Obrukbar">Obrukbar
 		</div>
       </li>
     </ul>  

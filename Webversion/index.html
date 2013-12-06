@@ -270,11 +270,7 @@ formats = {
           }),
             callbackKey: "callback"
           }),
-            format: new OpenLayers.Format.GeoJSON({
-            ignoreExtraDims: true
-          }),
-            callbackKey: "callback",
-                eventListeners:{
+          eventListeners:{
           "featureselected":function(evt){
             var feature = evt.feature;
 
