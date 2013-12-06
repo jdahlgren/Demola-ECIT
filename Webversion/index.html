@@ -113,6 +113,9 @@
     
     <script type="text/javascript">
 var map;
+
+
+
 var geo_style = new OpenLayers.Style({
         'fillColor': '#00ff00',
         'fillOpacity': .8,
@@ -144,10 +147,30 @@ var black_style_map = new OpenLayers.StyleMap({
            'default': black_style
       });
 function init(){
-      
+       var point_layer_size = 0;
       //Map block
       map = new OpenLayers.Map('map');
-            
+      
+      var in_options = {
+'internalProjection': null,
+'externalProjection': new OpenLayers.Projection(OpenLayers.Util.getElement("inproj").value)
+};
+var out_options = {
+'internalProjection': null,
+'externalProjection': new OpenLayers.Projection(OpenLayers.Util.getElement("outproj").value)
+};
+
+
+formats = {
+'in': {
+      geojson: new OpenLayers.Format.GeoJSON(in_options),
+      encoded_polyline: new OpenLayers.Format.EncodedPolyline(in_options)
+},
+'out': {
+        geojson: new OpenLayers.Format.GeoJSON(out_options),
+        encoded_polyline: new OpenLayers.Format.EncodedPolyline(out_options)}
+};
+
       //Layer block
       var layer = new OpenLayers.Layer.OSM("Karta");
       map.addLayer(layer);
@@ -227,8 +250,58 @@ function init(){
             feature.popup.destroy();
             feature.popup = null;
           }
+        },
+        "getNumberOfFeatuers":function(){
+          console.log(this.features.length);
         }
         });
+        
+        var kuk  =  new OpenLayers.Layer.Vector("från cartodb",{
+          projection: new OpenLayers.Projection("EPSG:4326"),
+          strategies: [new OpenLayers.Strategy.Fixed()],
+          protocol: new OpenLayers.Protocol.Script({
+          url: "http://ekke.cartodb.com/api/v2/sql",
+          params: {
+              q: "select * from points LIMIT 50",
+              format: "geojson",
+          },
+            format: new OpenLayers.Format.GeoJSON({
+            ignoreExtraDims: true
+          }),
+            callbackKey: "callback"
+          }),
+            format: new OpenLayers.Format.GeoJSON({
+            ignoreExtraDims: true
+          }),
+            callbackKey: "callback",
+                eventListeners:{
+          "featureselected":function(evt){
+            var feature = evt.feature;
+
+            var popup = new OpenLayers.Popup.Anchored("geo_popup",
+              feature.geometry.getBounds().getCenterLonLat(),
+              null,
+              null,
+              null,
+              true
+            );
+            popup.setOpacity(0.8); 
+            popup.setBackgroundColor('#212121');
+            popup.setContentHTML(evt.feature.data.vem + " \n" +evt.feature.data.vad);      
+            feature.popup = popup;
+
+            map.addPopup(popup);
+          },
+          "featureunselected":function(evt){
+            var feature = evt.feature;
+
+            map.removePopup(feature.popup);
+            feature.popup.destroy();
+            feature.popup = null;
+          }
+        }
+          });
+
         var geojson_point_layer3 = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
             projection: "EPSG:4326",
             strategies: [new OpenLayers.Strategy.Fixed()],
@@ -263,19 +336,66 @@ function init(){
           }
         }
       });
-      var selector = new OpenLayers.Control.SelectFeature([geojson_layer,geojson_point_layer,geojson_point_layer3],{
+      var selector = new OpenLayers.Control.SelectFeature([geojson_layer,geojson_point_layer,geojson_point_layer3,kuk],{
         hover:false,
         toggle:true,
-        autoActivate:true
+        autoActivate:true,
+        onUnselect: serialize
       });
+
+      
+    
     geojson_layer.styleMap = geo_style_map;
     geojson_point_layer.styleMap = alert_style_map;
     geojson_point_layer3.styleMap = black_style_map;
-    map.addLayer(geojson_layer);
-    map.addLayer(geojson_point_layer);
+    
+
+    //map.addLayer(geojson_layer);
+    //map.addLayer(geojson_point_layer);
     map.addLayer(geojson_point_layer3);
-    console.log(geojson_point_layer.features);
+    map.addLayer(kuk);
+
+    console.log("antal features : "+map.layers[2].features.length);
+   
     map.addControl(selector);
+    console.log("antal features : "+map.layers[2].features.length);
+    function serialize(feature) {
+      var type = 'geojson';
+      //console.log(feature.data);
+      //$.post("ekke.cartodb.com/api/v2/sql?q=UPDATE points SET vad = \'fk\' WHERE vem = \'Läkare\' &api_key=d36df91a79308f99c9469c57df807b6eb53825fb",function(data){console.log(data);},"json");
+      var sql = 'UPDATE points SET vad = \'sdlkfjds\' WHERE vem = \'Läkare\' '
+      $.ajax({
+        type: 'POST',
+        url: 'https://ekke.cartodb.com/api/v2/sql',
+        crossDomain: true,
+        data: {
+          "q": sql,
+          "api_key":'d36df91a79308f99c9469c57df807b6eb53825fb'
+        },
+        dataType: 'json',
+        success: function(responseData, textStatus, jqXHR) {
+          console.log("Data saved"+responseData);
+
+         
+           
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log("Problem saving the data");
+          console.log("Data saved"+responseData+textStatus+errorThrown);
+
+        }
+      });
+      // second argument for pretty printing (geojson only)
+      //var pretty = document.getElementById("prettyPrint").checked;
+      //var str = formats['out'][type].write(feature, false);
+      // not a good idea in general, just for this demo
+      //str = str.replace(/,/g, ', ');
+      //console.log(str);
+    }
+
+  
+    
+
 
     
        
@@ -285,6 +405,10 @@ function init(){
 <body onload="init()">
   
 <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px;'></div>
+
+<div id="inproj" ></div>
+<div id="outproj" ></div>
+<input type="button" onclick="deserialize();" value="add feature">
   
 </body>
 
