@@ -367,6 +367,7 @@ formats = {
       var pos = feature.geometry.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326").x);
       console.log(pos.x+" :pos");
       var type = 'geojson';
+
       test = '125.00922203';
       var sql = 'UPDATE points SET vad = \'HEJ\' WHERE vem = \'Läkare\' ';
       var sql2 = 'INSERT INTO datastorage(the_geom,vad,vem) VALUES(';
