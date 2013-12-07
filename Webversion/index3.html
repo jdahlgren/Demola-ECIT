@@ -35,6 +35,10 @@
     
 
     var vehicle_style = new OpenLayers.Style({
+         'fillColor': '#b61a1e',
+        'fillOpacity': .2,
+        'strokeColor': '#b61a1e',
+        'strokeWidth': 1
       });
 
     var vehicleFireTruckFilterBrukbar = new OpenLayers.Filter.Logical({
@@ -481,10 +485,10 @@ function init(){
 				}});
     assetLayer.styleMap = asset_style_map;
 	
-  var refresh = new OpenLayers.Strategy.Refresh({force: true, active: true});
+  var refreshperson = new OpenLayers.Strategy.Refresh({force: true, active: true});
   var personLayer = new OpenLayers.Layer.Vector('från cartodb',{
           projection: new OpenLayers.Projection("EPSG:4326"),
-          strategies: [new OpenLayers.Strategy.Fixed(),refresh],
+          strategies: [new OpenLayers.Strategy.Fixed(),refreshperson],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
@@ -501,10 +505,10 @@ function init(){
 					           "featureunselected":featureUnSelected
 				}});
   personLayer.styleMap = people_style_map;
-	
+	var refreshvehicle = new OpenLayers.Strategy.Refresh({force: true, active: true});
   var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
         projection: new OpenLayers.Projection("EPSG:4326"),
-          strategies: [new OpenLayers.Strategy.Fixed(),refresh],
+          strategies: [new OpenLayers.Strategy.Fixed(),refreshvehicle],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
@@ -700,9 +704,9 @@ function init(){
         $("#assetList").show();
         $("#vehicleList").hide();
         $("#personList").hide();
-		 $("#area2List").hide();
-		 $("#whoList").hide();
-		$("#skick").show();
+		    $("#area2List").hide();
+		    $("#whoList").hide();
+		    $("#skick").show();
          var List = "assetList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -796,8 +800,8 @@ function init(){
          $("#personList").hide();
 		     $("#area2List").show();
 		     $("#whoList").hide();
-		 $("#skick").hide();
-		 var List = "area2List";
+		     $("#skick").hide();
+		     var List = "area2List";
          
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -856,20 +860,17 @@ function init(){
       $("#assetList").hide();
    
 
-    var animationTimer = true;
-    var time = 0;
-    var startDate = new Date(1272736800000); // lower bound of when values
-    var endDate = new Date(1272737100000); // upper value of when values
-    var step = 8; // sencods to advance each interval
-    var interval = 0.125; // seconds between each step in the animation
+   
      
     var doSuff = function(){
-      console.log("Hej");
-      refresh.refresh();
+      console.log("Uppdaterar");
+      refreshvehicle.refresh();
+      refreshperson.refresh();
+
     }
 
    function update(){
-          setInterval(doSuff,5000);
+          setInterval(doSuff,3000);
     }
     update();
     
