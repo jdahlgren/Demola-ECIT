@@ -19,8 +19,7 @@
     var map;
     var layer_array   = [];
     var control_array = [];
-    var Task = $('#Task');    
-    var Vad  = $('#Vad');
+    var Task = $('#Task');
     var När  = $('När');
     
 
@@ -273,8 +272,7 @@
 
     asset_style.addRules([AssetRule,AssetRuleBrukbar]);
     
-    //------------------------------------Stylemaps------------------------------------------------------
-
+     //------------------------------------Stylemaps------------------------------------------------------
 
     var alert_style_map = new OpenLayers.StyleMap({
            'default': fire_style
@@ -292,94 +290,85 @@
     var asset_style_map = new OpenLayers.StyleMap({
            'default': asset_style
     });
-var featAdded = function(){
-                var d = new Date(); // for now
-                
-                
-                console.log();
-                if($('#Vad').val()==1){
-                  //this.that.features[this.featureVectorLength-1].st
-                }
-                this.that.features[this.featureVectorLength-1].attributes = { Vem: $("#Vem").val(),
-                                                                    Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
-                                                                    Vad: $("#Vad").val(),
-                                                                    Hur: $("#Hur").val(),
-                                                                    typ: $("#"+this.List+" option:selected").text(),
-                                                                    skick:$('input[name="Skick"]:checked').val()
-                }; 
-				        console.log(this.that.name);
-                if(this.that.name == 'Area One Layer'){
-                        console.log("I if satsen !");
-                        var style = OpenLayers.Util.applyDefaults(style, OpenLayers.Feature.Vector.style['default']);
-						if($("#"+this.List+" option:selected").text() === 'Brand'){
-							style.fillOpacity = 0.2;
-							style.strokeWidth = 1;
-							style.strokeColor = "#b61a1e";
-							style.fillColor = "#b61a1e";
-						}
-						else if($("#"+this.List+" option:selected").text() === 'Jordbävning'){
-							style.fillOpacity = 0.2;
-							style.strokeWidth = 1;
-							style.strokeColor = "#634729";
-							style.fillColor = "#634729";
-						}
-						else if($("#"+this.List+" option:selected").text() === 'Översvämmning'){
-							style.fillOpacity = 0.2;
-							style.strokeWidth = 1;
-							style.strokeColor = "#384bff";
-							style.fillColor = "#384bff";
-						}
-						else if($("#"+this.List+" option:selected").text() === 'Radioaktivt'){
-							style.fillOpacity = 0.2;
-							style.strokeWidth = 1;
-							style.strokeColor = "#fffc00";
-							style.fillColor = "#fffc00";
-						}
-						style.font = "Arial";
-                        style.label = $("#"+this.List+" option:selected").text();
+    var featAdded = function(){
+      var d = new Date(); // for now
+      
+      this.that.features[this.featureVectorLength - 1].attributes = {
+        Vem: $("#Vem").val(),
+        Time: (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds(),
+        Hur: $("#Hur").val(),
+        typ: $("#" + this.List + " option:selected").text(),
+        skick: $('#skick input:radio:checked').val()
+      };
+      
+      console.log(this.that.name);
+      if (this.that.name == 'Area One Layer') {
+        console.log("I if satsen !");
+        var style = OpenLayers.Util.applyDefaults(style, OpenLayers.Feature.Vector.style['default']);
+        if ($("#" + this.List + " option:selected").text() === 'Brand') {
+          style.fillOpacity = 0.2;
+          style.strokeWidth = 1;
+          style.strokeColor = "#b61a1e";
+          style.fillColor = "#b61a1e";
+        } else if ($("#" + this.List + " option:selected").text() === 'Jordbävning') {
+          style.fillOpacity = 0.2;
+          style.strokeWidth = 1;
+          style.strokeColor = "#634729";
+          style.fillColor = "#634729";
+        } else if ($("#" + this.List + " option:selected").text() === 'Översvämmning') {
+          style.fillOpacity = 0.2;
+          style.strokeWidth = 1;
+          style.strokeColor = "#384bff";
+          style.fillColor = "#384bff";
+        } else if ($("#" + this.List + " option:selected").text() === 'Radioaktivt') {
+          style.fillOpacity = 0.2;
+          style.strokeWidth = 1;
+          style.strokeColor = "#fffc00";
+          style.fillColor = "#fffc00";
+        }
+        style.font = "Arial";
+        style.label = $("#" + this.List + " option:selected").text();
 
-                        this.that.features[this.featureVectorLength-1].style = style;
-                }
-				
+        this.that.features[this.featureVectorLength - 1].style = style;
+      }
+      this.that.redraw(true);
+      $('#dialog').dialog('close');
+      $("" + this.List + "").hide();
 
-				
-                this.that.redraw(true); 
-                $('#dialog').dialog('close');
-                $(""+this.List+"").hide();
-				
-				        this.select.deactivate();
+      this.select.deactivate();
 
-                console.log(this.that.features[this.featureVectorLength-1].geometry.x);
-                console.log(this.that.features[this.featureVectorLength-1].geometry.y);
-                console.log(this.that.features[this.featureVectorLength-1].geometry.CLASS_NAME);
-                
-                
-                 var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength-1].geometry.x,this.that.features[this.featureVectorLength-1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
-                 console.log(lonlat.lon);
-                var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
-                sql3  += lonlat.lon+'::float,'+lonlat.lat+'::float),4326)';
-                sql3  += ',\''+$("#Vad").val()+'\',';
-                sql3  += '\''+$("#Hur").val()+'\',';
-                sql3  += '\''+$('input[name="Skick"]:checked').val()+'\',';
-                sql3  += '\''+$("#"+this.List+" option:selected").text()+'\',';
-                sql3  += '\''+(d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()+'\')';
-                $.ajax({
-                     type: 'POST',
-                     url: 'https://ekke.cartodb.com/api/v2/sql',
-                     crossDomain: true,
-                data: {
-                     "q": sql3,
-                     "api_key":'d36df91a79308f99c9469c57df807b6eb53825fb'
-                },
-                dataType: 'json',
-                success: function(responseData, textStatus, jqXHR) {
-                            console.log("Data saved"+responseData);
-                },
-                error: function(responseData, textStatus, errorThrown) {
-                           console.log("Problem saving the data");
-                           console.log("Data saved"+responseData+textStatus+errorThrown);
-                         }});
-}
+      console.log(this.that.features[this.featureVectorLength - 1].geometry.x);
+      console.log(this.that.features[this.featureVectorLength - 1].geometry.y);
+      console.log(this.that.features[this.featureVectorLength - 1].geometry.CLASS_NAME);
+
+
+      var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+      console.log(lonlat.lon);
+      var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
+      sql3 += lonlat.lon + '::float,' + lonlat.lat + '::float),4326)';
+      sql3 += ',\'' + $("#Vad").val() + '\',';
+      sql3 += '\'' + $("#Hur").val() + '\',';
+      sql3 += '\'' + $('input[name="Skick"]:checked').val() + '\',';
+      sql3 += '\'' + $("#" + this.List + " option:selected").text() + '\',';
+      sql3 += '\'' + (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
+      $.ajax({
+        type: 'POST',
+        url: 'https://ekke.cartodb.com/api/v2/sql',
+        crossDomain: true,
+        data: {
+          "q": sql3,
+          "api_key": 'd36df91a79308f99c9469c57df807b6eb53825fb'
+        },
+        dataType: 'json',
+        success: function(responseData, textStatus, jqXHR) {
+          console.log("Data saved" + responseData);
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log("Problem saving the data");
+          console.log("Data saved" + responseData + textStatus + errorThrown);
+        }
+      });
+    }
 function init(){
       //Functions block 
       //map functions
@@ -417,10 +406,9 @@ function init(){
               true
             );
             //popup.setOpacity(0.8); 
-            popup.setContentHTML("<div class=PopUpContent>"+"Time : "+evt.feature.attributes.tid+" <br>" + 
-				" Who : "+evt.feature.attributes.vem+"<br> "+
-				" What : "+evt.feature.attributes.vad+"<br> "+
-				" How : "+evt.feature.attributes.hur+"<br> "+"</div>");  
+            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.tid+" <br>" + 
+				" Vem : "+evt.feature.attributes.vem+"<br> "+
+				" Hur : "+evt.feature.attributes.hur+"<br> "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -600,16 +588,7 @@ function init(){
 					$(".button3ItemActive").toggle();
 					$(".userButtonItemInactive").toggle();
 					$(".userButtonItemActive").toggle();
-					/*$(".drawPointAssetItemInactive").hide();
-					$(".drawPointAssetItemActive").hide();
-					$(".drawPointPersonItemInactive").hide();
-					$(".drawPointPersonItemActive").hide();
-					$(".drawPointVehicleItemInactive").hide();
-					$(".drawPointVehicleItemActive").hide();
-					$(".drawPolygonAreaOneItemInactive").hide();
-					$(".drawPolygonAreaOneItemActive").hide();
-					$(".drawMoveButtonItemInactive").hide();
-					$(".drawMoveButtonItemActive").hide();*/
+					
 				},
 				displayClass: "button1"
 			});
@@ -628,23 +607,7 @@ function init(){
 				displayClass: "userButton"
 			});
 			 
-			/*var layersButton = new OpenLayers.Control.Button({
-				trigger: function(){
-					$(".drawPointAssetItemInactive").toggle();
-					$(".drawPointAssetItemActive").toggle();
-					$(".drawPointPersonItemInactive").toggle();
-					$(".drawPointPersonItemActive").toggle();
-					$(".drawPointVehicleItemInactive").toggle();
-					$(".drawPointVehicleItemActive").toggle();
-					$(".drawPolygonAreaOneItemInactive").toggle();
-					$(".drawPolygonAreaOneItemActive").toggle();
-					$(".drawMoveButtonItemInactive").toggle();
-					$(".drawMoveButtonItemActive").toggle();
-
-        },
-        displayClass: "layersButton"
-
-			});*/
+			
 	  
 			var layerButton = new OpenLayers.Control.Button({
 				displayClass: "button4",
@@ -689,47 +652,51 @@ function init(){
                 console.log(event.type + " " + event.layer.name + " " + event.property);
       }
 
-	  /*var drawMoveButton = new OpenLayers.Control.Button({
-		  displayClass: "drawMoveButton",
-		  trigger: function(){
-			 drawPointAsset.deactivate();
-			 drawPolygonAreaOne.deactivate();
-			 drawPointPerson.deactivate();
-			 drawPointVehicle.deactivate();
-		  }
-	  });*/
-    var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
-	  {'displayClass':'drawPointAsset',
-      featureAdded:function(){
-        $("#assetList").show();
-        $("#vehicleList").hide();
-        $("#personList").hide();
-		    $("#area2List").hide();
-		    $("#whoList").hide();
-		    $("#skick").show();
-         var List = "assetList";
-         var LayerName = this.layer.name;
-         var currentLayer = this.map.getLayersByName(LayerName);
-         //get the first layer !
-         var featureVectorLength = currentLayer[0].features.length;
-         var that = this.layer;
-         $("#dialog").dialog({
-            buttons:{
-              //Binder that och featureVectorLength till featAdded funktionen 
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List, select:drawPointAsset})
-            },
-            open:function(){
-           
-            map.layers[0].setOpacity(0.3);
-            },
-            close:function(){
-            map.layers[0].setOpacity(1.0);
-            }
-       });
 
-        
-      }});
-    var drawPointPerson = new OpenLayers.Control.DrawFeature(personLayer,OpenLayers.Handler.Point,
+  var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer, OpenLayers.Handler.Point, {
+    'displayClass': 'drawPointAsset',
+    featureAdded: function() {
+      $("#assetList").show();
+      $("#vehicleList").hide();
+      $("#personList").hide();
+      $("#area2List").hide();
+      $("#whoList").hide();
+      $("#skick").show();
+      $("#misc").hide();
+      $("#whoLI").hide();
+      $("#miscLI").hide();
+      $("#Hur").show();
+      $("#howLI").show();
+
+      var List = "assetList";
+      var LayerName = this.layer.name;
+      var currentLayer = this.map.getLayersByName(LayerName);
+      //get the first layer !
+      var featureVectorLength = currentLayer[0].features.length;
+      var that = this.layer;
+      $("#dialog").dialog({
+        buttons: {
+          //Binder that och featureVectorLength till featAdded funktionen 
+          Add: featAdded.bind({
+            that: that,
+            featureVectorLength: featureVectorLength,
+            List: List,
+            select: drawPointAsset
+          })
+        },
+        open: function() {
+
+          map.layers[0].setOpacity(0.3);
+        },
+        close: function() {
+          map.layers[0].setOpacity(1.0);
+        }
+      });
+
+
+    }
+  });
+  var drawPointPerson = new OpenLayers.Control.DrawFeature(personLayer, OpenLayers.Handler.Point,
 	{'displayClass':'drawPointPerson',
       featureAdded:function(){
         $("#assetList").hide();
@@ -737,7 +704,12 @@ function init(){
         $("#personList").show();
 		 $("#area2List").hide();
 		 $("#whoList").show();
-		 $("#skick").show();
+		 $("#skick").hide();
+		 $("#misc").hide();
+		 $("#whoLI").show();
+		 $("#miscLI").hide();
+		 $("#Hur").show();
+		 $("#howLI").show();
          var List = "personList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -769,6 +741,12 @@ function init(){
 		 $("#area2List").hide();
 		 $("#whoList").hide();
 		 $("#skick").show();
+		 $("#misc").hide();
+		 $("#whoLI").hide();
+		 $("#miscLI").hide();
+		 $("#Hur").show();
+		 $("#howLI").show();
+		      console.log($('#skick input:radio:checked').val());
          var List = "vehicleList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -798,10 +776,16 @@ function init(){
          $("#assetList").hide();
          $("#vehicleList").hide();
          $("#personList").hide();
-		     $("#area2List").show();
-		     $("#whoList").hide();
-		     $("#skick").hide();
-		     var List = "area2List";
+
+		 $("#area2List").show();
+		 $("#whoList").hide();
+		 $("#skick").hide();
+		 $("#misc").show();
+		 $("#whoLI").hide();
+		 $("#miscLI").show();
+		 $("#Hur").hide();
+		 $("#howLI").hide();
+		 var List = "area2List";
          
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -842,17 +826,7 @@ function init(){
 			$(".button3ItemActive").hide();
 			$(".userButtonItemInactive").hide();
 			$(".userButtonItemActive").hide();
-			/*//layers submenubuttons start hidden
-			$(".drawPointAssetItemInactive").hide();
-			$(".drawPointAssetItemActive").hide();
-			$(".drawPointPersonItemInactive").hide();
-			$(".drawPointPersonItemActive").hide();
-			$(".drawPointVehicleItemInactive").hide();
-			$(".drawPointVehicleItemActive").hide();
-			$(".drawPolygonAreaOneItemInactive").hide();
-			$(".drawPolygonAreaOneItemActive").hide();
-			$(".drawMoveButtonItemInactive").hide();
-			$(".drawMoveButtonItemActive").hide();*/
+			
       //------------------------------------------
       $("#dialog").hide();
       $("#vehicleList").hide();
@@ -877,29 +851,14 @@ function init(){
   }
 
 </script>
-  </head>
+</head>
 <body onload="init()"> 
   <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
 <div id ="output"></div>
   <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
     <ul>
       <li>
-      Vem 
-	  <select id="whoList">
-          <option>q1</option>
-		  <option>q2</option>
-		  <option>q3</option>
-		  <option>q4</option>
-		  <option>q5</option>
-      </select>
-      </li>
-      <li>
-      Vad <input type="textfield"id="Vad"/>
-      </li>
-      <li>            
-      Hur <input type="textfield" id="Hur"/>
-      </li>
-      <li>
+	  Typ
       <select id="vehicleList">
           <option>Brandbil</option>
           <option>Helikopter</option>
@@ -915,17 +874,33 @@ function init(){
       <select id="assetList">
           <option>Vattenpost</option>
       </select>
-	  <select id="area2List">
+	    <select id="area2List">
           <option>Radioaktivt</option>
 		  <option>Brand</option>
 		  <option>Översvämmning</option>
 		  <option>Jordbävning</option>
       </select>
       </li>
+	  <li id="whoLI">
+      Vem 
+	  <select id="whoList">
+          <option>p1</option>
+		  <option>p2</option>
+		  <option>p3</option>
+		  <option>p4</option>
+		  <option>p5</option>
+    </select>
+      </li>
+      <li id="howLI">            
+      Hur <input type="textfield" id="Hur"/>
+      </li>
+	  <li id="miscLI">            
+      Övrigt <input type="textfield" id="misc"/>
+      </li>
       <li>
 		<div id="skick">
-        <input type="radio" name="skick" value="Brukbar">Brukbar<br>
-        <input type="radio" name="skick" value="Obrukbar">Obrukbar
+        <input type="radio" name="skick" value="Brukbar"/>Brukbar<br>
+        <input type="radio" name="skick" value="Obrukbar"/>Obrukbar
 		</div>
       </li>
     </ul>  
