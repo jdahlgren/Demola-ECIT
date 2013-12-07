@@ -19,8 +19,7 @@
     var map;
     var layer_array   = [];
     var control_array = [];
-    var Task = $('#Task');    
-    var Vad  = $('#Vad');
+    var Task = $('#Task');
     var När  = $('När');
     
 
@@ -293,12 +292,9 @@ var featAdded = function(){
                 
                 
                 console.log();
-                if($('#Vad').val()==1){
-                  //this.that.features[this.featureVectorLength-1].st
-                }
+                
                 this.that.features[this.featureVectorLength-1].attributes = { Vem: $("#Vem").val(),
                                                                     Time: (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds(), 
-                                                                    Vad: $("#Vad").val(),
                                                                     Hur: $("#Hur").val(),
                                                                     typ: $("#"+this.List+" option:selected").text(),
                                                                     skick:$('input[name="Skick"]:checked').val()
@@ -413,10 +409,9 @@ function init(){
               true
             );
             //popup.setOpacity(0.8); 
-            popup.setContentHTML("<div class=PopUpContent>"+"Time : "+evt.feature.attributes.tid+" <br>" + 
-				" Who : "+evt.feature.attributes.vem+"<br> "+
-				" What : "+evt.feature.attributes.vad+"<br> "+
-				" How : "+evt.feature.attributes.hur+"<br> "+"</div>");  
+            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.tid+" <br>" + 
+				" Vem : "+evt.feature.attributes.vem+"<br> "+
+				" Hur : "+evt.feature.attributes.hur+"<br> "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
@@ -596,16 +591,7 @@ function init(){
 					$(".button3ItemActive").toggle();
 					$(".userButtonItemInactive").toggle();
 					$(".userButtonItemActive").toggle();
-					/*$(".drawPointAssetItemInactive").hide();
-					$(".drawPointAssetItemActive").hide();
-					$(".drawPointPersonItemInactive").hide();
-					$(".drawPointPersonItemActive").hide();
-					$(".drawPointVehicleItemInactive").hide();
-					$(".drawPointVehicleItemActive").hide();
-					$(".drawPolygonAreaOneItemInactive").hide();
-					$(".drawPolygonAreaOneItemActive").hide();
-					$(".drawMoveButtonItemInactive").hide();
-					$(".drawMoveButtonItemActive").hide();*/
+					
 				},
 				displayClass: "button1"
 			});
@@ -624,23 +610,7 @@ function init(){
 				displayClass: "userButton"
 			});
 			 
-			/*var layersButton = new OpenLayers.Control.Button({
-				trigger: function(){
-					$(".drawPointAssetItemInactive").toggle();
-					$(".drawPointAssetItemActive").toggle();
-					$(".drawPointPersonItemInactive").toggle();
-					$(".drawPointPersonItemActive").toggle();
-					$(".drawPointVehicleItemInactive").toggle();
-					$(".drawPointVehicleItemActive").toggle();
-					$(".drawPolygonAreaOneItemInactive").toggle();
-					$(".drawPolygonAreaOneItemActive").toggle();
-					$(".drawMoveButtonItemInactive").toggle();
-					$(".drawMoveButtonItemActive").toggle();
-
-        },
-        displayClass: "layersButton"
-
-			});*/
+			
 	  
 			var layerButton = new OpenLayers.Control.Button({
 				displayClass: "button4",
@@ -685,15 +655,7 @@ function init(){
                 console.log(event.type + " " + event.layer.name + " " + event.property);
       }
 
-	  /*var drawMoveButton = new OpenLayers.Control.Button({
-		  displayClass: "drawMoveButton",
-		  trigger: function(){
-			 drawPointAsset.deactivate();
-			 drawPolygonAreaOne.deactivate();
-			 drawPointPerson.deactivate();
-			 drawPointVehicle.deactivate();
-		  }
-	  });*/
+	 
     var drawPointAsset = new OpenLayers.Control.DrawFeature(assetLayer,OpenLayers.Handler.Point,
 	  {'displayClass':'drawPointAsset',
       featureAdded:function(){
@@ -703,6 +665,11 @@ function init(){
 		 $("#area2List").hide();
 		 $("#whoList").hide();
 		$("#skick").show();
+		$("#misc").hide();
+		$("#whoLI").hide();
+		 $("#miscLI").hide();
+		 $("#Hur").show();
+		 $("#howLI").show();
          var List = "assetList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -733,7 +700,12 @@ function init(){
         $("#personList").show();
 		 $("#area2List").hide();
 		 $("#whoList").show();
-		 $("#skick").show();
+		 $("#skick").hide();
+		 $("#misc").hide();
+		 $("#whoLI").show();
+		 $("#miscLI").hide();
+		 $("#Hur").show();
+		 $("#howLI").show();
          var List = "personList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -765,6 +737,12 @@ function init(){
 		 $("#area2List").hide();
 		 $("#whoList").hide();
 		 $("#skick").show();
+		 $("#misc").hide();
+		 $("#whoLI").hide();
+		 $("#miscLI").hide();
+		 $("#Hur").show();
+		 $("#howLI").show();
+		 
          var List = "vehicleList";
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -794,9 +772,14 @@ function init(){
          $("#assetList").hide();
          $("#vehicleList").hide();
          $("#personList").hide();
-		     $("#area2List").show();
-		     $("#whoList").hide();
+		 $("#area2List").show();
+		 $("#whoList").hide();
 		 $("#skick").hide();
+		 $("#misc").show();
+		 $("#whoLI").hide();
+		 $("#miscLI").show();
+		 $("#Hur").hide();
+		 $("#howLI").hide();
 		 var List = "area2List";
          
          var LayerName = this.layer.name;
@@ -838,17 +821,7 @@ function init(){
 			$(".button3ItemActive").hide();
 			$(".userButtonItemInactive").hide();
 			$(".userButtonItemActive").hide();
-			/*//layers submenubuttons start hidden
-			$(".drawPointAssetItemInactive").hide();
-			$(".drawPointAssetItemActive").hide();
-			$(".drawPointPersonItemInactive").hide();
-			$(".drawPointPersonItemActive").hide();
-			$(".drawPointVehicleItemInactive").hide();
-			$(".drawPointVehicleItemActive").hide();
-			$(".drawPolygonAreaOneItemInactive").hide();
-			$(".drawPolygonAreaOneItemActive").hide();
-			$(".drawMoveButtonItemInactive").hide();
-			$(".drawMoveButtonItemActive").hide();*/
+			
       //------------------------------------------
       $("#dialog").hide();
       $("#vehicleList").hide();
@@ -883,22 +856,7 @@ function init(){
   <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
     <ul>
       <li>
-      Vem 
-	  <select id="whoList">
-          <option>q1</option>
-		  <option>q2</option>
-		  <option>q3</option>
-		  <option>q4</option>
-		  <option>q5</option>
-      </select>
-      </li>
-      <li>
-      Vad <input type="textfield"id="Vad"/>
-      </li>
-      <li>            
-      Hur <input type="textfield" id="Hur"/>
-      </li>
-      <li>
+	  Typ
       <select id="vehicleList">
           <option>Brandbil</option>
           <option>Helikopter</option>
@@ -921,10 +879,26 @@ function init(){
 		  <option>Jordbävning</option>
       </select>
       </li>
+	  <li id="whoLI">
+      Vem 
+	  <select id="whoList">
+          <option>p1</option>
+		  <option>p2</option>
+		  <option>p3</option>
+		  <option>p4</option>
+		  <option>p5</option>
+      </select>
+      </li>
+      <li id="howLI">            
+      Hur <input type="textfield" id="Hur"/>
+      </li>
+	  <li id="miscLI">            
+      Övrigt <input type="textfield" id="misc"/>
+      </li>
       <li>
 		<div id="skick">
-        <input type="radio" name="skick" value="Brukbar">Brukbar<br>
-        <input type="radio" name="skick" value="Obrukbar">Obrukbar
+        <input type="radio" name="skick" value="Brukbar"/>Brukbar<br>
+        <input type="radio" name="skick" value="Obrukbar"/>Obrukbar
 		</div>
       </li>
     </ul>  
