@@ -21,8 +21,8 @@
     var control_array = [];
     var Task = $('#Task');
     var När  = $('När');
-    
-
+    var refreshvehicle = new OpenLayers.Strategy.Refresh({force: true, active: true});
+    var refreshperson = new OpenLayers.Strategy.Refresh({force: true, active: true});
     var fire_style = new OpenLayers.Style({
         'fillColor': '#b61a1e',
         'fillOpacity': .2,
@@ -288,12 +288,11 @@
     var asset_style_map = new OpenLayers.StyleMap({
            'default': asset_style
     });
-    //console.log(this.items);
-    //console.log(this.that.features[this.featureVectorLength - 1].attributes);
+    
     var featAdded = function(){
       var d = new Date(); // for now
       
-      console.log(this.featureVectorLength);
+      console.log($("#" + this.List + " option:selected").text());
       console.log( this.that.features[this.featureVectorLength - 1]);
       this.that.features[this.featureVectorLength - 1].attributes = {
         Vem: $("#Vem").val(),
@@ -333,6 +332,7 @@
 
         this.that.features[this.featureVectorLength - 1].style = style;
       }
+      this.that.refresh(true);
       this.that.redraw(true);
       $('#dialog').dialog('close');
       $("" + this.List + "").hide();
@@ -346,7 +346,37 @@
       if(this.that.features[this.featureVectorLength - 1].geometry.CLASS_NAME=='OpenLayers.Geometry.Polygon'){
         console.log("Polygon layer")
       }
-      else{
+      else if($("#" + this.List + " option:selected").text()=='Sjukvårdare'&&$("#" + this.List + " option:selected").text()=='Brandman'){
+        
+        var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+          console.log(lonlat.lon);
+      var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
+      sql3 += lonlat.lon + '::float,' + lonlat.lat + '::float),4326)';
+      sql3 += ',\'' + $("#Vad").val() + '\',';
+      sql3 += '\'' + $("#Hur").val() + '\',';
+      sql3 += '\'Brukbar\',';
+      sql3 += '\'' + $("#" + this.List + " option:selected").text() + '\',';
+      sql3 += '\'' + (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
+      $.ajax({
+        type: 'POST',
+        url: 'https://ekke.cartodb.com/api/v2/sql',
+        crossDomain: true,
+        data: {
+          "q": sql3,
+          "api_key": 'd36df91a79308f99c9469c57df807b6eb53825fb'
+        },
+        dataType: 'json',
+        success: function(responseData, textStatus, jqXHR) {
+          console.log("Data saved" + responseData);
+        },
+        error: function(responseData, textStatus, errorThrown) {
+          console.log("Problem saving the data");
+          console.log("Data saved" + responseData + textStatus + errorThrown);
+        }
+      });
+
+      }else{
+
           var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
       console.log(lonlat.lon);
       var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
@@ -373,10 +403,12 @@
           console.log("Data saved" + responseData + textStatus + errorThrown);
         }
       });
-
       }
+
+      refreshvehicle.refresh();
+      refreshperson.refresh();
     
-      this.that.redraw(true);
+      
 }
 function init(){
       //Functions block 
@@ -476,20 +508,33 @@ function init(){
   areaTwoLayer.styleMap = alert_style_map;
 	
   var assetLayer = new OpenLayers.Layer.Vector('Tillgång Layer',{
-				eventListeners:{
+				  projection: new OpenLayers.Projection("EPSG:4326"),
+          strategies: [new OpenLayers.Strategy.Fixed(),refreshperson],
+          protocol: new OpenLayers.Protocol.Script({
+          url: "http://ekke.cartodb.com/api/v2/sql",
+          params: {
+              q: "select * from datastorage WHERE typ='Vattenpost' ",
+              format: "geojson",
+          },
+            format: new OpenLayers.Format.GeoJSON({
+            ignoreExtraDims: true
+          }),
+            callbackKey: "callback"
+          }), 
+        eventListeners:{
 					"featureselected":featureSelected,
 					"featureunselected":featureUnSelected
 				}});
     assetLayer.styleMap = asset_style_map;
 	
-  var refreshperson = new OpenLayers.Strategy.Refresh({force: true, active: true});
+  //var refreshperson = new OpenLayers.Strategy.Refresh({force: true, active: true});
   var personLayer = new OpenLayers.Layer.Vector('från cartodb',{
           projection: new OpenLayers.Projection("EPSG:4326"),
           strategies: [new OpenLayers.Strategy.Fixed(),refreshperson],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
-              q: "select * from datastorage ",
+              q: "select * from datastorage WHERE typ='Sjukvårdare' or typ='Brandman' or typ='Polis' or typ='Militär' or typ='Volontär' ",
               format: "geojson",
           },
             format: new OpenLayers.Format.GeoJSON({
@@ -502,14 +547,14 @@ function init(){
 					           "featureunselected":featureUnSelected
 				}});
   personLayer.styleMap = people_style_map;
-	var refreshvehicle = new OpenLayers.Strategy.Refresh({force: true, active: true});
+	//var refreshvehicle = new OpenLayers.Strategy.Refresh({force: true, active: true});
   var vehicleLayer = new OpenLayers.Layer.Vector('Vehicle Layer',{
         projection: new OpenLayers.Projection("EPSG:4326"),
           strategies: [new OpenLayers.Strategy.Fixed(),refreshvehicle],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
-              q: "select * from datastorage ",
+              q: "select * from datastorage WHERE typ='Brandbil' or typ='Helikopter' ",
               format: "geojson",
           },
             format: new OpenLayers.Format.GeoJSON({
@@ -853,17 +898,17 @@ function init(){
 
    
    
-    var doSuff = function(){
-      console.log("Uppdaterar");
-      refreshvehicle.refresh();
-      refreshperson.refresh();
+   //  var doSuff = function(){
+   //    console.log("Uppdaterar");
+   //    refreshvehicle.refresh();
+   //    refreshperson.refresh();
 
-    }
+   //  }
 
-   function update(){
-          setInterval(doSuff,10000);
-    }
-    update();
+   // function update(){
+   //        setInterval(doSuff,10000);
+   //  }
+   //  update();
    
   }
 
