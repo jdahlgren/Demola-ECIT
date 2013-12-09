@@ -270,7 +270,30 @@
     });
 
 function init()
-{
+{             
+              var featureSelected = function(evt) {
+                var feature = evt.feature;
+                var popup = new OpenLayers.Popup.Anchored("geo_popup",
+                  feature.geometry.getBounds().getCenterLonLat(),
+                  null,
+                  null,
+                  null,
+                  true
+                );
+                //popup.setOpacity(0.8); 
+                popup.setContentHTML("<div class=PopUpContent>Skapad " + " : " + evt.feature.attributes.tid + " <br>" +
+                  "" + evt.feature.attributes.typ + "<br> " +
+                  " Hur : " + evt.feature.attributes.vad + "<br> " + "</div>");
+                feature.popup = popup;
+
+                map.addPopup(popup);
+              }
+              var featureUnSelected = function(evt) {
+                var feature = evt.feature;
+                map.removePopup(feature.popup);
+                feature.popup.destroy();
+                feature.popup = null;
+              }
               var point_layer_size = 0;
               //Map block
               map = new OpenLayers.Map('map');
@@ -324,6 +347,29 @@ function init()
                 }
               });
               
+              var refreshpeople_layer = new OpenLayers.Strategy.Refresh({
+                force: true,
+                active: true
+              });
+                var people_layer = new OpenLayers.Layer.Vector("GeoJSON", {
+                projection: new OpenLayers.Projection("EPSG:4326"),
+                strategies: [new OpenLayers.Strategy.Fixed(), refreshpeople_layer],
+                protocol: new OpenLayers.Protocol.Script({
+                  url: "http://ekke.cartodb.com/api/v2/sql",
+                  params: {
+                    q: "select * from datastorage where typ='Brandman' or typ='Sjukvårdare'or typ='Polis' or typ='Militär' or typ='Volontär'",
+                    format: "geojson",
+                  },
+                  format: new OpenLayers.Format.GeoJSON({
+                    ignoreExtraDims: true
+                  }),
+                  callbackKey: "callback"
+                }),
+                eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
+              
               var geojson_point_layer = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
                 projection: "EPSG:4326",
                 strategies: [new OpenLayers.Strategy.Fixed()],
@@ -331,37 +377,10 @@ function init()
                   url: "points.json",
                   format: new OpenLayers.Format.GeoJSON()
                 }),
-                eventListeners: {
-                  "featureselected": function(evt) {
-                    var feature = evt.feature;
-
-                    var popup = new OpenLayers.Popup.Anchored("geo_popup",
-                      feature.geometry.getBounds().getCenterLonLat(),
-                      null,
-                      null,
-                      null,
-                      true
-                    );
-
-                    popup.setOpacity(0.8);
-                    popup.setBackgroundColor('#212121');
-                    popup.setContentHTML(evt.feature.data.Vem + " \n" + evt.feature.data.Vad);
-                    feature.popup = popup;
-
-                    map.addPopup(popup);
-                  },
-                  "featureunselected": function(evt) {
-                    var feature = evt.feature;
-
-                    map.removePopup(feature.popup);
-                    feature.popup.destroy();
-                    feature.popup = null;
-                  }
-                },
-                "getNumberOfFeatuers": function() {
-                  console.log(this.features.length);
-                }
-              });
+            eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
               
               var refreshcartodb = new OpenLayers.Strategy.Refresh({
                 force: true,
@@ -374,7 +393,7 @@ function init()
                 protocol: new OpenLayers.Protocol.Script({
                   url: "http://ekke.cartodb.com/api/v2/sql",
                   params: {
-                    q: "select * from datastorage ",
+                    q: "select * from datastorage where typ='Brandbil'or typ='Helikopter' ",
                     format: "geojson",
                   },
                   format: new OpenLayers.Format.GeoJSON({
@@ -382,46 +401,23 @@ function init()
                   }),
                   callbackKey: "callback"
                 }),
-                eventListeners: {
-                  "featureselected": function(evt) {
-                    var feature = evt.feature;
-
-                    var popup = new OpenLayers.Popup.Anchored("geo_popup",
-                      feature.geometry.getBounds().getCenterLonLat(),
-                      null,
-                      null,
-                      null,
-                      true
-                    );
-                    popup.setOpacity(0.8);
-                    popup.setBackgroundColor('#212121');
-                    popup.setContentHTML(evt.feature.data.vem + " \n" + evt.feature.data.vad);
-                    feature.popup = popup;
-
-                    map.addPopup(popup);
-                  },
-                  "featureunselected": function(evt) {
-                    var feature = evt.feature;
-
-                    map.removePopup(feature.popup);
-                    feature.popup.destroy();
-                    feature.popup = null;
-                  }
-                }
-              });
+          eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
             
             var refreshgeojson = new OpenLayers.Strategy.Refresh({
                 force: true,
                 active: true
               });
 
-            var geojson_point_layer3 = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
+            var assest_layer = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
                 projection: new OpenLayers.Projection("EPSG:4326"),
                 strategies: [new OpenLayers.Strategy.Fixed(), refreshgeojson],
                 protocol: new OpenLayers.Protocol.Script({
                   url: "http://ekke.cartodb.com/api/v2/sql",
                   params: {
-                    q: "select * from datastorage ",
+                    q: "select * from datastorage where typ='Vattenpost'",
                     format: "geojson",
                   },
                   format: new OpenLayers.Format.GeoJSON({
@@ -429,34 +425,11 @@ function init()
                   }),
                   callbackKey: "callback"
                 }),
-                eventListeners: {
-                  "featureselected": function(evt) {
-                    var feature = evt.feature;
-
-                    var popup = new OpenLayers.Popup.Anchored("geo_popup",
-                      feature.geometry.getBounds().getCenterLonLat(),
-                      null,
-                      null,
-                      null,
-                      true
-                    );
-                    popup.setOpacity(0.8);
-                    popup.setBackgroundColor('#212121');
-                    popup.setContentHTML(evt.feature.data.Vem + " \n" + evt.feature.data.Vad);
-                    feature.popup = popup;
-
-                    map.addPopup(popup);
-                  },
-                  "featureunselected": function(evt) {
-                    var feature = evt.feature;
-
-                    map.removePopup(feature.popup);
-                    feature.popup.destroy();
-                    feature.popup = null;
-                  }
-                }
-              });
-              var selector = new OpenLayers.Control.SelectFeature([geojson_layer, geojson_point_layer, geojson_point_layer3, cartodb], {
+        eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
+              var selector = new OpenLayers.Control.SelectFeature([assest_layer, cartodb,people_layer], {
                 hover: false,
                 toggle: true,
                 autoActivate: true
@@ -468,68 +441,30 @@ function init()
               geojson_layer.styleMap = vehicle_style_map;
               cartodb.styleMap = vehicle_style_map;
               geojson_point_layer.styleMap = people_style_map;
-              geojson_point_layer3.styleMap = asset_style_map;
+              assest_layer.styleMap = asset_style_map;
+              people_layer.styleMap = people_style_map;
 
-
-              map.addLayer(geojson_layer);
-              map.addLayer(geojson_point_layer);
-              map.addLayer(geojson_point_layer3);
+              //map.addLayer(geojson_layer);
+              map.addLayer(assest_layer);
+              map.addLayer(people_layer);
               map.addLayer(cartodb);
 
-              console.log("antal features : " + map.layers[2].features.length);
+              
 
               map.addControl(selector);
-              console.log("antal features : " + map.layers[2].features.length);
-              refreshcartodb.refresh();
-              refreshgeojson.refresh();
-  // function serialize(feature) {
-
-  //   console.log(feature.geometry.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326")));
-  //   var pos = feature.geometry.transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326").x);
-  //   console.log(pos.x + " :pos");
-  //   var type = 'geojson';
-
-  //   test = '125.00922203';
-  //   var sql = 'UPDATE points SET vad = \'HEJ\' WHERE vem = \'Läkare\' ';
-  //   var sql2 = 'INSERT INTO datastorage(the_geom,vad,vem) VALUES(';
-  //   sql2 += 'ST_GeomFromText(’POINT(-71.2 42.5)’, 4326)';
-  //   sql2 += ',\'zxc\', \'Läkare1\') ';
-  //   var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad) VALUES (ST_SetSRID(ST_MakePoint(';
-  //   sql3 += pos.x + '::float,' + pos.y + '::float),4326),\'HEJ\',\'Läkare\')';
-
-  //   $.ajax({
-  //     type: 'POST',
-  //     url: 'https://ekke.cartodb.com/api/v2/sql',
-  //     crossDomain: true,
-  //     data: {
-  //       "q": sql3,
-  //       "api_key": 'd36df91a79308f99c9469c57df807b6eb53825fb'
-  //     },
-  //     dataType: 'json',
-  //     success: function(responseData, textStatus, jqXHR) {
-  //       console.log("Data saved" + responseData);
-
-
-
-  //     },
-  //     error: function(responseData, textStatus, errorThrown) {
-  //       console.log("Problem saving the data");
-  //       console.log("Data saved" + responseData + textStatus + errorThrown);
-
-  //     }
-  //   });
-
-
- // }
+              
+              
+ 
     var doSuff = function(){
       console.log("Uppdaterar");
       refreshcartodb.refresh();
       refreshgeojson.refresh();
+      refreshpeople_layer.refresh();
 
     }
 
    function update(){
-          setInterval(doSuff,3000);
+          setInterval(doSuff,1000);
     }
     update();
     
