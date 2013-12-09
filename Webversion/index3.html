@@ -356,7 +356,7 @@
       sql3 += '\'' + $("#Hur").val() + '\',';
       sql3 += '\'Brukbar\',';
       sql3 += '\'' + $("#" + this.List + " option:selected").text() + '\',';
-      sql3 += '\'' + (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
+      sql3 += '\'' +d.getFullYear()+'-'+ (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
       $.ajax({
         type: 'POST',
         url: 'https://ekke.cartodb.com/api/v2/sql',
@@ -385,7 +385,7 @@
       sql3 += '\'' + $("#Hur").val() + '\',';
       sql3 += '\'' + $('#skick input:radio:checked').val() + '\',';
       sql3 += '\'' + $("#" + this.List + " option:selected").text() + '\',';
-      sql3 += '\'' + (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
+      sql3 += '\'' +d.getFullYear()+'-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
       $.ajax({
         type: 'POST',
         url: 'https://ekke.cartodb.com/api/v2/sql',
@@ -447,9 +447,9 @@ function init(){
               true
             );
             //popup.setOpacity(0.8); 
-            popup.setContentHTML("<div class=PopUpContent>"+"Tid : "+evt.feature.attributes.tid+" <br>" + 
-				" Vem : "+evt.feature.attributes.vem+"<br> "+
-				" Hur : "+evt.feature.attributes.hur+"<br> "+"</div>");  
+            popup.setContentHTML("<div class=PopUpContent>Skapad "+" : "+evt.feature.attributes.tid+" <br>" + 
+				""+evt.feature.attributes.typ+"<br> "+
+				" Hur : "+evt.feature.attributes.vad+"<br> "+"</div>");  
             feature.popup = popup;
 
             map.addPopup(popup);
