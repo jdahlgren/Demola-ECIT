@@ -22,6 +22,7 @@
     var Task = $('#Task');
     var När  = $('När');
     var refreshvehicle = new OpenLayers.Strategy.Refresh({force: true, active: true});
+    var refreshAsset = new OpenLayers.Strategy.Refresh({force: true, active: true});
     var refreshperson = new OpenLayers.Strategy.Refresh({force: true, active: true});
     var fire_style = new OpenLayers.Style({
         'fillColor': '#b61a1e',
@@ -348,7 +349,7 @@
       }
       else if($("#" + this.List + " option:selected").text()=='Sjukvårdare'&&$("#" + this.List + " option:selected").text()=='Brandman'){
         
-        var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+          var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
           console.log(lonlat.lon);
       var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
       sql3 += lonlat.lon + '::float,' + lonlat.lat + '::float),4326)';
@@ -509,7 +510,7 @@ function init(){
 	
   var assetLayer = new OpenLayers.Layer.Vector('Tillgång Layer',{
 				  projection: new OpenLayers.Projection("EPSG:4326"),
-          strategies: [new OpenLayers.Strategy.Fixed(),refreshperson],
+          strategies: [new OpenLayers.Strategy.Fixed(),refreshAsset],
           protocol: new OpenLayers.Protocol.Script({
           url: "http://ekke.cartodb.com/api/v2/sql",
           params: {
@@ -898,17 +899,17 @@ function init(){
 
    
    
-   //  var doSuff = function(){
-   //    console.log("Uppdaterar");
-   //    refreshvehicle.refresh();
-   //    refreshperson.refresh();
+    var doSuff = function(){
+      console.log("Uppdaterar");
+      refreshvehicle.refresh();
+      refreshperson.refresh();
 
-   //  }
+    }
 
-   // function update(){
-   //        setInterval(doSuff,10000);
-   //  }
-   //  update();
+   function update(){
+          setInterval(doSuff,10000);
+    }
+    update();
    
   }
 
