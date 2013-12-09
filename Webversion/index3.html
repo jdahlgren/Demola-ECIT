@@ -35,7 +35,6 @@
 
     var vehicle_style = new OpenLayers.Style({
          'fillColor': '#b61a1e',
-        'fillOpacity': .2,
         'strokeColor': '#b61a1e',
         'strokeWidth': 1
       });
@@ -238,7 +237,6 @@
     
     var asset_style = new OpenLayers.Style({
         'fillColor': '#f0f30',
-        'fillOpacity': .8,
         'strokeColor': '#aaee77',
         'strokeWidth': 3,
         'pointRadius': 8,
@@ -345,8 +343,11 @@
       console.log(this.that.features[this.featureVectorLength - 1].geometry.y);
       console.log(this.that.features[this.featureVectorLength - 1].geometry.CLASS_NAME);
 
-
-      var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
+      if(this.that.features[this.featureVectorLength - 1].geometry.CLASS_NAME=='OpenLayers.Geometry.Polygon'){
+        console.log("Polygon layer")
+      }
+      else{
+          var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
       console.log(lonlat.lon);
       var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
       sql3 += lonlat.lon + '::float,' + lonlat.lat + '::float),4326)';
@@ -372,7 +373,11 @@
           console.log("Data saved" + responseData + textStatus + errorThrown);
         }
       });
-    }
+
+      }
+    
+      this.that.redraw(true);
+}
 function init(){
       //Functions block 
       //map functions
@@ -850,7 +855,8 @@ function init(){
    
     var doSuff = function(){
       console.log("Uppdaterar");
-      
+      refreshvehicle.refresh();
+      refreshperson.refresh();
 
     }
 
