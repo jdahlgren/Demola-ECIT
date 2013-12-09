@@ -347,13 +347,13 @@
       if(this.that.features[this.featureVectorLength - 1].geometry.CLASS_NAME=='OpenLayers.Geometry.Polygon'){
         console.log("Polygon layer")
       }
-      else if($("#" + this.List + " option:selected").text()=='Sjukvårdare'&&$("#" + this.List + " option:selected").text()=='Brandman'){
+      else if($("#" + this.List + " option:selected").text()=='Sjukvårdare'|| $("#" + this.List + " option:selected").text()=='Brandman'){
         
           var lonlat = new OpenLayers.LonLat(this.that.features[this.featureVectorLength - 1].geometry.x, this.that.features[this.featureVectorLength - 1].geometry.y).transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
           console.log(lonlat.lon);
       var sql3 = 'INSERT INTO datastorage (the_geom,vem,vad,skick,typ,tid) VALUES (ST_SetSRID(ST_MakePoint(';
       sql3 += lonlat.lon + '::float,' + lonlat.lat + '::float),4326)';
-      sql3 += ',\'' + $("#Vad").val() + '\',';
+      sql3 += ',\'' + $("#whoList option:selected").text() + '\',';
       sql3 += '\'' + $("#Hur").val() + '\',';
       sql3 += '\'Brukbar\',';
       sql3 += '\'' + $("#" + this.List + " option:selected").text() + '\',';
@@ -814,7 +814,7 @@ function init(){
          var featureVectorLength = currentLayer[0].features.length;
 
          var that = this.layer;
-         console.log($("#vehicleList option:selected").text());
+        console.log($("#vehicleList option:selected").text());
          console.log("Hej"+LayerName+" "+currentLayer+" "+featureVectorLength+" ");
          $("#dialog").dialog({
             buttons:{
@@ -918,7 +918,7 @@ function init(){
 <body onload="init()"> 
   <div id="map" class="smallmap olMap" ><style='width: 500px; height: 500px; '></div>
 <div id ="output"></div>
-  <div id="dialog" class="dialog" title=""><style='z-index: 800px;'>
+  <div id="dialog" class="dialog" title="Add task"><style='z-index: 800px;'>
     <ul>
       <li>
 	  Typ
