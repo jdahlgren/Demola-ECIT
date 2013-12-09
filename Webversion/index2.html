@@ -1,0 +1,515 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>GI Demola</title>
+    <script src="lib/OpenLayers.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    
+    <!--<script src="lib/Firebug/firebug.js"></script>-->
+    
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="style.css" type="text/css"> 
+    <link rel="stylesheet" href="theme/default/style.css" type="text/css">
+    <link rel="stylesheet" href="demola.css" type="text/css">
+<script type="text/javascript">
+            var map;
+
+              var fire_style = new OpenLayers.Style({
+                    'fillColor': '#b61a1e', 
+                    'strokeColor': '#b61a1e',
+                    'strokeWidth': 1
+              });
+              
+                //------------------------------------------------vehicle_style------------------------------------------ 
+                
+
+                var vehicle_style = new OpenLayers.Style({
+                     'fillColor': '#b61a1e',
+                    'strokeColor': '#b61a1e',
+                    'strokeWidth': 1
+                });
+
+                var vehicleFireTruckFilterBrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Brandbil'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
+                    ]
+                });
+
+                var vehicleFireTruckFilterBrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Brandbil'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
+                    ]
+                });
+
+                var vehicleFireTruckFilterObrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Brandbil'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Obrukbar' })
+                    ]
+                });
+
+                var HelicopterFilterBrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Helikopter'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
+                    ]
+                });
+
+                var HelicopterFilterObrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Helikopter'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Obrukbar' })
+                    ]
+                });
+              
+
+                var vehicleFire = new OpenLayers.Rule({
+                  filter:vehicleFireTruckFilterBrukbar,
+                  symbolizer: {
+                    externalGraphic: 'img/brandbil.png',
+                    graphicWidth: 35, 
+                    graphicHeight: 35,
+                    graphicYOffset: -4  
+                  }
+                  });
+
+                var vehicleFire2 = new OpenLayers.Rule({
+                  filter: vehicleFireTruckFilterObrukbar,
+                  symbolizer: {
+                    externalGraphic: 'img/brandbil.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35,
+                    graphicYOffset: -4      
+                  } 
+                });
+
+                var vehicleFire3 = new OpenLayers.Rule({
+                  filter: HelicopterFilterBrukbar,
+                  symbolizer: {
+                    externalGraphic: 'img/helikopter.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35,
+                    graphicYOffset: -4    
+                  }
+                  });
+
+                var vehicleFire4 = new OpenLayers.Rule({
+                  filter: HelicopterFilterObrukbar,
+                  symbolizer: {
+                    externalGraphic: 'img/helikopter_o.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35,
+                    graphicYOffset: -4     
+                  }
+                  });
+              
+
+
+                vehicle_style.addRules([vehicleFire,vehicleFire2,vehicleFire3,vehicleFire4]);
+                
+                //-----------------------------------------people_style--------------------------------------------------
+              
+              var doctorFilterBrukbarid = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Sjukvårdare'
+                    }), 
+                    new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, 
+                      property:'skick',
+                      value:'Brukbar' }),
+                    new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, 
+                      property:'vem',value:'p5' })
+                    ]
+                });
+
+              var doctorFilterBrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Sjukvårdare'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Brukbar' })
+                    ]
+                });
+              var doctorFilterObrukbar = new OpenLayers.Filter.Logical({
+                  type: OpenLayers.Filter.Logical.AND,
+                  filters:[
+                    new OpenLayers.Filter.Comparison({
+                      type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                      property: 'typ',
+                      value:'Sjukvårdare'
+                    }), new OpenLayers.Filter.Comparison({ type: OpenLayers.Filter.Comparison.EQUAL_TO, property:'skick',value:'Obrukbar' })
+                    ]
+                });
+              var doctor1 = new OpenLayers.Rule({
+                filter: doctorFilterObrukbar,
+                symbolizer: {
+                    externalGraphic: 'img/personer/upptagen.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35,
+                    graphicYOffset: -4  
+                    
+                }
+                });
+              var doctor2 = new OpenLayers.Rule({
+                filter: doctorFilterBrukbar,
+                symbolizer: {
+                    externalGraphic: 'img/personer/1.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35,
+                    graphicYOffset: -4  
+                    
+                }
+                });
+              var doctor3 = new OpenLayers.Rule({
+                filter: doctorFilterBrukbarid,
+                symbolizer: {
+                    label:'Din position !',
+                     labelOutlineColor: "black",
+                    labelOutlineWidth: 3,
+                    fontFamily: "Arial",
+                    fontColor: "white",
+                    fontSize: "8",
+                    externalGraphic: 'img/personer/4.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35      
+                }
+                });
+              var people_style = new OpenLayers.Style({
+                    externalGraphic: 'img/personer/1.png', 
+                    graphicWidth: 26, 
+                    graphicHeight: 30,         
+                  });
+              var FireMan = new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'typ',
+                    value: 'Brandman',
+                }),
+                symbolizer: {
+                    label: "Brandman",
+                    externalGraphic: 'img/personer/3.png', 
+                    labelOutlineColor: "black",
+                    labelOutlineWidth: 3,
+                    fontFamily: "Arial",
+                    fontColor: "white",
+                    fontSize: "8"
+                    
+                }
+              });
+              var PoliceMan = new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'typ',
+                    value: 'Polis',
+                }),
+                symbolizer: {
+                    externalGraphic: 'img/personer/polismili.png', 
+                    label: "Polis",
+                    labelOutlineColor: "black",
+                    labelOutlineWidth: 3,
+                    fontColor: "white",
+                    fontSize: "8"
+                }
+                });
+
+                
+              people_style.addRules([FireMan,PoliceMan, doctor1, doctor2,doctor3]);
+                
+//------------------------------------------asset_style-------------------------------------------------
+                
+              var asset_style = new OpenLayers.Style({
+                    'fillColor': '#f0f30',
+                    'strokeColor': '#aaee77',
+                    'strokeWidth': 3,
+                    'pointRadius': 8,
+                    externalGraphic: 'img/brandpost.png', 
+                    graphicWidth: 35, 
+                    graphicHeight: 35
+                });
+              var AssetRule = new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'skick',
+                    value: 'Obrukbar',
+                }),
+                symbolizer: {
+                    externalGraphic: 'img/brandpost_o.png'
+                }
+
+                });
+
+              var AssetRuleBrukbar = new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'skick',
+                    value: 'Brukbar',
+                }),
+                symbolizer: {
+                    externalGraphic: 'img/brandpost.png'
+                }
+
+                });
+
+              asset_style.addRules([AssetRule,AssetRuleBrukbar]);
+
+               var alert_style_map = new OpenLayers.StyleMap({
+           'default': fire_style
+    });
+
+//------------------------------------Stylemaps-----------------------------------------------------
+
+    var vehicle_style_map = new OpenLayers.StyleMap({
+           'default': vehicle_style
+    });
+    var people_style_map = new OpenLayers.StyleMap({
+           'default': people_style
+    });
+    var asset_style_map = new OpenLayers.StyleMap({
+           'default': asset_style
+    });
+
+function init()
+{             
+              var featureSelected = function(evt) {
+                var feature = evt.feature;
+                var popup = new OpenLayers.Popup.Anchored("geo_popup",
+                  feature.geometry.getBounds().getCenterLonLat(),
+                  null,
+                  null,
+                  null,
+                  true
+                );
+                //popup.setOpacity(0.8); 
+                popup.setContentHTML("<div class=PopUpContent>Skapad " + " : " + evt.feature.attributes.tid + " <br>" +
+                  "" + evt.feature.attributes.typ + "<br> " +
+                  " Hur : " + evt.feature.attributes.vad + "<br> " + "</div>");
+                feature.popup = popup;
+
+                map.addPopup(popup);
+              }
+              var featureUnSelected = function(evt) {
+                var feature = evt.feature;
+                map.removePopup(feature.popup);
+                feature.popup.destroy();
+                feature.popup = null;
+              }
+              var point_layer_size = 0;
+              //Map block
+              map = new OpenLayers.Map('map');
+
+              
+              //Layer block
+              var layer = new OpenLayers.Layer.OSM("Karta");
+              map.addLayer(layer);
+              var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+              var lonlat = new OpenLayers.LonLat(151.47056579589844,-32.810361684869).transform(
+              new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
+              map.setCenter(lonlat);
+              map.zoomTo(13);
+
+              //Format object for reading fromfiles !
+              //Create a Format object
+
+              var geojson_layer = new OpenLayers.Layer.Vector("GeoJSON", {
+                projection: "EPSG:4326",
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                protocol: new OpenLayers.Protocol.HTTP({
+                  url: "data.json",
+                  format: new OpenLayers.Format.GeoJSON()
+                }),
+                eventListeners: {
+                  "featureselected": function(evt) {
+                    var feature = evt.feature;
+
+                    var popup = new OpenLayers.Popup.Anchored("geo_popup",
+                      feature.geometry.getBounds().getCenterLonLat(),
+                      null,
+                      null,
+                      null,
+                      true
+                    );
+
+                    popup.setOpacity(0.8);
+                    popup.setBackgroundColor('#212121');
+                    popup.setContentHTML(evt.feature.data.Vem + " \n" + evt.feature.data.Vad);
+                    feature.popup = popup;
+
+                    map.addPopup(popup);
+                  },
+                  "featureunselected": function(evt) {
+                    var feature = evt.feature;
+                    feature.select.deactive();
+                    map.removePopup(feature.popup);
+                    feature.popup.destroy();
+                    feature.popup = null;
+                  }
+                }
+              });
+              
+              var refreshpeople_layer = new OpenLayers.Strategy.Refresh({
+                force: true,
+                active: true
+              });
+                var people_layer = new OpenLayers.Layer.Vector("GeoJSON", {
+                projection: new OpenLayers.Projection("EPSG:4326"),
+                strategies: [new OpenLayers.Strategy.Fixed(), refreshpeople_layer],
+                protocol: new OpenLayers.Protocol.Script({
+                  url: "http://ekke.cartodb.com/api/v2/sql",
+                  params: {
+                    q: "select * from datastorage where typ='Brandman' or typ='Sjukvårdare'or typ='Polis' or typ='Militär' or typ='Volontär'",
+                    format: "geojson",
+                  },
+                  format: new OpenLayers.Format.GeoJSON({
+                    ignoreExtraDims: true
+                  }),
+                  callbackKey: "callback"
+                }),
+                eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
+              
+              var geojson_point_layer = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
+                projection: "EPSG:4326",
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                protocol: new OpenLayers.Protocol.HTTP({
+                  url: "points.json",
+                  format: new OpenLayers.Format.GeoJSON()
+                }),
+            eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
+              
+              var refreshcartodb = new OpenLayers.Strategy.Refresh({
+                force: true,
+                active: true
+              });
+              
+              var cartodb = new OpenLayers.Layer.Vector("från cartodb", {
+                projection: new OpenLayers.Projection("EPSG:4326"),
+                strategies: [new OpenLayers.Strategy.Fixed(), refreshcartodb],
+                protocol: new OpenLayers.Protocol.Script({
+                  url: "http://ekke.cartodb.com/api/v2/sql",
+                  params: {
+                    q: "select * from datastorage where typ='Brandbil'or typ='Helikopter' ",
+                    format: "geojson",
+                  },
+                  format: new OpenLayers.Format.GeoJSON({
+                    ignoreExtraDims: true
+                  }),
+                  callbackKey: "callback"
+                }),
+          eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
+            
+            var refreshgeojson = new OpenLayers.Strategy.Refresh({
+                force: true,
+                active: true
+              });
+
+            var assest_layer = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
+                projection: new OpenLayers.Projection("EPSG:4326"),
+                strategies: [new OpenLayers.Strategy.Fixed(), refreshgeojson],
+                protocol: new OpenLayers.Protocol.Script({
+                  url: "http://ekke.cartodb.com/api/v2/sql",
+                  params: {
+                    q: "select * from datastorage where typ='Vattenpost'",
+                    format: "geojson",
+                  },
+                  format: new OpenLayers.Format.GeoJSON({
+                    ignoreExtraDims: true
+                  }),
+                  callbackKey: "callback"
+                }),
+        eventListeners:{
+          "featureselected":featureSelected,
+          "featureunselected":featureUnSelected 
+        }});
+              var selector = new OpenLayers.Control.SelectFeature([assest_layer, cartodb,people_layer], {
+                hover: false,
+                toggle: true,
+                autoActivate: true
+              
+              });
+
+
+
+              geojson_layer.styleMap = vehicle_style_map;
+              cartodb.styleMap = vehicle_style_map;
+              geojson_point_layer.styleMap = people_style_map;
+              assest_layer.styleMap = asset_style_map;
+              people_layer.styleMap = people_style_map;
+
+              //map.addLayer(geojson_layer);
+              map.addLayer(assest_layer);
+              map.addLayer(people_layer);
+              map.addLayer(cartodb);
+
+              
+
+              map.addControl(selector);
+              
+              
+ 
+    var doSuff = function(){
+      console.log("Uppdaterar");
+      refreshcartodb.refresh();
+      refreshgeojson.refresh();
+      refreshpeople_layer.refresh();
+
+    }
+
+   function update(){
+          setInterval(doSuff,1000);
+    }
+    update();
+    
+  }
+
+
+</script>
+</head >
+
+<body onload = "init()" >
+
+<div id = "map" class = "smallmap olMap" > <style = 'width: 500px; height: 500px;'> </div>
+
+<div id="inproj" ></div > < div id = "outproj" > < /div>
+<input type="button" onclick="deserialize();" value="add feature">
+  
+</body >
+
+</html>

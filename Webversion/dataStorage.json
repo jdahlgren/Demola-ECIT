@@ -1,107 +1,203 @@
 {
-  "type": "FeatureCollection",
-  "features": [{
-      "type": "Feature",
-      "properties": {
-        "Vem": "Läkare"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          125.00638961791992,
-          11.244240608578309
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {
-        "Vem": "Läkare",
-        "Vad":"",
-        "Status":""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          124.99840736389162,
-          11.242556940487976
-        ]
-      }
-    },{
-      "type": "Feature",
-      "properties": {
-        "Vem": "Läkare"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          124.9980640411377,
-          11.239273759426156
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {
-        "Vem": "Läkare"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          124.99681949615477,
-          11.230097491050714
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {
-        "Vem": "Läkare"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          125.00051021575928,
-          11.236958673381103
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          125.00321388244629,
-          11.227571861379818
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          125.00381469726562,
-          11.232538912054155
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          125.00450134277344,
-          11.237758432479831
-        ]
-      }
-    }, {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          125.00922203063965,
-          11.245755901449801
-        ]
-      }
-    }
-  ]
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "Vem": "Läkare"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    125.00638961791992,
+                    11.244240608578309
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "Vem": "Läkare",
+                "Vad": "",
+                "Status": ""
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    124.99840736389162,
+                    11.242556940487976
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "Vem": "Läkare"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    124.9980640411377,
+                    11.239273759426156
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "Vem": "Läkare"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    124.99681949615477,
+                    11.230097491050714
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "Vem": "Läkare"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    125.00051021575928,
+                    11.236958673381103
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    125.00321388244629,
+                    11.227571861379818
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    125.00381469726562,
+                    11.232538912054155
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    125.00450134277344,
+                    11.237758432479831
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    125.00922203063965,
+                    11.245755901449801
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            150.2771759033203,
+                            -33.10649732605985
+                        ],
+                        [
+                            150.2661895751953,
+                            -33.08866514588217
+                        ],
+                        [
+                            150.2606964111328,
+                            -33.05385321584544
+                        ],
+                        [
+                            150.2826690673828,
+                            -33.001465540593415
+                        ],
+                        [
+                            150.3310775756836,
+                            -32.97295587553773
+                        ],
+                        [
+                            150.38497924804688,
+                            -32.974683996129144
+                        ],
+                        [
+                            150.43270111083984,
+                            -32.989083685928954
+                        ],
+                        [
+                            150.47321319580078,
+                            -33.013845657739125
+                        ],
+                        [
+                            150.48797607421875,
+                            -33.00751186140884
+                        ],
+                        [
+                            150.50411224365234,
+                            -33.03082950191153
+                        ],
+                        [
+                            150.50033569335938,
+                            -33.03831286901919
+                        ],
+                        [
+                            150.52505493164062,
+                            -33.06392419812064
+                        ],
+                        [
+                            150.48934936523438,
+                            -33.08693925905122
+                        ],
+                        [
+                            150.40145874023438,
+                            -33.132951312515885
+                        ],
+                        [
+                            150.37948608398438,
+                            -33.11224887048159
+                        ],
+                        [
+                            150.33416748046875,
+                            -33.13065128220442
+                        ],
+                        [
+                            150.29434204101562,
+                            -33.151349385342506
+                        ],
+                        [
+                            150.24627685546875,
+                            -33.13180130489295
+                        ],
+                        [
+                            150.2771759033203,
+                            -33.10649732605985
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
 }
