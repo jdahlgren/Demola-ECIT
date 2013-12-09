@@ -257,9 +257,7 @@
            'default': fire_style
     });
 
-        //------------------------------------Stylemaps-----------------------------------------------------
-
-
+//------------------------------------Stylemaps-----------------------------------------------------
 
     var vehicle_style_map = new OpenLayers.StyleMap({
            'default': vehicle_style
@@ -283,12 +281,13 @@ function init()
               map.addLayer(layer);
               var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
               var lonlat = new OpenLayers.LonLat(151.47056579589844,-32.810361684869).transform(
-                new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
+              new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913"));
               map.setCenter(lonlat);
               map.zoomTo(13);
 
               //Format object for reading fromfiles !
               //Create a Format object
+
               var geojson_layer = new OpenLayers.Layer.Vector("GeoJSON", {
                 projection: "EPSG:4326",
                 strategies: [new OpenLayers.Strategy.Fixed()],
@@ -324,6 +323,7 @@ function init()
                   }
                 }
               });
+              
               var geojson_point_layer = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
                 projection: "EPSG:4326",
                 strategies: [new OpenLayers.Strategy.Fixed()],
@@ -362,10 +362,12 @@ function init()
                   console.log(this.features.length);
                 }
               });
+              
               var refreshcartodb = new OpenLayers.Strategy.Refresh({
                 force: true,
                 active: true
               });
+              
               var cartodb = new OpenLayers.Layer.Vector("från cartodb", {
                 projection: new OpenLayers.Projection("EPSG:4326"),
                 strategies: [new OpenLayers.Strategy.Fixed(), refreshcartodb],
@@ -408,12 +410,12 @@ function init()
                 }
               });
             
-             var refreshgeojson = new OpenLayers.Strategy.Refresh({
+            var refreshgeojson = new OpenLayers.Strategy.Refresh({
                 force: true,
                 active: true
               });
 
-              var geojson_point_layer3 = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
+            var geojson_point_layer3 = new OpenLayers.Layer.Vector("Geo_Point_JSON", {
                 projection: new OpenLayers.Projection("EPSG:4326"),
                 strategies: [new OpenLayers.Strategy.Fixed(), refreshgeojson],
                 protocol: new OpenLayers.Protocol.Script({
@@ -465,8 +467,8 @@ function init()
 
               geojson_layer.styleMap = vehicle_style_map;
               cartodb.styleMap = vehicle_style_map;
-              geojson_point_layer.styleMap = asset_style_map;
-              geojson_point_layer3.styleMap = people_style_map;
+              geojson_point_layer.styleMap = people_style_map;
+              geojson_point_layer3.styleMap = asset_style_map;
 
 
               map.addLayer(geojson_layer);
