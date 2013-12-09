@@ -290,18 +290,22 @@
     var asset_style_map = new OpenLayers.StyleMap({
            'default': asset_style
     });
+    //console.log(this.items);
+    //console.log(this.that.features[this.featureVectorLength - 1].attributes);
     var featAdded = function(){
       var d = new Date(); // for now
       
+      console.log(this.featureVectorLength);
+      console.log( this.that.features[this.featureVectorLength - 1]);
       this.that.features[this.featureVectorLength - 1].attributes = {
         Vem: $("#Vem").val(),
         Time: (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds(),
         Hur: $("#Hur").val(),
-        typ: $("#" + this.List + " option:selected").text(),
-        skick: $('#skick input:radio:checked').val()
+        typ: this.typ,
+        skick:"Brukbar"
       };
       
-      console.log(this.that.name);
+      
       if (this.that.name == 'Area One Layer') {
         console.log("I if satsen !");
         var style = OpenLayers.Util.applyDefaults(style, OpenLayers.Feature.Vector.style['default']);
@@ -348,7 +352,7 @@
       sql3 += lonlat.lon + '::float,' + lonlat.lat + '::float),4326)';
       sql3 += ',\'' + $("#Vad").val() + '\',';
       sql3 += '\'' + $("#Hur").val() + '\',';
-      sql3 += '\'' + $('input[name="Skick"]:checked').val() + '\',';
+      sql3 += '\'' + $('#skick input:radio:checked').val() + '\',';
       sql3 += '\'' + $("#" + this.List + " option:selected").text() + '\',';
       sql3 += '\'' + (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + '\')';
       $.ajax({
@@ -612,7 +616,9 @@ function init(){
 			var layerButton = new OpenLayers.Control.Button({
 				displayClass: "button4",
 				trigger: function(){
-					location.reload();
+          refreshvehicle.refresh();
+          refreshperson.refresh();
+					
 				}
 			});
 
@@ -738,25 +744,31 @@ function init(){
         $("#assetList").hide();
         $("#vehicleList").show();
         $("#personList").hide();
-		 $("#area2List").hide();
-		 $("#whoList").hide();
-		 $("#skick").show();
-		 $("#misc").hide();
-		 $("#whoLI").hide();
-		 $("#miscLI").hide();
-		 $("#Hur").show();
-		 $("#howLI").show();
-		      console.log($('#skick input:radio:checked').val());
+		    $("#area2List").hide();
+		    $("#whoList").hide();
+		    $("#skick").show();
+		    $("#misc").hide();
+		    $("#whoLI").hide();
+		    $("#miscLI").hide();
+		    $("#Hur").show();
+		    $("#howLI").show();
+		     console.log($('#skick input:radio:checked').val());
          var List = "vehicleList";
+         //var items =["#"+List +" option:selected").text(),$('#skick input:radio:checked').val()];
+         //console.log(items);
+        
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
          //get the first layer !
          var featureVectorLength = currentLayer[0].features.length;
+
          var that = this.layer;
+          console.log($("#vehicleList option:selected").text());
+         console.log("Hej"+LayerName+" "+currentLayer+" "+featureVectorLength+" ");
          $("#dialog").dialog({
             buttons:{
               //Binder that och featureVectorLength till featAdded funktionen 
-              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List,select:drawPointVehicle})
+              Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List,select:drawPointVehicle,typ:$("#vehicleList option:selected").text()})
             },
             open:function(){
            
@@ -773,19 +785,18 @@ function init(){
 
     var drawPolygonAreaOne = new OpenLayers.Control.DrawFeature(areaOneLayer, OpenLayers.Handler.Polygon,{'displayClass':'drawPolygonAreaOne',
         featureAdded:function(){
-         $("#assetList").hide();
-         $("#vehicleList").hide();
-         $("#personList").hide();
-
-		 $("#area2List").show();
-		 $("#whoList").hide();
-		 $("#skick").hide();
-		 $("#misc").show();
-		 $("#whoLI").hide();
-		 $("#miscLI").show();
-		 $("#Hur").hide();
-		 $("#howLI").hide();
-		 var List = "area2List";
+        $("#assetList").hide();
+        $("#vehicleList").hide();
+        $("#personList").hide();
+        $("#area2List").show();
+        $("#whoList").hide();
+        $("#skick").hide();
+        $("#misc").show();
+        $("#whoLI").hide();
+        $("#miscLI").show();
+        $("#Hur").hide();
+        $("#howLI").hide();
+      var List = "area2List";
          
          var LayerName = this.layer.name;
          var currentLayer = this.map.getLayersByName(LayerName);
@@ -793,6 +804,7 @@ function init(){
          //get the first layer !
          var featureVectorLength = currentLayer[0].features.length;
          var that = this.layer;
+
          $("#dialog").dialog({
             buttons:{
               Add: featAdded.bind({that:that,featureVectorLength:featureVectorLength,List:List, select:drawPolygonAreaOne})
@@ -835,19 +847,18 @@ function init(){
    
 
    
-     
+   
     var doSuff = function(){
       console.log("Uppdaterar");
-      refreshvehicle.refresh();
-      refreshperson.refresh();
+      
 
     }
 
    function update(){
-          setInterval(doSuff,3000);
+          setInterval(doSuff,10000);
     }
     update();
-    
+   
   }
 
 </script>
